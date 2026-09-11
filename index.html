@@ -129,6 +129,13 @@
   .jeocell.blank{background:transparent;border-color:transparent;}
   .jeopick{display:block;width:100%;max-width:520px;margin:10px auto;background:var(--panel);border:2px solid var(--blue);color:var(--ink);border-radius:14px;padding:18px;font-weight:900;font-size:22px;}
   .jeopick:hover{background:var(--bg2);}
+  .roundlabel{font-weight:900;color:var(--gold);font-size:clamp(12px,1.5vw,18px);letter-spacing:1px;margin-top:2px;}
+  .jeofinalintro{flex:1;display:flex;align-items:center;justify-content:center;}
+  .wager{font-weight:900;font-size:clamp(44px,8vw,96px);line-height:1;color:var(--gold);text-align:center;margin:6px 0;}
+  .fwrow{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .fwrow .wtag{font-weight:900;font-size:26px;min-width:96px;text-align:center;}
+  .minibtn{background:var(--line);color:var(--ink);border-radius:10px;padding:11px 15px;font-weight:900;font-size:18px;}
+  .minibtn:active{transform:translateY(2px);} .minibtn.max{background:var(--gold);color:var(--gold-ink);}
 
   /* overlays */
   .overlay{position:fixed;inset:0;background:rgba(4,8,15,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
@@ -257,13 +264,15 @@
     </div>
     <div id="jeoBoardWrap" class="jeowrap hidden">
       <div class="jeohd">
-        <h2 id="jeoTitle">Jeopardy</h2>
-        <div style="display:flex;gap:10px;">
-          <button class="sbtn ghost" id="jeoReset">Reset board</button>
+        <div><h2 id="jeoTitle">Jeopardy</h2><div class="roundlabel" id="jeoRoundLabel"></div></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button class="sbtn" id="jeoNext">Next Round</button>
+          <button class="sbtn ghost" id="jeoReset">Restart</button>
           <button class="sbtn ghost" id="jeoChoose">Other boards</button>
         </div>
       </div>
       <div class="jeogrid" id="jeoGrid"></div>
+      <div class="jeofinalintro hidden" id="jeoFinalIntro"></div>
     </div>
   </div>
 
@@ -308,8 +317,11 @@
 
     <div class="card">
       <h2>&#127942; Jeopardy &mdash; build a board</h2>
-      <p class="hint">One clue per line: <code>Category | value | question | answer</code>. Lines with the same category stack into a column, sorted by value.<br>
-        <code>Old Testament | 100 | Who built the ark? | Noah</code></p>
+      <p class="hint">One clue per line. Start each line with the round: <code>S</code> = Jeopardy, <code>D</code> = Double Jeopardy, <code>F</code> = Final. A random Daily Double is hidden each game (2 in the Double round).<br>
+        <code>S | Old Testament | 100 | Who built the ark? | Noah</code><br>
+        <code>D | Kings | 200 | Who was the first king of Israel? | Saul</code><br>
+        <code>F | The Gospel | What must you do to be saved? | Believe in Jesus</code><br>
+        Leaving off <code>S/D/F</code> is treated as a single Jeopardy round.</p>
       <label class="fld">Board title</label>
       <input type="text" id="jTitle" placeholder="e.g. Bible Basics">
       <label class="fld">Paste clues</label>
@@ -351,18 +363,9 @@
   </div>
 </div>
 
-<!-- jeopardy clue overlay -->
+<!-- jeopardy overlay -->
 <div class="overlay" id="jeoOverlay">
-  <div class="jeoclue">
-    <div class="cat" id="jeoClueCat"></div>
-    <div class="q" id="jeoClueQ"></div>
-    <div class="a hidden" id="jeoClueA"></div>
-    <div class="foot">
-      <button class="btn gold big" id="jeoReveal" style="max-width:none;">Reveal Answer</button>
-      <div class="awardbar" id="jeoAward"></div>
-      <button class="sbtn ghost" id="jeoSkip">Close (no one got it)</button>
-    </div>
-  </div>
+  <div class="jeoclue" id="jeoCard"></div>
 </div>
 
 <canvas id="confetti"></canvas>
@@ -397,11 +400,12 @@ function load(){
   ensureArrays();
   if(applyDefaults())save();
 }
-const DEFAULTS_VERSION=2;
+const DEFAULTS_VERSION=3;
 function applyDefaults(){
   const applied=state.defaultsVersion||0;
   if(applied>=DEFAULTS_VERSION)return false;
   state.questions=state.questions.filter(q=>q.week!=="Sample questions (delete me)");
+  if(applied<3)state.jeopardy=state.jeopardy.filter(b=>b.id!=="jb-bible-basics");
   const addBy=(arr,defs)=>{const have=new Set(arr.map(x=>x.id));defs.forEach(x=>{if(!have.has(x.id))arr.push(JSON.parse(JSON.stringify(x)));});};
   addBy(state.questions,DEFAULT_QUESTIONS);
   addBy(state.whoami,DEFAULT_WHOAMI);
@@ -561,35 +565,120 @@ function whoNav(d){const n=whoPlay.index+d;if(n>=0&&n<whoPlay.order.length){whoP
 $("whoNextClue").onclick=whoNextClue;$("whoReveal").onclick=doWhoReveal;$("whoPrev").onclick=()=>whoNav(-1);$("whoNext").onclick=()=>whoNav(1);
 
 /* ==================== JEOPARDY ==================== */
-let jeoPlay={boardId:null,used:{},openKey:null};
+let jeoPlay={boardId:null,round:"single",used:{},dd:{},openKey:null,ddTeam:null,ddWager:0,finalWagers:[]};
+function boardRounds(b){if(b.single||b.double||b.final)return{single:b.single||[],double:b.double||[],final:b.final||null};return{single:b.categories||[],double:[],final:null};}
+function curBoard(){return state.jeopardy.find(b=>b.id===jeoPlay.boardId)||null;}
+function roundList(b){const r=boardRounds(b);const l=["single"];if(r.double.length)l.push("double");if(r.final)l.push("final");return l;}
+function roundCats(){const r=boardRounds(curBoard());return jeoPlay.round==="double"?r.double:r.single;}
+function roundMaxValue(){let m=0;roundCats().forEach(c=>c.clues.forEach(cl=>{if(cl.value>m)m=cl.value;}));return m||500;}
 function enterJeopardy(){if(!state.jeopardy.length||state.jeopardy.length>1)showJeoPicker();else loadBoard(state.jeopardy[0].id);}
-function showJeoPicker(){jeoPlay.boardId=null;$("jeoPicker").classList.remove("hidden");$("jeoBoardWrap").classList.add("hidden");
+function showJeoPicker(){jeoPlay.boardId=null;$("jeoOverlay").classList.remove("show");$("jeoPicker").classList.remove("hidden");$("jeoBoardWrap").classList.add("hidden");
   const list=$("jeoPickList");list.innerHTML="";
   if(!state.jeopardy.length){list.innerHTML=`<div class="empty">No boards yet — build one in Setup.</div>`;return;}
   state.jeopardy.forEach(b=>{const btn=document.createElement("button");btn.className="jeopick";btn.textContent=b.title;btn.onclick=()=>loadBoard(b.id);list.appendChild(btn);});
 }
-function curBoard(){return state.jeopardy.find(b=>b.id===jeoPlay.boardId)||null;}
-function loadBoard(id){jeoPlay.boardId=id;jeoPlay.used={};jeoPlay.openKey=null;$("jeoPicker").classList.add("hidden");$("jeoBoardWrap").classList.remove("hidden");renderBoard();}
-function renderBoard(){
-  const b=curBoard();if(!b)return;$("jeoTitle").textContent=b.title;
-  const grid=$("jeoGrid");grid.style.gridTemplateColumns=`repeat(${b.categories.length},1fr)`;grid.innerHTML="";
-  b.categories.forEach(c=>{const h=document.createElement("div");h.className="jeohead";h.textContent=c.name;grid.appendChild(h);});
-  const rows=Math.max.apply(null,b.categories.map(c=>c.clues.length));
-  for(let r=0;r<rows;r++)b.categories.forEach((c,ci)=>{const clue=c.clues[r];const cell=document.createElement("button");cell.className="jeocell";
+function loadBoard(id){jeoPlay.boardId=id;jeoPlay.used={};jeoPlay.dd={};jeoPlay.round="single";jeoPlay.openKey=null;$("jeoOverlay").classList.remove("show");$("jeoPicker").classList.add("hidden");$("jeoBoardWrap").classList.remove("hidden");genDD("single");renderRound();}
+function genDD(round){if(jeoPlay.dd[round])return;const r=boardRounds(curBoard());const cats=round==="double"?r.double:r.single;const tiles=[];cats.forEach((c,ci)=>c.clues.forEach((cl,ri)=>tiles.push(ci+"-"+ri)));const count=round==="double"?2:1;const picks=[];for(let k=0;k<count&&tiles.length;k++){const idx=Math.floor(Math.random()*tiles.length);picks.push(tiles.splice(idx,1)[0]);}jeoPlay.dd[round]=picks;}
+function isDD(ci,ri){return (jeoPlay.dd[jeoPlay.round]||[]).indexOf(ci+"-"+ri)>=0;}
+function renderRound(){
+  const b=curBoard();if(!b)return;const r=boardRounds(b);$("jeoTitle").textContent=b.title;
+  const labels={single:"Round 1 \u2014 Jeopardy",double:"Round 2 \u2014 Double Jeopardy",final:"Final Jeopardy"};
+  $("jeoRoundLabel").textContent=labels[jeoPlay.round];
+  const rl=roundList(b),idx=rl.indexOf(jeoPlay.round),nb=$("jeoNext");
+  if(idx<rl.length-1){const nxt=rl[idx+1];nb.classList.remove("hidden");nb.textContent=(nxt==="double"?"Double Jeopardy":"Final Jeopardy")+" \u2192";nb.onclick=()=>gotoRound(nxt);}else nb.classList.add("hidden");
+  if(jeoPlay.round==="final"){$("jeoGrid").classList.add("hidden");$("jeoFinalIntro").classList.remove("hidden");renderFinalIntro(r.final);}
+  else{$("jeoFinalIntro").classList.add("hidden");$("jeoGrid").classList.remove("hidden");renderGrid();}
+}
+function gotoRound(round){jeoPlay.round=round;if(round!=="final")genDD(round);renderRound();}
+function renderGrid(){
+  const cats=roundCats();const grid=$("jeoGrid");grid.style.gridTemplateColumns=`repeat(${cats.length||1},1fr)`;grid.innerHTML="";
+  cats.forEach(c=>{const h=document.createElement("div");h.className="jeohead";h.textContent=c.name;grid.appendChild(h);});
+  const rows=cats.length?Math.max.apply(null,cats.map(c=>c.clues.length)):0;
+  for(let ri=0;ri<rows;ri++)cats.forEach((c,ci)=>{const clue=c.clues[ri];const cell=document.createElement("button");cell.className="jeocell";
     if(!clue){cell.classList.add("blank");cell.disabled=true;}
-    else{const key=ci+"-"+r;if(jeoPlay.used[key]){cell.classList.add("done");cell.disabled=true;}else{cell.textContent=clue.value;cell.onclick=()=>openTile(ci,r);}}
+    else{const key=jeoPlay.round+"-"+ci+"-"+ri;if(jeoPlay.used[key]){cell.classList.add("done");cell.disabled=true;}else{cell.textContent=clue.value;cell.onclick=()=>openTile(ci,ri);}}
     grid.appendChild(cell);});
 }
-function openTile(ci,r){const b=curBoard();const clue=b.categories[ci].clues[r];jeoPlay.openKey=ci+"-"+r;AC();
-  $("jeoClueCat").textContent=b.categories[ci].name+" — "+clue.value;$("jeoClueQ").textContent=clue.q;
-  $("jeoClueA").textContent=clue.a;$("jeoClueA").classList.add("hidden");$("jeoReveal").classList.remove("hidden");$("jeoAward").classList.add("hidden");
-  teamAwardBar($("jeoAward"),i=>{award(i,clue.value);sCorrect();burstConfetti();closeTile(true);},"+"+clue.value+"  ");
-  $("jeoOverlay").classList.add("show");}
-function jeoRevealAnswer(){$("jeoClueA").classList.remove("hidden");$("jeoReveal").classList.add("hidden");$("jeoAward").classList.remove("hidden");sBlip();}
-function closeTile(markUsed){if(markUsed&&jeoPlay.openKey)jeoPlay.used[jeoPlay.openKey]=true;$("jeoOverlay").classList.remove("show");jeoPlay.openKey=null;renderBoard();}
-$("jeoReveal").onclick=jeoRevealAnswer;$("jeoSkip").onclick=()=>closeTile(true);
+function openTile(ci,ri){const cats=roundCats();const clue=cats[ci].clues[ri];jeoPlay.openKey=jeoPlay.round+"-"+ci+"-"+ri;AC();
+  if(isDD(ci,ri))renderDDsetup(cats[ci],clue);else renderNormal(cats[ci],clue);$("jeoOverlay").classList.add("show");}
+function markUsed(){if(jeoPlay.openKey)jeoPlay.used[jeoPlay.openKey]=true;}
+function closeTile(mk){if(mk)markUsed();$("jeoOverlay").classList.remove("show");jeoPlay.openKey=null;jeoPlay.ddTeam=null;jeoPlay.ddWager=0;renderRound();}
+function renderNormal(cat,clue){
+  $("jeoCard").innerHTML=`<div class="cat">${esc(cat.name)} \u2014 ${clue.value}</div><div class="q">${esc(clue.q)}</div><div class="a hidden" id="jeoA">${esc(clue.a)}</div>`+
+    `<div class="foot"><button class="btn gold big" id="jeoRevealBtn" style="max-width:none;">Reveal Answer</button><div class="awardbar hidden" id="jeoAwardBar"></div><button class="sbtn ghost" id="jeoSkipBtn">Close (no one got it)</button></div>`;
+  $("jeoRevealBtn").onclick=()=>{$("jeoA").classList.remove("hidden");$("jeoRevealBtn").classList.add("hidden");const bar=$("jeoAwardBar");bar.classList.remove("hidden");teamAwardBar(bar,i=>{award(i,clue.value);sCorrect();burstConfetti();closeTile(true);},"+"+clue.value+"  ");sBlip();};
+  $("jeoSkipBtn").onclick=()=>closeTile(true);
+}
+function renderDDsetup(cat,clue){
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);font-size:clamp(22px,3.4vw,44px);">\u2b50 DAILY DOUBLE!</div><div class="q" style="font-size:clamp(20px,2.6vw,36px);">Which team found it?</div><div class="awardbar" id="jeoDDteams"></div>`;
+  teamAwardBar($("jeoDDteams"),i=>{jeoPlay.ddTeam=i;jeoPlay.ddWager=0;renderDDwager(cat,clue);},"");
+}
+function renderDDwager(cat,clue){
+  const t=state.teams[jeoPlay.ddTeam],maxW=Math.max(roundMaxValue(),t.score);
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">\u2b50 DAILY DOUBLE \u2014 ${esc(t.name)}</div>`+
+    `<div class="q" style="font-size:clamp(18px,2.2vw,30px);">Decide your wager <b>before</b> the clue!</div>`+
+    `<div class="wager num" id="jeoWagerNum">0</div><div style="color:var(--muted);font-weight:700;margin-bottom:12px;">Max wager: ${fmt(maxW)}</div>`+
+    `<div class="fwrow" id="jeoWagerBtns"></div><div class="foot" style="margin-top:16px;"><button class="btn green big" id="jeoWagerGo" style="max-width:none;">Reveal the Clue \u25b6</button></div>`;
+  const setW=v=>{jeoPlay.ddWager=Math.max(0,Math.min(maxW,v));$("jeoWagerNum").textContent=fmt(jeoPlay.ddWager);};
+  const box=$("jeoWagerBtns"),mk=(l,f,c)=>{const b=document.createElement("button");b.className="minibtn"+(c?" "+c:"");b.textContent=l;b.onclick=f;return b;};
+  [["\u2212500",()=>setW(jeoPlay.ddWager-500)],["\u2212100",()=>setW(jeoPlay.ddWager-100)],["+100",()=>setW(jeoPlay.ddWager+100)],["+500",()=>setW(jeoPlay.ddWager+500)],["+1000",()=>setW(jeoPlay.ddWager+1000)]].forEach(a=>box.appendChild(mk(a[0],a[1])));
+  box.appendChild(mk("MAX",()=>setW(maxW),"max"));box.appendChild(mk("Clear",()=>setW(0)));setW(0);
+  $("jeoWagerGo").onclick=()=>renderDDclue(cat,clue);
+}
+function renderDDclue(cat,clue){
+  const t=state.teams[jeoPlay.ddTeam];
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">\u2b50 ${esc(t.name)} \u2022 Wager ${fmt(jeoPlay.ddWager)}</div><div class="q">${esc(clue.q)}</div><div class="a hidden" id="jeoA">${esc(clue.a)}</div>`+
+    `<div class="foot"><button class="btn gold big" id="jeoRevealBtn" style="max-width:none;">Reveal Answer</button><div class="awardbar hidden" id="jeoDDresult"></div></div>`;
+  $("jeoRevealBtn").onclick=()=>{$("jeoA").classList.remove("hidden");$("jeoRevealBtn").classList.add("hidden");const bar=$("jeoDDresult");bar.classList.remove("hidden");bar.innerHTML="";
+    const ok=document.createElement("button");ok.className="awardbtn";ok.style.setProperty("--tc","#34d399");ok.textContent="Correct  +"+fmt(jeoPlay.ddWager);ok.onclick=()=>{award(jeoPlay.ddTeam,jeoPlay.ddWager);sCorrect();burstConfetti();closeTile(true);};
+    const no=document.createElement("button");no.className="awardbtn";no.style.setProperty("--tc","#f87171");no.textContent="Wrong  \u2212"+fmt(jeoPlay.ddWager);no.onclick=()=>{award(jeoPlay.ddTeam,-jeoPlay.ddWager);sBuzzer();closeTile(true);};
+    bar.appendChild(ok);bar.appendChild(no);sBlip();};
+}
+function renderFinalIntro(final){
+  if(!final){$("jeoFinalIntro").innerHTML=`<div class="empty">This board has no Final Jeopardy.</div>`;return;}
+  $("jeoFinalIntro").innerHTML=`<div style="text-align:center;max-width:760px;"><div class="cat" style="color:var(--gold);font-size:clamp(22px,3.4vw,44px);margin-bottom:10px;">&#127942; FINAL JEOPARDY</div>`+
+    `<div style="font-weight:900;font-size:clamp(24px,3.4vw,48px);margin-bottom:10px;">Category: ${esc(final.category)}</div>`+
+    `<p style="color:var(--muted);font-weight:700;margin:0 auto 20px;">Each team secretly decides a wager (up to their own score). Then everyone answers the same clue.</p>`+
+    `<button class="btn gold big" id="jeoFinalStart" style="max-width:none;">Set Wagers \u25b6</button></div>`;
+  $("jeoFinalStart").onclick=()=>renderFinalWager(final);
+}
+function renderFinalWager(final){
+  jeoPlay.finalWagers=state.teams.map(()=>0);
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">&#127942; FINAL JEOPARDY \u2014 ${esc(final.category)}</div>`+
+    `<div class="q" style="font-size:clamp(18px,2.2vw,30px);">Set each team's wager (up to their score):</div>`+
+    `<div id="jeoFinalRows" style="display:flex;flex-direction:column;gap:12px;margin:16px 0;"></div>`+
+    `<div class="foot"><button class="btn green big" id="jeoFinalReveal" style="max-width:none;">Reveal the Clue \u25b6</button></div>`;
+  const rows=$("jeoFinalRows");
+  state.teams.forEach((t,i)=>{const max=Math.max(0,t.score);const row=document.createElement("div");row.className="fwrow";
+    const name=document.createElement("span");name.style.cssText="font-weight:900;min-width:110px;text-align:right;color:"+t.color;name.textContent=t.name;
+    const minus=document.createElement("button");minus.className="minibtn";minus.textContent="\u2212100";
+    const val=document.createElement("span");val.className="wtag num";val.textContent="0";
+    const plus=document.createElement("button");plus.className="minibtn";plus.textContent="+100";
+    const mx=document.createElement("button");mx.className="minibtn max";mx.textContent="MAX";
+    const cap=document.createElement("span");cap.style.cssText="color:var(--muted);font-weight:700;";cap.textContent="/ "+fmt(max);
+    const setW=v=>{jeoPlay.finalWagers[i]=Math.max(0,Math.min(max,v));val.textContent=fmt(jeoPlay.finalWagers[i]);};
+    minus.onclick=()=>setW(jeoPlay.finalWagers[i]-100);plus.onclick=()=>setW(jeoPlay.finalWagers[i]+100);mx.onclick=()=>setW(max);
+    [name,minus,val,plus,mx,cap].forEach(el=>row.appendChild(el));rows.appendChild(row);});
+  $("jeoFinalReveal").onclick=()=>renderFinalClue(final);
+  $("jeoOverlay").classList.add("show");
+}
+function renderFinalClue(final){
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">&#127942; FINAL JEOPARDY</div><div class="q">${esc(final.q)}</div><div class="a hidden" id="jeoA">${esc(final.a)}</div>`+
+    `<div class="foot"><button class="btn gold big" id="jeoRevealBtn" style="max-width:none;">Reveal Answer</button><div id="jeoFinalResults" class="hidden" style="display:flex;flex-direction:column;gap:12px;"></div><button class="sbtn ghost hidden" id="jeoFinalDone">Done</button></div>`;
+  $("jeoRevealBtn").onclick=()=>{$("jeoA").classList.remove("hidden");$("jeoRevealBtn").classList.add("hidden");const res=$("jeoFinalResults");res.classList.remove("hidden");res.innerHTML="";
+    state.teams.forEach((t,i)=>{const w=jeoPlay.finalWagers[i]||0;const row=document.createElement("div");row.className="fwrow";
+      const name=document.createElement("span");name.style.cssText="font-weight:900;min-width:130px;text-align:right;color:"+t.color;name.textContent=t.name+" ("+fmt(w)+")";
+      const ok=document.createElement("button");ok.className="awardbtn";ok.style.setProperty("--tc","#34d399");ok.textContent="Correct +"+fmt(w);
+      const no=document.createElement("button");no.className="awardbtn";no.style.setProperty("--tc","#f87171");no.textContent="Wrong \u2212"+fmt(w);
+      let done=false;
+      ok.onclick=()=>{if(done)return;done=true;award(i,w);sCorrect();no.disabled=true;no.style.opacity=".3";ok.style.filter="brightness(1.3)";};
+      no.onclick=()=>{if(done)return;done=true;award(i,-w);sBlip();ok.disabled=true;ok.style.opacity=".3";no.style.filter="brightness(1.3)";};
+      [name,ok,no].forEach(el=>row.appendChild(el));res.appendChild(row);});
+    const done=$("jeoFinalDone");done.classList.remove("hidden");done.onclick=()=>{$("jeoOverlay").classList.remove("show");burstConfetti();};sBlip();};
+  $("jeoOverlay").classList.add("show");
+}
 $("jeoOverlay").onclick=e=>{if(e.target===$("jeoOverlay"))closeTile(false);};
-$("jeoReset").onclick=()=>{jeoPlay.used={};renderBoard();};
+$("jeoReset").onclick=()=>{jeoPlay.used={};jeoPlay.dd={};jeoPlay.round="single";jeoPlay.openKey=null;$("jeoOverlay").classList.remove("show");genDD("single");renderRound();};
 $("jeoChoose").onclick=showJeoPicker;
 
 /* ==================== CONFETTI / EFFECTS ==================== */
@@ -657,23 +746,31 @@ function renderWList(){const list=$("wList");list.innerHTML="";if(!state.whoami.
     list.appendChild(box);});}
 
 /* jeopardy parse */
-function parseJeo(raw){const map={},cats=[],errors=[];raw.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;
-  const p=t.split("|").map(s=>s.trim());if(p.length<4){errors.push(`Line ${i+1}: need Category | value | question | answer`);return;}
-  const name=p[0],value=parseInt(p[1],10),q=p[2],a=p.slice(3).join("|").trim();
-  if(!name||isNaN(value)||!q||!a){errors.push(`Line ${i+1}: check the fields`);return;}
-  if(!map[name]){map[name]={name,clues:[]};cats.push(map[name]);}map[name].clues.push({value,q,a});});
-  cats.forEach(c=>c.clues.sort((x,y)=>x.value-y.value));return{categories:cats,errors};}
-$("jAddBoard").onclick=()=>{const title=$("jTitle").value.trim()||"Untitled board";const{categories,errors}=parseJeo($("jPaste").value);const r=$("jParse");r.innerHTML="";
-  if(categories.length){state.jeopardy.push({id:uid(),title,categories});save();const n=categories.reduce((s,c)=>s+c.clues.length,0);r.innerHTML=`<span class="ok">&#10004; Built "${esc(title)}" — ${categories.length} categories, ${n} clues.</span>`;$("jPaste").value="";$("jTitle").value="";renderJList();renderHub();}
+function normRound(s){s=(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");if(["s","single","round1","r1","1","j","jeopardy"].indexOf(s)>=0)return"single";if(["d","double","round2","r2","2","dj","doublejeopardy"].indexOf(s)>=0)return"double";if(["f","final","round3","r3","3","fj","finaljeopardy"].indexOf(s)>=0)return"final";return null;}
+function parseJeo(raw){const R={single:{m:{},c:[]},double:{m:{},c:[]}};let final=null;const errors=[];
+  raw.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;
+    const p=t.split("|").map(s=>s.trim());let round=normRound(p[0]),fields;
+    if(round){fields=p.slice(1);}else{round="single";fields=p;}
+    if(round==="final"){const cat=fields[0]||"Final Jeopardy",q=fields[1]||"",a=fields.slice(2).join("|").trim();if(!q||!a){errors.push(`Line ${i+1}: Final needs  F | Category | question | answer`);return;}if(!final)final={category:cat,q,a};return;}
+    const name=fields[0],value=parseInt(fields[1],10),q=fields[2],a=fields.slice(3).join("|").trim();
+    if(!name||isNaN(value)||!q||!a){errors.push(`Line ${i+1}: need Category | value | question | answer`);return;}
+    const G=R[round];if(!G.m[name]){G.m[name]={name,clues:[]};G.c.push(G.m[name]);}G.m[name].clues.push({value,q,a});});
+  R.single.c.forEach(c=>c.clues.sort((a,b)=>a.value-b.value));R.double.c.forEach(c=>c.clues.sort((a,b)=>a.value-b.value));
+  return{single:R.single.c,double:R.double.c,final,errors};}
+$("jAddBoard").onclick=()=>{const title=$("jTitle").value.trim()||"Untitled board";const{single,double,final,errors}=parseJeo($("jPaste").value);const r=$("jParse");r.innerHTML="";
+  if(single.length||double.length||final){state.jeopardy.push({id:uid(),title,single,double,final});save();const sc=single.reduce((s,c)=>s+c.clues.length,0),dc=double.reduce((s,c)=>s+c.clues.length,0);
+    r.innerHTML=`<span class="ok">&#10004; Built "${esc(title)}" — Jeopardy ${sc} clues${double.length?", Double "+dc+" clues":""}${final?", Final \u2713":""}.</span>`;$("jPaste").value="";$("jTitle").value="";renderJList();renderHub();}
   if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
-  if(!categories.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+  if(!single.length&&!double.length&&!final&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
 $("jClearPaste").onclick=()=>{$("jPaste").value="";$("jParse").innerHTML="";};
 function renderJList(){const list=$("jList");list.innerHTML="";if(!state.jeopardy.length){list.innerHTML=`<div class="empty">No boards yet.</div>`;return;}
-  state.jeopardy.forEach(b=>{const box=document.createElement("div");box.className="listweek";const n=b.categories.reduce((s,c)=>s+c.clues.length,0);
-    const head=document.createElement("h3");head.innerHTML=`<span>${esc(b.title)} <span style="color:var(--muted);font-weight:600;">(${b.categories.length} cats, ${n} clues)</span></span>`;
+  state.jeopardy.forEach(b=>{const box=document.createElement("div");box.className="listweek";const r=boardRounds(b);
+    const sc=r.single.reduce((s,c)=>s+c.clues.length,0),dc=r.double.reduce((s,c)=>s+c.clues.length,0);
+    const parts=[`Jeopardy: ${r.single.length} cats / ${sc} clues`];if(r.double.length)parts.push(`Double: ${r.double.length} cats / ${dc} clues`);if(r.final)parts.push("Final \u2713");
+    const head=document.createElement("h3");head.innerHTML=`<span>${esc(b.title)}</span>`;
     const del=document.createElement("button");del.className="xbtn";del.textContent="Delete board";del.onclick=()=>{if(confirm(`Delete board "${b.title}"?`)){state.jeopardy=state.jeopardy.filter(o=>o.id!==b.id);save();renderJList();renderHub();}};
     head.appendChild(del);box.appendChild(head);
-    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">Categories: ${b.categories.map(c=>esc(c.name)).join(", ")}</div>`;box.appendChild(it);list.appendChild(box);});}
+    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">${parts.join(" &bull; ")}</div>`;box.appendChild(it);list.appendChild(box);});}
 
 /* settings */
 $("setTimer").onchange=e=>{let v=Math.max(3,Math.min(120,+e.target.value||10));state.settings.timerSeconds=v;e.target.value=v;save();resetTimerDisplay();};
@@ -784,33 +881,73 @@ const DEFAULT_WHOAMI=[
 {id:"wa-06",week:"Bible Heroes",subject:"Peter",clues:["I was a fisherman before I followed Jesus.","Jesus said I would become a fisher of men.","I walked on water toward Jesus, then began to sink.","On the night Jesus was arrested, I denied him three times.","I preached at Pentecost and three thousand were saved."]}
 ];
 const DEFAULT_JEOPARDY=[
-{id:"jb-bible-basics",title:"Bible Basics",categories:[
+{id:"jb-bible-basics-v3",title:"Bible Basics",
+single:[
 {name:"Old Testament",clues:[
 {value:100,q:"Who built an ark to survive the flood?",a:"Noah"},
 {value:200,q:"Who led the Israelites out of Egypt?",a:"Moses"},
 {value:300,q:"Who was thrown into the lions' den but wasn't harmed?",a:"Daniel"},
-{value:400,q:"What did God create on the very first day?",a:"Light"}]},
+{value:400,q:"What did God create on the very first day?",a:"Light"},
+{value:500,q:"Which strong man lost his strength when his hair was cut?",a:"Samson"}]},
 {name:"New Testament",clues:[
 {value:100,q:"In what town was Jesus born?",a:"Bethlehem"},
 {value:200,q:"Who baptized Jesus in the Jordan River?",a:"John the Baptist"},
 {value:300,q:"How many disciples did Jesus choose?",a:"Twelve"},
-{value:400,q:"Which disciple denied Jesus three times?",a:"Peter"}]},
+{value:400,q:"Which disciple denied Jesus three times?",a:"Peter"},
+{value:500,q:"Who met Jesus on the Damascus road and wrote many letters?",a:"Paul"}]},
 {name:"Miracles of Jesus",clues:[
 {value:100,q:"Jesus turned water into what at a wedding?",a:"Wine"},
 {value:200,q:"Jesus fed 5,000 with five loaves and two of these.",a:"Fish"},
 {value:300,q:"Jesus calmed a storm on what body of water?",a:"The Sea of Galilee"},
-{value:400,q:"Jesus raised this man from the dead after four days.",a:"Lazarus"}]},
+{value:400,q:"Jesus raised this man from the dead after four days.",a:"Lazarus"},
+{value:500,q:"Jesus healed a blind man who then washed in this pool.",a:"The pool of Siloam"}]},
 {name:"Animals & Nature",clues:[
 {value:100,q:"What kind of animal swallowed Jonah?",a:"A great fish"},
 {value:200,q:"What animal did Jesus ride into Jerusalem?",a:"A donkey"},
 {value:300,q:"What sign did God put in the sky after the flood?",a:"A rainbow"},
-{value:400,q:"In the garden of Eden, what creature tempted Eve?",a:"The serpent (snake)"}]},
+{value:400,q:"In the garden of Eden, what creature tempted Eve?",a:"The serpent (snake)"},
+{value:500,q:"God provided this animal in a thicket so Abraham wouldn't sacrifice Isaac.",a:"A ram"}]},
 {name:"Bible Numbers",clues:[
 {value:100,q:"How many days and nights did it rain in Noah's flood?",a:"40"},
 {value:200,q:"How many people did Jesus feed with the loaves and fish?",a:"5,000"},
 {value:300,q:"On which day did God rest from creating?",a:"The seventh day"},
-{value:400,q:"How many books are in the whole Bible?",a:"66"}]}
-]}
+{value:400,q:"How many books are in the whole Bible?",a:"66"},
+{value:500,q:"How many commandments did God give Moses on the mountain?",a:"Ten"}]}
+],
+double:[
+{name:"Kings of Israel",clues:[
+{value:200,q:"Who was the first king of Israel?",a:"Saul"},
+{value:400,q:"Which shepherd boy became king after defeating Goliath?",a:"David"},
+{value:600,q:"Who was the wisest king, the son of David?",a:"Solomon"},
+{value:800,q:"What did Solomon build for God in Jerusalem?",a:"The temple"},
+{value:1000,q:"Which queen visited Solomon to test his wisdom?",a:"The Queen of Sheba"}]},
+{name:"Parables of Jesus",clues:[
+{value:200,q:"A shepherd left 99 sheep to find how many lost ones?",a:"One"},
+{value:400,q:"A father joyfully welcomed home his lost (prodigal) what?",a:"Son"},
+{value:600,q:"A beaten man was helped by a 'Good' man from what region?",a:"Samaria (the Good Samaritan)"},
+{value:800,q:"In the parable of the sower, the best seed fell on this kind of soil.",a:"Good soil"},
+{value:1000,q:"The wise man built his house on rock instead of this.",a:"Sand"}]},
+{name:"Words of Jesus",clues:[
+{value:200,q:"'I am the ___ of the world,' said Jesus.",a:"Light"},
+{value:400,q:"'I am the good ___,' who lays down his life for the sheep.",a:"Shepherd"},
+{value:600,q:"'I am the ___ of life; whoever comes to me shall not hunger.'",a:"Bread"},
+{value:800,q:"Jesus said to love God and love your ___ as yourself.",a:"Neighbor"},
+{value:1000,q:"'I am the way, and the truth, and the ___.'",a:"Life"}]},
+{name:"Bible Places",clues:[
+{value:200,q:"In what garden did Jesus pray the night he was arrested?",a:"Gethsemane"},
+{value:400,q:"At what place, 'the place of a skull,' was Jesus crucified?",a:"Golgotha (Calvary)"},
+{value:600,q:"In what city did the Holy Spirit come at Pentecost?",a:"Jerusalem"},
+{value:800,q:"In what Galilean town did Jesus grow up?",a:"Nazareth"},
+{value:1000,q:"On what mountain did Moses receive the Ten Commandments?",a:"Mount Sinai"}]},
+{name:"People of Faith",clues:[
+{value:200,q:"Who was the mother of Jesus?",a:"Mary"},
+{value:400,q:"Which brother of Moses became the first high priest?",a:"Aaron"},
+{value:600,q:"Who interpreted Pharaoh's dreams and saved Egypt from famine?",a:"Joseph"},
+{value:800,q:"Which woman of Jericho hid the Israelite spies?",a:"Rahab"},
+{value:1000,q:"Which short tax collector climbed a sycamore tree to see Jesus?",a:"Zacchaeus"}]}
+],
+final:{category:"The Gospel",q:"According to John 3:16, God gave his only Son so that whoever believes in him should not perish but have this.",a:"Eternal life (everlasting life)"}
+}
 ];
 
 /* ==================== INIT ==================== */
