@@ -338,27 +338,105 @@ const LETTERS=["A","B","C","D","E","F"];
 let state={
   questions:[],
   teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0}],
-  settings:{timerSeconds:10,order:"sequential",sound:true},
+  settings:{timerSeconds:10,order:"shuffle",sound:true},
 };
-let play={index:0,order:[],phase:"idle",timeLeft:0,handle:null,openTeam:null};
+let play={index:0,order:[],phase:"idle",timeLeft:0,handle:null,openTeam:null,shuffleMap:{}};
 
 function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
 function load(){
   try{const d=JSON.parse(localStorage.getItem(LS));
     if(d&&d.questions){state=Object.assign(state,d);
-      state.settings=Object.assign({timerSeconds:10,order:"sequential",sound:true},d.settings||{});}
+      state.settings=Object.assign({timerSeconds:10,order:"shuffle",sound:true},d.settings||{});}
   }catch(e){}
-  if(!state.questions.length) seedSamples();
+  if(applyDefaults())save();
 }
-function seedSamples(){
-  const w="Sample questions (delete me)";
-  state.questions=[
-    {id:uid(),type:"mc",text:"Who led the Israelites out of Egypt?",choices:["Moses","David","Noah","Paul"],correct:[0],week:w},
-    {id:uid(),type:"tf",text:"David defeated Goliath with a sling and a stone.",choices:["True","False"],correct:[0],week:w},
-    {id:uid(),type:"fb",text:"Jesus fed the crowd with 5 loaves and 2 ___.",answers:["fish","fishes"],week:w},
-    {id:uid(),type:"mc",text:"How many days did God take to create the world (resting on the 7th)?",choices:["7","6","3","40"],correct:[1],week:w},
-  ];
+const DEFAULTS_VERSION=1;
+function applyDefaults(){
+  const applied=state.defaultsVersion||0;
+  if(applied>=DEFAULTS_VERSION)return false;
+  state.questions=state.questions.filter(q=>q.week!=="Sample questions (delete me)");
+  const have=new Set(state.questions.map(q=>q.id));
+  DEFAULT_QUESTIONS.forEach(q=>{if(!have.has(q.id))state.questions.push(JSON.parse(JSON.stringify(q)));});
+  state.defaultsVersion=DEFAULTS_VERSION;
+  return true;
 }
+const DEFAULT_QUESTIONS=[
+{id:"a1-01",type:"mc",week:"Acts 1",text:"Who does the writer address at the start of Acts?",choices:["Theophilus","Timothy","Titus","Thomas"],correct:[0]},
+{id:"a1-02",type:"mc",week:"Acts 1",text:"Acts 1:1 says the \"first book\" told all that Jesus began to do and to...",choices:["teach","build","destroy","sail"],correct:[0]},
+{id:"a1-03",type:"mc",week:"Acts 1",text:"For how many days did Jesus appear to the apostles after his suffering?",choices:["40 days","3 days","7 days","12 days"],correct:[0]},
+{id:"a1-04",type:"mc",week:"Acts 1",text:"Jesus spoke to the apostles about the kingdom of...",choices:["God","Rome","David","Egypt"],correct:[0]},
+{id:"a1-05",type:"tf",week:"Acts 1",text:"Jesus told the apostles to leave Jerusalem right away.",choices:["True","False"],correct:[1]},
+{id:"a1-06",type:"mc",week:"Acts 1",text:"What were the apostles told to wait for in Jerusalem?",choices:["The promise of the Father","A new king","A pile of gold","A ship"],correct:[0]},
+{id:"a1-07",type:"mc",week:"Acts 1",text:"\"John baptized with water, but you will be baptized with the ___.\"",choices:["Holy Spirit","fire only","oil","rain"],correct:[0]},
+{id:"a1-08",type:"tf",week:"Acts 1",text:"The apostles asked Jesus if He would restore the kingdom to Israel.",choices:["True","False"],correct:[0]},
+{id:"a1-09",type:"mc",week:"Acts 1",text:"Jesus said the times and seasons are fixed by whose authority?",choices:["The Father's","The angels'","Their own","Caesar's"],correct:[0]},
+{id:"a1-10",type:"mc",week:"Acts 1",text:"The apostles would receive power when what came upon them?",choices:["The Holy Spirit","An army","Great riches","A crown"],correct:[0]},
+{id:"a1-11",type:"fb",week:"Acts 1",text:"\"You will be my ___ in Jerusalem and in all Judea and Samaria.\"",answers:["witnesses","my witnesses"]},
+{id:"a1-12",type:"mc",week:"Acts 1",text:"The witnesses would go to Jerusalem, Judea, Samaria, and to the...",choices:["end of the earth","top of the mountain","Jordan River","temple gate"],correct:[0]},
+{id:"a1-13",type:"mc",week:"Acts 1",text:"How did Jesus leave the earth in Acts 1:9?",choices:["A cloud took Him up","He walked away","A chariot of fire","He left at night"],correct:[0]},
+{id:"a1-14",type:"tf",week:"Acts 1",text:"Two men in white robes appeared as the apostles gazed into heaven.",choices:["True","False"],correct:[0]},
+{id:"a1-15",type:"mc",week:"Acts 1",text:"What did the two men call the apostles?",choices:["Men of Galilee","Men of Judea","Sons of Thunder","Friends of Rome"],correct:[0]},
+{id:"a1-16",type:"mc",week:"Acts 1",text:"The two men said Jesus would come back in what way?",choices:["The same way He went into heaven","As a baby again","As a roaring lion","In total secret"],correct:[0]},
+{id:"a1-17",type:"mc",week:"Acts 1",text:"From which mount did the apostles return to Jerusalem?",choices:["Olivet (Mount of Olives)","Mount Sinai","Mount Zion","Mount Carmel"],correct:[0]},
+{id:"a1-18",type:"fb",week:"Acts 1",text:"The trip back to Jerusalem was a \"___ day's journey\" away.",answers:["Sabbath"]},
+{id:"a1-19",type:"mc",week:"Acts 1",text:"Where did the apostles gather and stay to pray?",choices:["The upper room","The temple courts","A fishing boat","A cave"],correct:[0]},
+{id:"a1-20",type:"mc",week:"Acts 1",text:"Who is named as praying with the apostles?",choices:["Mary, the mother of Jesus","Pontius Pilate","John the Baptist","King Herod"],correct:[0]},
+{id:"a1-21",type:"mc",week:"Acts 1",text:"About how many people were gathered together?",choices:["About 120","About 12","About 500","About 5,000"],correct:[0]},
+{id:"a1-22",type:"mc",week:"Acts 1",text:"Who stood up among the brothers to speak?",choices:["Peter","James","Paul","Andrew"],correct:[0]},
+{id:"a1-23",type:"mc",week:"Acts 1",text:"What was the field connected to Judas called?",choices:["Field of Blood (Akeldama)","Field of Peace","Field of Bones","Garden of Eden"],correct:[0]},
+{id:"a1-24",type:"tf",week:"Acts 1",text:"The apostles picked the new apostle by a show of hands.",choices:["True","False"],correct:[1]},
+{id:"a1-25",type:"mc",week:"Acts 1",text:"Who was chosen to replace Judas among the Twelve?",choices:["Matthias","Barsabbas (Justus)","Stephen","Barnabas"],correct:[0]},
+{id:"a2-01",type:"mc",week:"Acts 2",text:"On what day did the Holy Spirit come upon the believers?",choices:["Passover","Pentecost","The Sabbath","Christmas"],correct:[1]},
+{id:"a2-02",type:"mc",week:"Acts 2",text:"What did the sound from heaven sound like?",choices:["A mighty rushing wind","A trumpet blast","Rolling thunder","A quiet whisper"],correct:[0]},
+{id:"a2-03",type:"mc",week:"Acts 2",text:"What appeared and rested on each believer?",choices:["Bright clouds","Golden crowns","Tongues as of fire","White doves"],correct:[2]},
+{id:"a2-04",type:"mc",week:"Acts 2",text:"What were the believers suddenly able to do?",choices:["Become invisible","Heal every sickness","Speak in other languages","Walk on water"],correct:[2]},
+{id:"a2-05",type:"mc",week:"Acts 2",text:"Who stood up and preached to the crowd?",choices:["John","James","Paul","Peter"],correct:[3]},
+{id:"a2-06",type:"fb",week:"Acts 2",text:"About how many people were added to the church that day?",answers:["3000","3,000","three thousand","about three thousand"]},
+{id:"a2-07",type:"tf",week:"Acts 2",text:"The believers shared what they owned with one another.",choices:["True","False"],correct:[0]},
+{id:"a2-08",type:"tf",week:"Acts 2",text:"Peter agreed that the believers were drunk on wine.",choices:["True","False"],correct:[1]},
+{id:"a2-09",type:"mc",week:"Acts 2",text:"What time did Peter say it was, proving they weren't drunk?",choices:["Noon","The third hour (9 a.m.)","The sixth hour","Midnight"],correct:[1]},
+{id:"a2-10",type:"mc",week:"Acts 2",text:"Which prophet did Peter quote about God pouring out His Spirit?",choices:["Isaiah","Daniel","Joel","Jeremiah"],correct:[2]},
+{id:"a2-11",type:"fb",week:"Acts 2",text:"\"Everyone who calls upon the name of the ___ shall be saved.\"",answers:["Lord"]},
+{id:"a2-12",type:"mc",week:"Acts 2",text:"What two things did Peter tell the crowd to do?",choices:["Fast and pray","Repent and be baptized","Give away money","Travel to Rome"],correct:[1]},
+{id:"a2-13",type:"fb",week:"Acts 2",text:"Those who repented would receive the gift of the ___ ___.",answers:["Holy Spirit"]},
+{id:"a2-14",type:"mc",week:"Acts 2",text:"When the crowd heard Peter's message, they were \"cut to the ___.\"",choices:["bone","core","heart","quick"],correct:[2]},
+{id:"a2-15",type:"mc",week:"Acts 2",text:"Peter said God has made Jesus both Lord and ___.",choices:["Christ","King","Priest","Judge"],correct:[0]},
+{id:"a2-16",type:"fb",week:"Acts 2",text:"They devoted themselves to teaching, fellowship, breaking of bread, and the ___.",answers:["prayers","prayer","the prayers"]},
+{id:"a2-17",type:"tf",week:"Acts 2",text:"Day by day the Lord added to their number those being saved.",choices:["True","False"],correct:[0]},
+{id:"a2-18",type:"mc",week:"Acts 2",text:"Some mocked, saying the believers were filled with what?",choices:["Fear","New wine","Pride","Anger"],correct:[1]},
+{id:"a2-19",type:"mc",week:"Acts 2",text:"The crowd was amazed the speakers came from which region?",choices:["Rome","Egypt","Samaria","Galilee"],correct:[3]},
+{id:"a2-20",type:"fb",week:"Acts 2",text:"Jesus was delivered up by the definite plan and ___ of God.",answers:["foreknowledge"]},
+{id:"a2-21",type:"mc",week:"Acts 2",text:"Whose tomb did Peter say was still with them that day?",choices:["Moses'","David's","Abraham's","Elijah's"],correct:[1]},
+{id:"a2-22",type:"fb",week:"Acts 2",text:"Peter quoted, \"The Lord said to my Lord, sit at my ___ hand.\"",answers:["right"]},
+{id:"a2-23",type:"fb",week:"Acts 2",text:"Peter urged them, \"Save yourselves from this ___ generation.\"",answers:["crooked"]},
+{id:"a2-24",type:"fb",week:"Acts 2",text:"\"The promise is for you and for your ___ and for all who are far off.\"",answers:["children"]},
+{id:"a2-25",type:"mc",week:"Acts 2",text:"Where did the believers gather together day by day?",choices:["In the temple","In a boat","In the desert","In prison"],correct:[0]},
+{id:"gb-01",type:"mc",week:"Gospel Basics",text:"\"For God so loved the world, that he gave his only ___.\"",choices:["angel","Son","prophet","servant"],correct:[1]},
+{id:"gb-02",type:"fb",week:"Gospel Basics",text:"Jesus told Nicodemus, \"You must be born ___.\"",answers:["again","anew"]},
+{id:"gb-03",type:"mc",week:"Gospel Basics",text:"In what town was Jesus born?",choices:["Nazareth","Jerusalem","Bethlehem","Capernaum"],correct:[2]},
+{id:"gb-04",type:"mc",week:"Gospel Basics",text:"Jesus said, \"I am the way, and the truth, and the ___.\"",choices:["light","door","bread","life"],correct:[3]},
+{id:"gb-05",type:"tf",week:"Gospel Basics",text:"Jesus rose from the dead on the third day.",choices:["True","False"],correct:[0]},
+{id:"gb-06",type:"mc",week:"Gospel Basics",text:"Who baptized Jesus in the Jordan River?",choices:["Peter","John the Baptist","Elijah","Moses"],correct:[1]},
+{id:"gb-07",type:"mc",week:"Gospel Basics",text:"\"No one comes to the Father except through ___.\"",choices:["Moses","the temple","me (Jesus)","the law"],correct:[2]},
+{id:"gb-08",type:"mc",week:"Gospel Basics",text:"How many disciples did Jesus choose?",choices:["Seven","Twelve","Ten","Three"],correct:[1]},
+{id:"gb-09",type:"mc",week:"Gospel Basics",text:"John called Jesus \"the ___ of God, who takes away the sin of the world.\"",choices:["Lion","Son","Lamb","Bread"],correct:[2]},
+{id:"gb-10",type:"fb",week:"Gospel Basics",text:"The shortest verse in the Bible says, \"Jesus ___.\"",answers:["wept"]},
+{id:"gb-11",type:"mc",week:"Gospel Basics",text:"Jesus said the Son of Man came to seek and to save the ___.",choices:["strong","proud","rich","lost"],correct:[3]},
+{id:"gb-12",type:"mc",week:"Gospel Basics",text:"Who betrayed Jesus to the authorities?",choices:["Thomas","Judas","Andrew","Philip"],correct:[1]},
+{id:"gb-13",type:"mc",week:"Gospel Basics",text:"What was Jesus' first miracle?",choices:["Feeding the 5,000","Walking on water","Turning water into wine","Calming a storm"],correct:[2]},
+{id:"gb-14",type:"mc",week:"Gospel Basics",text:"Asked who Jesus was, Peter answered, \"You are the ___.\"",choices:["teacher","prophet","Christ","healer"],correct:[2]},
+{id:"gb-15",type:"fb",week:"Gospel Basics",text:"Jesus began preaching, \"Repent, for the kingdom of heaven is at ___.\"",answers:["hand"]},
+{id:"gb-16",type:"mc",week:"Gospel Basics",text:"In the Great Commission, Jesus said go and make ___ of all nations.",choices:["disciples","laws","temples","kings"],correct:[0]},
+{id:"gb-17",type:"mc",week:"Gospel Basics",text:"The greatest commandment is to love the Lord your God with all your ___.",choices:["strength only","heart","riches","words"],correct:[1]},
+{id:"gb-18",type:"mc",week:"Gospel Basics",text:"Jesus called himself \"the good ___,\" who lays down his life for the sheep.",choices:["teacher","king","servant","shepherd"],correct:[3]},
+{id:"gb-19",type:"fb",week:"Gospel Basics",text:"On the cross Jesus said, \"It is ___,\" and gave up his spirit.",answers:["finished"]},
+{id:"gb-20",type:"mc",week:"Gospel Basics",text:"Which disciple denied knowing Jesus three times?",choices:["John","Peter","James","Matthew"],correct:[1]},
+{id:"gb-21",type:"mc",week:"Gospel Basics",text:"\"The Son of Man came... to give his life as a ___ for many.\"",choices:["ransom","gift","lesson","sign"],correct:[0]},
+{id:"gb-22",type:"mc",week:"Gospel Basics",text:"In Mark, Jesus' first message was \"Repent and ___ in the gospel.\"",choices:["wait","rejoice","believe","be baptized"],correct:[2]},
+{id:"gb-23",type:"mc",week:"Gospel Basics",text:"Which disciple doubted until he saw Jesus' wounds?",choices:["Philip","Thomas","Judas","Peter"],correct:[1]},
+{id:"gb-24",type:"mc",week:"Gospel Basics",text:"On the cross Jesus prayed, \"Father, ___ them, for they know not what they do.\"",choices:["judge","save","forgive","remember"],correct:[2]},
+{id:"gb-25",type:"mc",week:"Gospel Basics",text:"After rising, Jesus walked with two disciples on the road to ___.",choices:["Jericho","Emmaus","Bethany","Damascus"],correct:[1]}
+];
 
 /* ============ SOUND ============ */
 let actx=null;
@@ -437,7 +515,16 @@ function buildOrder(){
   if(state.settings.order==="shuffle"){
     for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
   }
-  play.order=idx;play.index=0;
+  play.order=idx;play.index=0;play.shuffleMap={};
+}
+function choiceOrder(q){
+  if(q.type==="tf")return [0,1];
+  if(!play.shuffleMap[q.id]){
+    const idx=q.choices.map((_,i)=>i);
+    for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+    play.shuffleMap[q.id]=idx;
+  }
+  return play.shuffleMap[q.id];
 }
 function currentQ(){
   if(!play.order.length)return null;
@@ -464,9 +551,9 @@ function renderQuestion(){
     area.appendChild(p);
   }else{
     const g=document.createElement("div");g.className="choices"+(q.type==="tf"?" tf":"");
-    q.choices.forEach((c,i)=>{
-      const b=document.createElement("div");b.className="choice";b.dataset.i=i;
-      b.innerHTML=`<span class="letter">${LETTERS[i]}</span><span>${esc(c)}</span>`;
+    choiceOrder(q).forEach((origIdx,pos)=>{
+      const b=document.createElement("div");b.className="choice";b.dataset.i=origIdx;
+      b.innerHTML=`<span class="letter">${LETTERS[pos]}</span><span>${esc(q.choices[origIdx])}</span>`;
       g.appendChild(b);
     });
     area.appendChild(g);
@@ -760,8 +847,8 @@ $("clearAllBtn").onclick=()=>{
   if(confirm("Erase ALL questions and reset teams? This cannot be undone (export first if unsure).")){
     localStorage.removeItem(LS);
     state={questions:[],teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0}],
-      settings:{timerSeconds:10,order:"sequential",sound:true}};
-    seedSamples();save();renderSetup();renderScoreboard();
+      settings:{timerSeconds:10,order:"shuffle",sound:true}};
+    applyDefaults();save();renderSetup();renderScoreboard();
   }
 };
 
