@@ -137,6 +137,24 @@
   .minibtn{background:var(--line);color:var(--ink);border-radius:10px;padding:11px 15px;font-weight:900;font-size:18px;}
   .minibtn:active{transform:translateY(2px);} .minibtn.max{background:var(--gold);color:var(--gold-ink);}
 
+  /* CONCENTRATION */
+  .concstage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:10px;min-height:0;}
+  .concstatus{font-weight:900;font-size:clamp(16px,2vw,26px);min-height:1.3em;color:var(--muted);text-align:center;}
+  .concstatus.good{color:var(--green);} .concstatus.bad{color:var(--red);}
+  .concboard{position:relative;width:min(92vw,900px);max-height:70vh;aspect-ratio:5/4;border:7px solid #c0271b;border-radius:16px;overflow:hidden;background:#5b1717;box-shadow:0 0 0 10px #24406b,var(--shadow);}
+  #concImg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;}
+  .concimgph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#c9b8a0;font-weight:800;font-size:clamp(14px,2vw,22px);text-align:center;padding:20px;}
+  #concGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);}
+  .conctile{border:3px solid #c0271b;background:linear-gradient(180deg,#ffd24a,#eda200);color:#9a2a08;font-weight:900;
+    font-size:clamp(20px,4.2vw,54px);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .25s, background .2s;padding:2px;text-align:center;line-height:1.05;}
+  .conctile:hover:not(.gone){filter:brightness(1.06);}
+  .conctile.up{background:#fff7e6;color:#7a1f1f;font-size:clamp(11px,1.5vw,20px);}
+  .conctile.match{box-shadow:inset 0 0 0 4px var(--green);}
+  .conctile.gone{background:transparent;border-color:transparent;color:transparent;pointer-events:none;}
+  .concfield{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;}
+  .concfield input{border:none;background:transparent;color:var(--ink);font-size:15px;min-width:150px;padding:6px;}
+  .concfield input:focus{outline:none;}
+
   /* overlays */
   .overlay{position:fixed;inset:0;background:rgba(4,8,15,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
   .overlay.show{display:flex;}
@@ -276,6 +294,29 @@
     </div>
   </div>
 
+  <!-- ============ CONCENTRATION ============ -->
+  <div id="concentration" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div id="concPicker" class="whowrap hidden">
+      <h2 style="text-align:center;">Choose a match set</h2>
+      <div id="concPickList"></div>
+    </div>
+    <div id="concPlay" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div class="jeohd" style="padding:12px 16px 0;">
+        <div><h2 id="concTitle">Concentration</h2><div class="roundlabel" id="concStatusTop"></div></div>
+        <div class="concfield"><span style="color:var(--muted);font-weight:700;">&#128247; image:</span><input type="text" id="concImgInput" placeholder="e.g. shepherd.jpg"><button class="sbtn" id="concSetImg">Load</button></div>
+      </div>
+      <div class="concstage">
+        <div class="concboard"><div id="concImg"></div><div class="concimgph" id="concImgPh"></div><div id="concGrid"></div></div>
+        <div class="concstatus" id="concStatus"></div>
+      </div>
+    </div>
+    <div class="controls" id="concControls">
+      <button class="btn" id="concNew">New Game</button>
+      <button class="btn green big" id="concSolve">Solve Picture (+5,000)</button>
+      <button class="btn" id="concSets">Other Sets</button>
+    </div>
+  </div>
+
   <!-- ============ SETUP ============ -->
   <div class="setup hidden" id="setup">
 
@@ -329,6 +370,23 @@
       <div class="row" style="margin-top:12px;"><button class="sbtn" id="jAddBoard">Create board</button><button class="sbtn ghost" id="jClearPaste">Clear</button></div>
       <div class="parseresult" id="jParse"></div>
       <div id="jList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#129513; Concentration &mdash; match sets &amp; pictures</h2>
+      <p class="hint">Each set is a pile of matching pairs (12 are used per game on the 5&times;5 board). One item per line makes a pair of the <i>same</i> word; use <code>A | B</code> to match two <i>different</i> things.<br>
+        <code>Lamb of God</code> &nbsp;(matches another "Lamb of God" tile)<br>
+        <code>Bethlehem | Jesus was born here</code> &nbsp;(matches a place to its fact)<br>
+        <b>Pictures:</b> put image files in an <code>images</code> folder in your repo, then just type the filename (e.g. <code>shepherd.jpg</code>) on the game screen. You can also set a default image below.</p>
+      <label class="fld">Set title</label>
+      <input type="text" id="cTitle" placeholder="e.g. Names of Jesus">
+      <label class="fld">Default image filename (optional)</label>
+      <input type="text" id="cImage" placeholder="e.g. good-shepherd.jpg">
+      <label class="fld">Paste pairs (one per line)</label>
+      <textarea id="cPaste" placeholder="Good Shepherd&#10;Lamb of God&#10;Bethlehem | Jesus was born here"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="cAdd">Create set</button><button class="sbtn ghost" id="cClearPaste">Clear</button></div>
+      <div class="parseresult" id="cParse"></div>
+      <div id="cList" style="margin-top:16px;"></div>
     </div>
 
     <div class="card">
@@ -391,7 +449,7 @@ let state={
 let screen="hub";
 
 function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
-function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.teams=state.teams||[];}
+function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.teams=state.teams||[];}
 function load(){
   try{const d=JSON.parse(localStorage.getItem(LS));
     if(d&&(d.questions||d.teams)){state=Object.assign(state,d);
@@ -400,7 +458,7 @@ function load(){
   ensureArrays();
   if(applyDefaults())save();
 }
-const DEFAULTS_VERSION=3;
+const DEFAULTS_VERSION=4;
 function applyDefaults(){
   const applied=state.defaultsVersion||0;
   if(applied>=DEFAULTS_VERSION)return false;
@@ -410,6 +468,7 @@ function applyDefaults(){
   addBy(state.questions,DEFAULT_QUESTIONS);
   addBy(state.whoami,DEFAULT_WHOAMI);
   addBy(state.jeopardy,DEFAULT_JEOPARDY);
+  addBy(state.concentration,DEFAULT_CONCENTRATION);
   state.defaultsVersion=DEFAULTS_VERSION;
   return true;
 }
@@ -471,7 +530,8 @@ $("scoreOverlay").onclick=e=>{if(e.target===$("scoreOverlay"))$("popClose").oncl
 const GAMES=[
   {id:"quiz",ic:"&#127919;",tt:"Quiz Showdown",tc:"#ffc233",td:"Multiple choice, true/false & fill-in. Big timer, buzzer, and confetti.",count:()=>state.questions.length+" questions"},
   {id:"whoami",ic:"&#128373;&#65039;",tt:"Who Am I?",tc:"#34d399",td:"Five clues, worth more the earlier you guess. Perfect for latecomers.",count:()=>state.whoami.length+" sets"},
-  {id:"jeopardy",ic:"&#127942;",tt:"Jeopardy",tc:"#3b82f6",td:"Pick-a-square board with categories and point values.",count:()=>state.jeopardy.length+" board"+(state.jeopardy.length===1?"":"s")},
+  {id:"jeopardy",ic:"&#127942;",tt:"Jeopardy",tc:"#3b82f6",td:"Pick-a-square board with categories, Daily Doubles & Final Jeopardy.",count:()=>state.jeopardy.length+" board"+(state.jeopardy.length===1?"":"s")},
+  {id:"concentration",ic:"&#129513;",tt:"Concentration",tc:"#f97316",td:"Match pairs to uncover a hidden picture, then guess it for 5,000.",count:()=>state.concentration.length+" set"+(state.concentration.length===1?"":"s")},
 ];
 function renderHub(){
   const t=$("tiles");t.innerHTML="";
@@ -481,15 +541,16 @@ function renderHub(){
 }
 function showScreen(name){
   screen=name;
-  ["hub","quiz","whoami","jeopardy","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
+  ["hub","quiz","whoami","jeopardy","concentration","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
   $("homeBtn").classList.toggle("hidden",name==="hub");
   $("modeBtn").innerHTML=name==="setup"?"&#9654; Back":"&#9881; Setup";
-  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",setup:"Setup"};
+  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",setup:"Setup"};
   $("brandText").textContent=titles[name]||"Game Hub";
   if(name==="hub")renderHub();
   if(name==="quiz"){buildQuizOrder();renderQuiz();}
   if(name==="whoami"){buildWhoOrder();renderWho();}
   if(name==="jeopardy")enterJeopardy();
+  if(name==="concentration")enterConcentration();
   if(name==="setup")renderSetup();
 }
 $("homeBtn").onclick=()=>showScreen("hub");
@@ -544,7 +605,7 @@ $("startBtn").onclick=startTimer;$("revealBtn").onclick=revealQuiz;$("nextBtn").
 let whoPlay={order:[],index:0,shown:1,revealed:false};
 function buildWhoOrder(){const idx=state.whoami.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}whoPlay.order=idx;whoPlay.index=0;whoPlay.shown=1;whoPlay.revealed=false;}
 function curWho(){return state.whoami[whoPlay.order[whoPlay.index]]||null;}
-function whoWorth(q){return Math.max(1,q.clues.length-whoPlay.shown+1);}
+function whoWorth(q){return Math.max(1000,(q.clues.length-whoPlay.shown+1)*1000);}
 function renderWho(){
   const q=curWho();
   if(!q){$("whoWorth").textContent="No 'Who Am I?' sets yet — add some in Setup.";$("whoClues").innerHTML="";$("whoAnswer").classList.add("hidden");$("whoAward").innerHTML="";$("whoCounter").textContent="";$("whoNextClue").disabled=true;$("whoReveal").disabled=true;$("whoPrev").disabled=true;$("whoNext").disabled=true;return;}
@@ -552,7 +613,7 @@ function renderWho(){
   let h="";q.clues.forEach((c,idx)=>{if(idx<whoPlay.shown)h+=`<div class="clue"><span class="cluenum">${idx+1}</span><span>${esc(c)}</span></div>`;});
   $("whoClues").innerHTML=h;
   const w=whoWorth(q);
-  $("whoWorth").innerHTML=whoPlay.revealed?"&#9989; Answer":`Worth <b>${w}</b> ${w===1?"point":"points"}`;
+  $("whoWorth").innerHTML=whoPlay.revealed?"&#9989; Answer":`Worth <b>${fmt(w)}</b> points`;
   const ans=$("whoAnswer");if(whoPlay.revealed){ans.textContent=q.subject;ans.classList.remove("hidden");}else{ans.classList.add("hidden");ans.textContent="";}
   $("whoNextClue").disabled=whoPlay.revealed||whoPlay.shown>=q.clues.length;
   $("whoReveal").disabled=whoPlay.revealed;
@@ -681,6 +742,82 @@ $("jeoOverlay").onclick=e=>{if(e.target===$("jeoOverlay"))closeTile(false);};
 $("jeoReset").onclick=()=>{jeoPlay.used={};jeoPlay.dd={};jeoPlay.round="single";jeoPlay.openKey=null;$("jeoOverlay").classList.remove("show");genDD("single");renderRound();};
 $("jeoChoose").onclick=showJeoPicker;
 
+/* ==================== CONCENTRATION ==================== */
+let concPlay={setId:null,image:"",tiles:[],up:[],busy:false,solved:false};
+const CONC_TILES=25;
+function concImgUrl(v){v=(v||"").trim();if(!v)return"";if(/^https?:\/\//i.test(v)||v.indexOf("/")>=0)return v;return"images/"+v;}
+function curConcSet(){return state.concentration.find(s=>s.id===concPlay.setId)||null;}
+function enterConcentration(){if(!state.concentration.length||state.concentration.length>1)showConcPicker();else loadConcSet(state.concentration[0].id);}
+function showConcPicker(){concPlay.setId=null;$("concPicker").classList.remove("hidden");$("concPlay").classList.add("hidden");$("concControls").style.visibility="hidden";
+  const list=$("concPickList");list.innerHTML="";
+  if(!state.concentration.length){list.innerHTML=`<div class="empty">No match sets yet — create one in Setup.</div>`;return;}
+  state.concentration.forEach(s=>{const b=document.createElement("button");b.className="jeopick";b.textContent=s.title;b.onclick=()=>loadConcSet(s.id);list.appendChild(b);});
+}
+function loadConcSet(id){concPlay.setId=id;const s=curConcSet();concPlay.image=s&&s.image?s.image:"";$("concImgInput").value=concPlay.image;
+  $("concPicker").classList.add("hidden");$("concPlay").classList.remove("hidden");$("concControls").style.visibility="visible";
+  newConcGame();}
+function buildConcFaces(){
+  const s=curConcSet();let pairs=(s&&s.pairs?s.pairs.slice():[]);
+  for(let i=pairs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pairs[i],pairs[j]]=[pairs[j],pairs[i]];}
+  const maxPairs=Math.floor(CONC_TILES/2);pairs=pairs.slice(0,maxPairs);
+  const faces=[];pairs.forEach((p,idx)=>{faces.push({m:idx,t:p[0]});faces.push({m:idx,t:p[1]});});
+  while(faces.length<CONC_TILES)faces.push({m:"free",t:"FREE"});
+  for(let i=faces.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[faces[i],faces[j]]=[faces[j],faces[i]];}
+  return faces;
+}
+function newConcGame(){
+  concPlay.image=$("concImgInput").value.trim();
+  concPlay.tiles=buildConcFaces().map(f=>({face:f,state:"down"}));
+  concPlay.up=[];concPlay.busy=false;concPlay.solved=false;
+  const s=curConcSet();$("concTitle").textContent=s?s.title:"Concentration";
+  const url=concImgUrl(concPlay.image);
+  $("concImg").style.backgroundImage=url?`url("${url}")`:"none";
+  $("concImgPh").style.display=url?"none":"flex";
+  $("concImgPh").textContent="Type an image filename above (from your repo's images folder) and press Load.";
+  $("concStatus").textContent="";$("concStatus").className="concstatus";
+  $("concStatusTop").textContent="Match the pairs to uncover the picture";
+  renderConcGrid();
+}
+function renderConcGrid(){
+  const grid=$("concGrid");grid.innerHTML="";
+  concPlay.tiles.forEach((tile,i)=>{
+    const b=document.createElement("button");b.className="conctile";
+    if(tile.state==="gone"){b.classList.add("gone");}
+    else if(tile.state==="up"||tile.state==="match"){b.classList.add("up");if(tile.state==="match")b.classList.add("match");b.textContent=tile.face.t;}
+    else{b.textContent=(i+1);}
+    if(tile.state==="down")b.onclick=()=>concFlip(i);
+    grid.appendChild(b);
+  });
+}
+function concFlip(i){
+  if(concPlay.busy||concPlay.solved)return;const tile=concPlay.tiles[i];if(tile.state!=="down")return;AC();
+  if(tile.face.m==="free"){tile.state="up";renderConcGrid();sBlip();setTimeout(()=>{tile.state="gone";renderConcGrid();},500);$("concStatus").textContent="Free space!";$("concStatus").className="concstatus good";return;}
+  tile.state="up";concPlay.up.push(i);sBlip();renderConcGrid();
+  if(concPlay.up.length===2){
+    concPlay.busy=true;const [a,b]=concPlay.up;const ta=concPlay.tiles[a],tb=concPlay.tiles[b];
+    if(ta.face.m===tb.face.m){
+      ta.state="match";tb.state="match";renderConcGrid();sCorrect();
+      $("concStatus").textContent="Match!";$("concStatus").className="concstatus good";
+      setTimeout(()=>{ta.state="gone";tb.state="gone";concPlay.up=[];concPlay.busy=false;renderConcGrid();checkConcCleared();},800);
+    }else{
+      $("concStatus").textContent="No match — try to remember!";$("concStatus").className="concstatus bad";
+      setTimeout(()=>{ta.state="down";tb.state="down";concPlay.up=[];concPlay.busy=false;renderConcGrid();$("concStatus").textContent="";$("concStatus").className="concstatus";},1500);
+    }
+  }
+}
+function checkConcCleared(){if(concPlay.tiles.every(t=>t.state==="gone")){$("concStatus").textContent="Board cleared! Who can name the picture?";$("concStatus").className="concstatus good";}}
+function concRevealAll(){concPlay.tiles.forEach(t=>t.state="gone");concPlay.solved=true;renderConcGrid();}
+$("concSetImg").onclick=()=>{concPlay.image=$("concImgInput").value.trim();const url=concImgUrl(concPlay.image);$("concImg").style.backgroundImage=url?`url("${url}")`:"none";$("concImgPh").style.display=url?"none":"flex";};
+$("concImgInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("concSetImg").onclick();});
+$("concNew").onclick=()=>newConcGame();
+$("concSets").onclick=showConcPicker;
+$("concSolve").onclick=()=>{if(concPlay.solved)return;
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">&#129513; Who guessed the picture?</div><div class="q" style="font-size:clamp(18px,2.4vw,32px);">Award 5,000 and reveal it in full.</div><div class="awardbar" id="concAward"></div><div class="foot" style="margin-top:12px;"><button class="sbtn ghost" id="concCancel">Cancel</button></div>`;
+  teamAwardBar($("concAward"),i=>{award(i,5000);sCorrect();burstConfetti();concRevealAll();$("jeoOverlay").classList.remove("show");$("concStatus").textContent="Solved! +5,000";$("concStatus").className="concstatus good";$("concStatusTop").textContent="Picture revealed — hit New Game for the next one";},"+5,000  ");
+  $("concCancel").onclick=()=>$("jeoOverlay").classList.remove("show");
+  $("jeoOverlay").classList.add("show");
+};
+
 /* ==================== CONFETTI / EFFECTS ==================== */
 const cv=$("confetti"),cx=cv.getContext("2d");let parts=[],confAnim=null;
 function sizeCanvas(){cv.width=innerWidth;cv.height=innerHeight;}addEventListener("resize",sizeCanvas);sizeCanvas();
@@ -772,6 +909,24 @@ function renderJList(){const list=$("jList");list.innerHTML="";if(!state.jeopard
     head.appendChild(del);box.appendChild(head);
     const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">${parts.join(" &bull; ")}</div>`;box.appendChild(it);list.appendChild(box);});}
 
+/* concentration parse */
+function parseConc(raw){const pairs=[],errors=[];raw.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;
+  const p=t.split("|").map(s=>s.trim());
+  if(p.length>=2){if(!p[0]||!p[1]){errors.push(`Line ${i+1}: both sides needed for a pair`);return;}pairs.push([p[0],p[1]]);}
+  else{pairs.push([p[0],p[0]]);}});
+  return{pairs,errors};}
+$("cAdd").onclick=()=>{const title=$("cTitle").value.trim()||"Untitled set";const image=$("cImage").value.trim();const{pairs,errors}=parseConc($("cPaste").value);const r=$("cParse");r.innerHTML="";
+  if(pairs.length){state.concentration.push({id:uid(),title,image,pairs});save();r.innerHTML=`<span class="ok">&#10004; Created "${esc(title)}" with ${pairs.length} pair${pairs.length>1?"s":""}${pairs.length<12?" (needs 12 to fill the board — the rest become free spaces)":""}.</span>`;$("cPaste").value="";$("cTitle").value="";$("cImage").value="";renderCList();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!pairs.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("cClearPaste").onclick=()=>{$("cPaste").value="";$("cParse").innerHTML="";};
+function renderCList(){const list=$("cList");list.innerHTML="";if(!state.concentration.length){list.innerHTML=`<div class="empty">No match sets yet.</div>`;return;}
+  state.concentration.forEach(s=>{const box=document.createElement("div");box.className="listweek";
+    const head=document.createElement("h3");head.innerHTML=`<span>${esc(s.title)} <span style="color:var(--muted);font-weight:600;">(${s.pairs.length} pairs${s.image?", img: "+esc(s.image):""})</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete set";del.onclick=()=>{if(confirm(`Delete set "${s.title}"?`)){state.concentration=state.concentration.filter(o=>o.id!==s.id);save();renderCList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">${s.pairs.map(p=>esc(p[0]===p[1]?p[0]:p[0]+"="+p[1])).join(", ")}</div>`;box.appendChild(it);list.appendChild(box);});}
+
 /* settings */
 $("setTimer").onchange=e=>{let v=Math.max(3,Math.min(120,+e.target.value||10));state.settings.timerSeconds=v;e.target.value=v;save();resetTimerDisplay();};
 $("setOrder").onchange=e=>{state.settings.order=e.target.value;save();};
@@ -783,10 +938,10 @@ $("importBtn").onclick=()=>$("importFile").click();
 $("importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.teams&&!d.questions)throw 0;
   if(confirm("Import replaces your current teams and games. Continue?")){state=Object.assign({settings:{timerSeconds:10,order:"shuffle",sound:true}},d);ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
 $("clearAllBtn").onclick=()=>{if(confirm("Reset teams and reload the built-in games? Your added content will be removed (export first if unsure).")){localStorage.removeItem(LS);
-  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[]};
+  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[],concentration:[]};
   applyDefaults();save();renderSetup();renderScoreboard();renderHub();}};
 
-function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
+function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
 
 /* keyboard (quiz) */
 addEventListener("keydown",e=>{if(screen!=="quiz")return;const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea"||tag==="select")return;
@@ -948,6 +1103,14 @@ double:[
 ],
 final:{category:"The Gospel",q:"According to John 3:16, God gave his only Son so that whoever believes in him should not perish but have this.",a:"Eternal life (everlasting life)"}
 }
+];
+const DEFAULT_CONCENTRATION=[
+{id:"cc-names-of-jesus",title:"Names of Jesus",image:"",pairs:[
+["Good Shepherd","Good Shepherd"],["Lamb of God","Lamb of God"],["Light of the World","Light of the World"],
+["Bread of Life","Bread of Life"],["King of Kings","King of Kings"],["Prince of Peace","Prince of Peace"],
+["Son of God","Son of God"],["Savior","Savior"],["Immanuel","Immanuel"],
+["The Word","The Word"],["Alpha and Omega","Alpha and Omega"],["The True Vine","The True Vine"]
+]}
 ];
 
 /* ==================== INIT ==================== */
