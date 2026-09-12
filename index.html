@@ -1191,7 +1191,10 @@ function spinWheel(){
   if(wwPlay.busy||wwPlay.phase!=="spin")return;AC();wwPlay.busy=true;$("wwSpin").disabled=true;
   const finalIdx=Math.floor(Math.random()*WHEEL.length);
   const seg=360/WHEEL.length;
-  wwPlay.rot+=360*5+(360-(finalIdx*seg+seg/2));
+  const targetMod=(360-(finalIdx*seg+seg/2))%360;
+  const currentMod=((wwPlay.rot%360)+360)%360;
+  let delta=targetMod-currentMod;if(delta<0)delta+=360;
+  wwPlay.rot+=360*5+delta;
   $("wwResult").textContent="\u2026";
   $("wwWheel").style.transform=`rotate(${wwPlay.rot}deg)`;
   let ticks=0;const ti=setInterval(()=>{sTick();if(++ticks>16)clearInterval(ti);},190);
