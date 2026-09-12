@@ -185,6 +185,33 @@
   .racebtn.spin{background:var(--gold);color:var(--gold-ink);}
   .racewin{text-align:center;font-weight:900;font-size:clamp(24px,4vw,52px);color:var(--gold);}
 
+  /* REVERSE CHARADES */
+  .chword{font-weight:900;font-size:clamp(34px,7vw,96px);line-height:1.05;text-align:center;text-wrap:balance;margin:10px 0;color:var(--gold);}
+
+  /* WORD PUZZLE WHEEL */
+  .wwcat{text-align:center;color:var(--muted);font-weight:800;letter-spacing:3px;text-transform:uppercase;font-size:clamp(13px,1.6vw,20px);padding:12px 10px 4px;}
+  .wwboard{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:10px 14px;}
+  .wwword{display:flex;gap:6px;}
+  .wwtile{width:clamp(26px,4.2vw,56px);height:clamp(34px,5.6vw,74px);border-radius:8px;background:#0c8a4a;border:2px solid #0a6e3b;
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(18px,3vw,40px);color:#fff;transition:transform .15s, box-shadow .2s, background .2s;}
+  .wwtile.punct{background:transparent;border-color:transparent;color:var(--ink);}
+  .wwtile.blank{background:#f4f7fb;border-color:#c7d2e0;color:#f4f7fb;}
+  .wwtile.lit{background:#fff59a;border-color:var(--gold);color:#7a5c00;cursor:pointer;animation:litpulse 1s ease infinite;box-shadow:0 0 20px var(--gold);}
+  @keyframes litpulse{0%,100%{box-shadow:0 0 10px var(--gold);}50%{box-shadow:0 0 26px var(--gold);transform:scale(1.05);}}
+  .wwtile.shown{background:#0c8a4a;border-color:#0a6e3b;color:#fff;}
+  .wwmid{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 14px;}
+  .wheelbox{position:relative;width:min(38vw,240px);height:min(38vw,240px);flex:none;display:flex;align-items:center;justify-content:center;}
+  .wheel{width:100%;height:100%;border-radius:50%;border:6px solid var(--line);transition:transform 2.6s cubic-bezier(.17,.67,.24,1);
+    background:conic-gradient(#3b82f6 0 30deg,#111 30deg 60deg,#f97316 60deg 90deg,#a855f7 90deg 120deg,#ef4444 120deg 150deg,#22d3ee 150deg 180deg,#ffc233 180deg 210deg,#34d399 210deg 240deg,#3b82f6 240deg 270deg,#111 270deg 300deg,#f97316 300deg 330deg,#a855f7 330deg 360deg);}
+  .wheelptr{position:absolute;top:-4px;left:50%;transform:translateX(-50%);border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid #fff;z-index:3;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6));}
+  .wheelval{position:absolute;background:rgba(9,15,26,.86);border:2px solid var(--gold);border-radius:12px;padding:8px 12px;font-weight:900;font-size:clamp(15px,2vw,26px);color:var(--gold);min-width:90px;text-align:center;}
+  .wwright{flex:1;min-width:260px;max-width:520px;}
+  .wwletters{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;}
+  .wwletter{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 0;font-weight:900;font-size:clamp(14px,1.7vw,20px);color:var(--ink);}
+  .wwletter:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}
+  .wwletter.used{opacity:.25;pointer-events:none;}
+  .wwletter:disabled{opacity:.4;}
+
   /* overlays */
   .overlay{position:fixed;inset:0;background:rgba(4,8,15,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
   .overlay.show{display:flex;}
@@ -368,17 +395,57 @@
     </div>
   </div>
 
-  <!-- ============ RACE TRACK ============ -->
-  <div id="racetrack" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
-    <div class="racehd">
-      <div><h2 style="margin:0;" id="raceTitle">Race to the Finish</h2><div class="roundlabel" id="raceHint">First team to the flag wins +5,000!</div></div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <span style="color:var(--muted);font-weight:700;">Length:</span>
-        <div class="pills" id="raceLenPills"></div>
-        <button class="sbtn" id="raceNew">New Race</button>
+  <!-- ============ REVERSE CHARADES ============ -->
+  <div id="charades" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div id="chPicker" class="whowrap hidden">
+      <h2 style="text-align:center;">Choose a word set</h2>
+      <div id="chPickList"></div>
+    </div>
+    <div id="chPlay" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div class="racehd">
+        <div><h2 style="margin:0;" id="chTitle">Reverse Charades</h2><div class="roundlabel">Act it out — one guesser faces away!</div></div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><span style="color:var(--muted);font-weight:700;">Round:</span><div class="pills" id="chLenPills"></div></div>
+      </div>
+      <div class="bcstage" style="padding-top:6px;">
+        <div id="chTeamPick" style="margin:2px 0;"><div class="bcteamlabel">Which team is acting?</div><div class="awardbar" id="chTeams"></div></div>
+        <div class="chword" id="chWord">Pick a team, then Start</div>
+        <div class="bcmid" style="gap:30px;"><div class="bctimer num" id="chTimer">60</div><div class="bctally"><div class="bctallylabel">Guessed</div><div class="bctallynum num" id="chGot">0</div></div></div>
+        <div class="bcbanner num" id="chBanner"></div>
       </div>
     </div>
-    <div class="racestage" id="raceLanes"></div>
+    <div class="controls" id="chControls">
+      <button class="btn" id="chSets">Other Sets</button>
+      <button class="btn green big" id="chStart">Start Round</button>
+      <button class="btn gold big" id="chGotBtn">Got it! (+1,000)</button>
+      <button class="btn" id="chSkip">Skip &#9654;</button>
+    </div>
+  </div>
+
+  <!-- ============ WORD PUZZLE WHEEL ============ -->
+  <div id="wordwheel" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div id="wwPicker" class="whowrap hidden">
+      <h2 style="text-align:center;">Choose a puzzle</h2>
+      <div id="wwPickList"></div>
+    </div>
+    <div id="wwPlay" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;overflow:auto;">
+      <div class="wwcat" id="wwCat"></div>
+      <div class="wwboard" id="wwBoard"></div>
+      <div class="wwmid">
+        <div class="wheelbox"><div class="wheelptr"></div><div class="wheel" id="wwWheel"></div><div class="wheelval num" id="wwResult">SPIN</div></div>
+        <div class="wwright">
+          <div class="bcteamlabel" id="wwTurn">Spin to begin</div>
+          <div class="awardbar" id="wwTeams" style="margin-bottom:10px;"></div>
+          <div class="wwletters" id="wwLetters"></div>
+        </div>
+      </div>
+      <div class="bcbanner num" id="wwBanner"></div>
+    </div>
+    <div class="controls" id="wwControls">
+      <button class="btn gold big" id="wwSpin">Spin the Wheel</button>
+      <button class="btn green big" id="wwSolve">Solve (+2,000)</button>
+      <button class="btn" id="wwNew">New Puzzle</button>
+      <button class="btn" id="wwSets">Other Puzzles</button>
+    </div>
   </div>
 
   <!-- ============ SETUP ============ -->
@@ -468,8 +535,29 @@
     </div>
 
     <div class="card">
-      <h2>&#127937; Race Track</h2>
-      <p class="hint">No setup needed &mdash; it works with your current teams. Ask a question from any game (or out loud), then tap a team's <b>&#9654;</b> to move it one space, or <b>&#127922;</b> to move a random 1&ndash;3. First team to the flag wins <b>+5,000</b>. Pick the track length and hit New Race right on the game screen.</p>
+      <h2>&#127917; Reverse Charades &mdash; word sets</h2>
+      <p class="hint">Each set is a title plus words/phrases to act out &mdash; one per line. The word shows big on screen; the acting team's guesser faces away.<br>
+        <code>Parting the Red Sea</code><br>
+        <code>Noah building the ark</code></p>
+      <label class="fld">Set title</label>
+      <input type="text" id="chSetTitle" placeholder="e.g. Bible Stories">
+      <label class="fld">Paste words (one per line)</label>
+      <textarea id="chPaste" placeholder="Moses&#10;Walking on water&#10;Daniel in the lions' den"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="chAdd">Create set</button><button class="sbtn ghost" id="chClearPaste">Clear</button></div>
+      <div class="parseresult" id="chParse"></div>
+      <div id="chList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#127942; Word Puzzle Wheel &mdash; puzzles</h2>
+      <p class="hint">One puzzle per line: <code>Category | PHRASE</code>. Keep phrases fairly short so they fit the board. The wheel already has all the money spaces plus <b>Bankrupt</b>, <b>Lose a Turn</b>, and a <b>$5,000</b> wedge.<br>
+        <code>Bible Verse | THE LORD IS MY SHEPHERD</code><br>
+        <code>Bible Person | JOHN THE BAPTIST</code></p>
+      <label class="fld">Paste puzzles</label>
+      <textarea id="wwPaste" placeholder="Bible Verse | GOD IS LOVE&#10;Bible Place | THE GARDEN OF EDEN"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="wwAdd">Add puzzles</button><button class="sbtn ghost" id="wwClearPaste">Clear</button></div>
+      <div class="parseresult" id="wwParse"></div>
+      <div id="wwList" style="margin-top:16px;"></div>
     </div>
 
     <div class="card">
@@ -532,7 +620,7 @@ let state={
 let screen="hub";
 
 function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
-function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.beatclock=state.beatclock||[];state.teams=state.teams||[];}
+function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.beatclock=state.beatclock||[];state.charades=state.charades||[];state.wordwheel=state.wordwheel||[];state.teams=state.teams||[];}
 function load(){
   try{const d=JSON.parse(localStorage.getItem(LS));
     if(d&&(d.questions||d.teams)){state=Object.assign(state,d);
@@ -541,7 +629,7 @@ function load(){
   ensureArrays();
   if(applyDefaults())save();
 }
-const DEFAULTS_VERSION=6;
+const DEFAULTS_VERSION=7;
 function applyDefaults(){
   const applied=state.defaultsVersion||0;
   if(applied>=DEFAULTS_VERSION)return false;
@@ -553,6 +641,8 @@ function applyDefaults(){
   addBy(state.jeopardy,DEFAULT_JEOPARDY);
   addBy(state.concentration,DEFAULT_CONCENTRATION);
   addBy(state.beatclock,DEFAULT_BEATCLOCK);
+  addBy(state.charades,DEFAULT_CHARADES);
+  addBy(state.wordwheel,DEFAULT_WORDWHEEL);
   state.defaultsVersion=DEFAULTS_VERSION;
   return true;
 }
@@ -617,7 +707,8 @@ const GAMES=[
   {id:"jeopardy",ic:"&#127942;",tt:"Jeopardy",tc:"#3b82f6",td:"Pick-a-square board with categories, Daily Doubles & Final Jeopardy.",count:()=>state.jeopardy.length+" board"+(state.jeopardy.length===1?"":"s")},
   {id:"concentration",ic:"&#129513;",tt:"Concentration",tc:"#f97316",td:"Match pairs to uncover a hidden picture, then guess it for 5,000.",count:()=>state.concentration.length+" set"+(state.concentration.length===1?"":"s")},
   {id:"beatclock",ic:"&#9201;&#65039;",tt:"Beat the Clock",tc:"#f43f5e",td:"A team races the clock to name as many as they can. Loud and fast.",count:()=>state.beatclock.length+" categories"},
-  {id:"racetrack",ic:"&#127937;",tt:"Race Track",tc:"#a855f7",td:"Teams race to the finish. Move for right answers or spin to advance.",count:()=>"board game"},
+  {id:"charades",ic:"&#127917;",tt:"Reverse Charades",tc:"#22d3ee",td:"The word's on screen — the whole team acts while one guesser faces away.",count:()=>state.charades.length+" word set"+(state.charades.length===1?"":"s")},
+  {id:"wordwheel",ic:"&#127942;",tt:"Word Puzzle Wheel",tc:"#eab308",td:"Spin the wheel, call letters, solve the phrase. Watch out for Bankrupt!",count:()=>state.wordwheel.length+" puzzle"+(state.wordwheel.length===1?"":"s")},
 ];
 function renderHub(){
   const t=$("tiles");t.innerHTML="";
@@ -627,10 +718,10 @@ function renderHub(){
 }
 function showScreen(name){
   screen=name;
-  ["hub","quiz","whoami","jeopardy","concentration","beatclock","racetrack","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
+  ["hub","quiz","whoami","jeopardy","concentration","beatclock","charades","wordwheel","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
   $("homeBtn").classList.toggle("hidden",name==="hub");
   $("modeBtn").innerHTML=name==="setup"?"&#9654; Back":"&#9881; Setup";
-  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",racetrack:"Race Track",setup:"Setup"};
+  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",charades:"Reverse Charades",wordwheel:"Word Puzzle Wheel",setup:"Setup"};
   $("brandText").textContent=titles[name]||"Game Hub";
   if(name==="hub")renderHub();
   if(name==="quiz"){buildQuizOrder();renderQuiz();}
@@ -638,7 +729,8 @@ function showScreen(name){
   if(name==="jeopardy")enterJeopardy();
   if(name==="concentration")enterConcentration();
   if(name==="beatclock")enterBeatClock();
-  if(name==="racetrack")enterRaceTrack();
+  if(name==="charades")enterCharades();
+  if(name==="wordwheel")enterWordWheel();
   if(name==="setup")renderSetup();
 }
 $("homeBtn").onclick=()=>showScreen("hub");
@@ -927,13 +1019,13 @@ function renderBC(){
   $("bcTally").textContent=bcPlay.tally;
   teamAwardBar($("bcTeams"),i=>{bcPlay.team=i;renderBC();},"");
   [...$("bcTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===bcPlay.team));
-  if(bcPlay.phase==="done")$("bcBanner").innerHTML=`Time! Tap a team to bank <b>${bcPlay.tally}</b>`;
+  if(bcPlay.phase==="done")$("bcBanner").innerHTML=`Tap a team to bank <b>${fmt(bcPlay.tally*200)}</b>`;
   else if(bcPlay.phase==="idle")$("bcBanner").textContent="";
   bcButtons();
 }
-function bcButtons(){const c=curBC(),has=!!c,run=bcPlay.phase==="running";
-  $("bcStart").disabled=!has||run||bcPlay.team===null;
-  $("bcStart").textContent=bcPlay.phase==="done"?"Play Again":`Start ${bcPlay.seconds}s`;
+function bcButtons(){const c=curBC(),has=!!c,run=bcPlay.phase==="running";const b=$("bcStart");
+  if(run){b.disabled=false;b.textContent="Stop & Tally";}
+  else{b.disabled=!has||bcPlay.team===null;b.textContent=bcPlay.phase==="done"?"Play Again":`Start ${bcPlay.seconds}s`;}
   $("bcPlus").disabled=!run;$("bcMinus").disabled=!run;
   $("bcPrev").disabled=bcPlay.index<=0||run;$("bcNext").disabled=bcPlay.index>=bcPlay.order.length-1||run;
 }
@@ -942,9 +1034,10 @@ function startBC(){const c=curBC();if(!c||bcPlay.team===null)return;AC();stopBC(
 function stopBC(silent){if(bcPlay.handle){clearInterval(bcPlay.handle);bcPlay.handle=null;}}
 function bcExpire(){stopBC(true);bcPlay.phase="done";sBuzzer();$("flash").classList.add("go");setTimeout(()=>$("flash").classList.remove("go"),500);$("app").classList.add("shake");setTimeout(()=>$("app").classList.remove("shake"),500);renderBC();}
 function bcTally(d){if(bcPlay.phase!=="running")return;bcPlay.tally=Math.max(0,bcPlay.tally+d);$("bcTally").textContent=bcPlay.tally;if(d>0)sBlip();}
-function bcBank(){if(bcPlay.phase!=="done"||bcPlay.team===null)return;award(bcPlay.team,bcPlay.tally);sCorrect();if(bcPlay.tally>0)burstConfetti();bcPlay.phase="idle";$("bcBanner").innerHTML=`Banked <b>${bcPlay.tally}</b> for ${esc(state.teams[bcPlay.team].name)}!`;renderBC();}
+function bcBank(){if(bcPlay.phase!=="done"||bcPlay.team===null)return;const pts=bcPlay.tally*200;award(bcPlay.team,pts);sCorrect();if(pts>0)burstConfetti();bcPlay.phase="idle";$("bcBanner").innerHTML=`Banked <b>${fmt(pts)}</b> for ${esc(state.teams[bcPlay.team].name)}!`;renderBC();}
 function bcNav(d){if(bcPlay.phase==="running")return;const n=bcPlay.index+d;if(n>=0&&n<bcPlay.order.length){bcPlay.index=n;bcPlay.phase="idle";bcPlay.tally=0;$("bcBanner").textContent="";renderBC();}}
-$("bcStart").onclick=startBC;$("bcPlus").onclick=()=>bcTally(1);$("bcMinus").onclick=()=>bcTally(-1);$("bcPrev").onclick=()=>bcNav(-1);$("bcNext").onclick=()=>bcNav(1);
+function bcStop(){if(bcPlay.phase!=="running")return;stopBC();bcPlay.phase="done";sBlip();renderBC();}
+$("bcStart").onclick=()=>{if(bcPlay.phase==="running")bcStop();else startBC();};$("bcPlus").onclick=()=>bcTally(1);$("bcMinus").onclick=()=>bcTally(-1);$("bcPrev").onclick=()=>bcNav(-1);$("bcNext").onclick=()=>bcNav(1);
 // when time's up, tapping a team banks the tally to that team
 $("bcTeams").addEventListener("click",()=>{if(bcPlay.phase==="done")setTimeout(bcBank,0);},true);
 
@@ -984,7 +1077,137 @@ function raceMove(i,d){
   if(d>0)sBlip();renderRace();
   if(racePlay.pos[i]>=racePlay.length){racePlay.winner=i;award(i,5000);sCorrect();burstConfetti();setTimeout(()=>{sCorrect();},250);renderRace();}
 }
-$("raceNew").onclick=newRace;
+
+/* ==================== REVERSE CHARADES ==================== */
+let chPlay={setId:null,order:[],index:0,team:null,seconds:60,timeLeft:60,handle:null,phase:"idle",got:0};
+function curChSet(){return state.charades.find(s=>s.id===chPlay.setId)||null;}
+function enterCharades(){if(!state.charades.length||state.charades.length>1)showChPicker();else loadChSet(state.charades[0].id);}
+function showChPicker(){chPlay.setId=null;stopCh(true);$("chPicker").classList.remove("hidden");$("chPlay").classList.add("hidden");$("chControls").style.visibility="hidden";
+  const list=$("chPickList");list.innerHTML="";
+  if(!state.charades.length){list.innerHTML=`<div class="empty">No word sets yet — create one in Setup.</div>`;return;}
+  state.charades.forEach(s=>{const b=document.createElement("button");b.className="jeopick";b.textContent=s.title;b.onclick=()=>loadChSet(s.id);list.appendChild(b);});
+}
+function loadChSet(id){chPlay.setId=id;chPlay.team=null;chPlay.phase="idle";chPlay.got=0;stopCh(true);buildChOrder();
+  $("chPicker").classList.add("hidden");$("chPlay").classList.remove("hidden");$("chControls").style.visibility="visible";renderChLenPills();renderCh();}
+function buildChOrder(){const s=curChSet();const idx=(s?s.words:[]).map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}chPlay.order=idx;chPlay.index=0;}
+function curChWord(){const s=curChSet();if(!s||!chPlay.order.length)return null;return s.words[chPlay.order[chPlay.index]];}
+function renderChLenPills(){const el=$("chLenPills");el.innerHTML="";[30,60,90].forEach(v=>{const p=document.createElement("span");p.className="pill"+(chPlay.seconds===v?" on":"");p.textContent=v+"s";p.onclick=()=>{if(chPlay.phase!=="running"){chPlay.seconds=v;renderCh();}};el.appendChild(p);});}
+function renderCh(){
+  const s=curChSet();$("chTitle").textContent=s?s.title:"Reverse Charades";
+  teamAwardBar($("chTeams"),i=>{if(chPlay.phase!=="running"){chPlay.team=i;renderCh();}},"");
+  [...$("chTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===chPlay.team));
+  renderChLenPills();
+  $("chGot").textContent=chPlay.got;
+  $("chTimer").textContent=chPlay.phase==="idle"?chPlay.seconds:chPlay.timeLeft;
+  $("chTimer").classList.toggle("low",chPlay.phase==="running"&&chPlay.timeLeft<=5);
+  if(chPlay.phase==="running")$("chWord").textContent=curChWord()||"—";
+  else if(chPlay.phase==="done")$("chWord").textContent="Round over!";
+  else $("chWord").textContent="Pick a team, then Start";
+  $("chStart").disabled=!s||chPlay.phase==="running"||chPlay.team===null;
+  $("chStart").textContent=chPlay.phase==="done"?"Play Again":`Start ${chPlay.seconds}s`;
+  $("chGotBtn").disabled=chPlay.phase!=="running";$("chSkip").disabled=chPlay.phase!=="running";
+}
+function startCh(){const s=curChSet();if(!s||chPlay.team===null)return;AC();stopCh(true);chPlay.phase="running";chPlay.got=0;chPlay.timeLeft=chPlay.seconds;buildChOrder();$("chBanner").textContent="";renderCh();
+  chPlay.handle=setInterval(()=>{chPlay.timeLeft--;if(chPlay.timeLeft<=0){chPlay.timeLeft=0;chExpire();return;}$("chTimer").textContent=chPlay.timeLeft;$("chTimer").classList.toggle("low",chPlay.timeLeft<=5);if(chPlay.timeLeft<=5)sTickLow();},1000);sTick();}
+function stopCh(){if(chPlay.handle){clearInterval(chPlay.handle);chPlay.handle=null;}}
+function chExpire(){stopCh();chPlay.phase="done";sBuzzer();$("flash").classList.add("go");setTimeout(()=>$("flash").classList.remove("go"),500);$("chBanner").innerHTML=`Round over — <b>${chPlay.got}</b> guessed for ${chPlay.team!==null?esc(state.teams[chPlay.team].name):""}!`;renderCh();}
+function chAdvance(){chPlay.index++;if(chPlay.index>=chPlay.order.length)buildChOrder();renderCh();}
+function chGot(){if(chPlay.phase!=="running"||chPlay.team===null)return;award(chPlay.team,1000);chPlay.got++;sCorrect();chAdvance();}
+function chSkip(){if(chPlay.phase!=="running")return;sBlip();chAdvance();}
+$("chStart").onclick=startCh;$("chGotBtn").onclick=chGot;$("chSkip").onclick=chSkip;$("chSets").onclick=showChPicker;
+
+/* ==================== WORD PUZZLE WHEEL ==================== */
+const WHEEL=[
+{t:"$500",v:500,c:"#3b82f6"},{t:"BANKRUPT",v:"bankrupt",c:"#111"},{t:"$700",v:700,c:"#f97316"},{t:"$900",v:900,c:"#a855f7"},
+{t:"LOSE A TURN",v:"lose",c:"#ef4444"},{t:"$600",v:600,c:"#22d3ee"},{t:"$5000",v:5000,c:"#ffc233"},{t:"$800",v:800,c:"#34d399"},
+{t:"$1000",v:1000,c:"#3b82f6"},{t:"BANKRUPT",v:"bankrupt",c:"#111"},{t:"$650",v:650,c:"#f97316"},{t:"$750",v:750,c:"#a855f7"}];
+let wwPlay={puzzleId:null,tiles:[],guessed:{},active:0,round:[],spinValue:0,phase:"spin",busy:false,rot:0};
+function curWWPuzzle(){return state.wordwheel.find(p=>p.id===wwPlay.puzzleId)||null;}
+function enterWordWheel(){if(!state.wordwheel.length||state.wordwheel.length>1)showWWPicker();else loadWWPuzzle(state.wordwheel[0].id);}
+function showWWPicker(){wwPlay.puzzleId=null;$("wwPicker").classList.remove("hidden");$("wwPlay").classList.add("hidden");$("wwControls").style.visibility="hidden";
+  const list=$("wwPickList");list.innerHTML="";
+  if(!state.wordwheel.length){list.innerHTML=`<div class="empty">No puzzles yet — add some in Setup.</div>`;return;}
+  state.wordwheel.forEach(p=>{const b=document.createElement("button");b.className="jeopick";b.textContent=p.category+": "+p.phrase.length+" letters";b.onclick=()=>loadWWPuzzle(p.id);list.appendChild(b);});
+}
+function loadWWPuzzle(id){wwPlay.puzzleId=id;$("wwPicker").classList.add("hidden");$("wwPlay").classList.remove("hidden");$("wwControls").style.visibility="visible";setupWWPuzzle();}
+function setupWWPuzzle(){
+  const p=curWWPuzzle();if(!p)return;
+  wwPlay.tiles=p.phrase.toUpperCase().split("").map(ch=>{const isL=/[A-Z]/.test(ch);return{ch,isLetter:isL,state:isL?"blank":"punct"};});
+  wwPlay.guessed={};wwPlay.active=0;wwPlay.round=state.teams.map(()=>0);wwPlay.spinValue=0;wwPlay.phase="spin";wwPlay.busy=false;
+  $("wwResult").textContent="SPIN";$("wwBanner").textContent="";
+  renderWW();
+}
+function renderWW(){
+  const p=curWWPuzzle();if(!p){return;}
+  $("wwCat").textContent=p.category;
+  // board
+  const board=$("wwBoard");board.innerHTML="";
+  const words=[];let cur=[];
+  wwPlay.tiles.forEach((t,i)=>{if(t.ch===" "){if(cur.length){words.push(cur);cur=[];}}else{cur.push(i);}});
+  if(cur.length)words.push(cur);
+  words.forEach(w=>{const wd=document.createElement("div");wd.className="wwword";
+    w.forEach(i=>{const t=wwPlay.tiles[i];const el=document.createElement("div");el.className="wwtile";
+      if(!t.isLetter){el.classList.add("punct");el.textContent=t.ch;}
+      else if(t.state==="blank"){el.classList.add("blank");el.textContent="A";}
+      else if(t.state==="lit"){el.classList.add("lit");el.textContent=t.ch;el.onclick=()=>revealTile(i);}
+      else{el.classList.add("shown");el.textContent=t.ch;}
+      wd.appendChild(el);});
+    board.appendChild(wd);});
+  // teams / turn
+  teamAwardBar($("wwTeams"),i=>{wwPlay.active=i;renderWW();},"");
+  [...$("wwTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===wwPlay.active));
+  const at=state.teams[wwPlay.active];
+  const turnMsg={spin:"'s turn — spin the wheel!",pick:" spun "+(typeof wwPlay.spinValue==="number"?"$"+fmt(wwPlay.spinValue):"")+" — pick a letter",reveal:" — press the glowing letters!",solved:""};
+  $("wwTurn").innerHTML=at?`<span style="color:${at.color}">${esc(at.name)}</span>${turnMsg[wwPlay.phase]||""}`:"";
+  // letters
+  const grid=$("wwLetters");grid.innerHTML="";
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(L=>{const b=document.createElement("button");b.className="wwletter";b.textContent=L;
+    if(wwPlay.guessed[L])b.classList.add("used");
+    b.disabled=wwPlay.phase!=="pick"||!!wwPlay.guessed[L];
+    b.onclick=()=>pickLetter(L);grid.appendChild(b);});
+  // buttons
+  $("wwSpin").disabled=wwPlay.busy||wwPlay.phase!=="spin";
+  $("wwSolve").disabled=wwPlay.phase==="solved"||wwPlay.busy;
+}
+function spinWheel(){
+  if(wwPlay.busy||wwPlay.phase!=="spin")return;AC();wwPlay.busy=true;$("wwSpin").disabled=true;
+  const finalIdx=Math.floor(Math.random()*WHEEL.length);
+  const seg=360/WHEEL.length;
+  wwPlay.rot+=360*4+(360-(finalIdx*seg+seg/2));
+  $("wwWheel").style.transform=`rotate(${wwPlay.rot}deg)`;
+  let ticks=0;const ti=setInterval(()=>{sTick();if(++ticks>10)clearInterval(ti);},180);
+  setTimeout(()=>{clearInterval(ti);landWheel(finalIdx);},2650);
+}
+function landWheel(idx){
+  const w=WHEEL[idx];$("wwResult").textContent=w.t;$("wwResult").style.color=w.v==="bankrupt"?"#fff":w.v==="lose"?"#f87171":"#ffe27a";
+  wwPlay.busy=false;
+  if(w.v==="bankrupt"){sBuzzer();const lost=wwPlay.round[wwPlay.active];if(lost>0)award(wwPlay.active,-lost);wwPlay.round[wwPlay.active]=0;$("wwBanner").innerHTML=`&#128176; BANKRUPT! ${esc(state.teams[wwPlay.active].name)} loses this round's ${fmt(lost)}.`;passWWTurn();}
+  else if(w.v==="lose"){sBuzzer();$("wwBanner").innerHTML=`&#10060; Lose a turn!`;passWWTurn();}
+  else{sCorrect();wwPlay.spinValue=w.v;wwPlay.phase="pick";$("wwBanner").innerHTML=`Pick a letter for <b>$${fmt(w.v)}</b> each!`;renderWW();}
+}
+function passWWTurn(){wwPlay.active=(wwPlay.active+1)%state.teams.length;wwPlay.spinValue=0;wwPlay.phase="spin";renderWW();}
+function pickLetter(L){
+  if(wwPlay.phase!=="pick"||wwPlay.guessed[L])return;AC();wwPlay.guessed[L]=true;
+  const hits=wwPlay.tiles.filter(t=>t.isLetter&&t.state==="blank"&&t.ch===L);
+  if(hits.length){wwPlay.tiles.forEach(t=>{if(t.isLetter&&t.state==="blank"&&t.ch===L)t.state="lit";});wwPlay.phase="reveal";$("wwBanner").innerHTML=`${hits.length} <b>${L}</b>${hits.length>1?"'s":""}! Press each glowing tile.`;sCorrect();renderWW();}
+  else{sBuzzer();$("wwBanner").innerHTML=`No <b>${L}</b>. Turn passes.`;passWWTurn();}
+}
+function revealTile(i){
+  const t=wwPlay.tiles[i];if(t.state!=="lit")return;t.state="shown";award(wwPlay.active,wwPlay.spinValue);wwPlay.round[wwPlay.active]+=wwPlay.spinValue;sBlip();
+  const moreLit=wwPlay.tiles.some(x=>x.state==="lit");
+  if(!moreLit){wwPlay.phase="spin";wwPlay.spinValue=0;$("wwBanner").innerHTML=`Nice! ${esc(state.teams[wwPlay.active].name)} spins again.`;if(wwSolvedFully()){wwWin(wwPlay.active,false);}else renderWW();}
+  else renderWW();
+}
+function wwSolvedFully(){return wwPlay.tiles.every(t=>!t.isLetter||t.state==="shown");}
+function wwWin(team,bonus){wwPlay.tiles.forEach(t=>{if(t.isLetter)t.state="shown";});wwPlay.phase="solved";if(bonus)award(team,2000);sCorrect();burstConfetti();$("wwBanner").innerHTML=`&#127942; ${esc(state.teams[team].name)} solved it!${bonus?" +2,000":""} Hit New Puzzle.`;renderWW();}
+$("wwSpin").onclick=spinWheel;
+$("wwSolve").onclick=()=>{if(wwPlay.phase==="solved"||wwPlay.busy)return;
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">&#127942; Who solved the puzzle?</div><div class="q" style="font-size:clamp(18px,2.4vw,32px);">Reveal it and award +2,000.</div><div class="awardbar" id="wwSolveTeams"></div><div class="foot" style="margin-top:12px;"><button class="sbtn ghost" id="wwSolveCancel">Cancel</button></div>`;
+  teamAwardBar($("wwSolveTeams"),i=>{$("jeoOverlay").classList.remove("show");wwWin(i,true);},"");
+  $("wwSolveCancel").onclick=()=>$("jeoOverlay").classList.remove("show");
+  $("jeoOverlay").classList.add("show");};
+$("wwNew").onclick=()=>setupWWPuzzle();
+$("wwSets").onclick=showWWPicker;
 
 /* ==================== CONFETTI / EFFECTS ==================== */
 const cv=$("confetti"),cx=cv.getContext("2d");let parts=[],confAnim=null;
@@ -1111,6 +1334,28 @@ function renderBCList(){const list=$("bcList");list.innerHTML="";if(!state.beatc
       const x=document.createElement("button");x.className="xbtn";x.textContent="Delete";x.onclick=()=>{state.beatclock=state.beatclock.filter(o=>o.id!==q.id);save();renderBCList();renderHub();};it.appendChild(x);box.appendChild(it);});
     list.appendChild(box);});}
 
+/* charades + wordwheel setup */
+$("chAdd").onclick=()=>{const title=$("chSetTitle").value.trim()||"Untitled set";const words=$("chPaste").value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s&&!s.startsWith("#"));const r=$("chParse");r.innerHTML="";
+  if(words.length){state.charades.push({id:uid(),title,words});save();r.innerHTML=`<span class="ok">&#10004; Created "${esc(title)}" with ${words.length} words.</span>`;$("chPaste").value="";$("chSetTitle").value="";renderChList();renderHub();}
+  else r.innerHTML=`<span class="err">Add at least one word.</span>`;};
+$("chClearPaste").onclick=()=>{$("chPaste").value="";$("chParse").innerHTML="";};
+function renderChList(){const list=$("chList");list.innerHTML="";if(!state.charades.length){list.innerHTML=`<div class="empty">No word sets yet.</div>`;return;}
+  state.charades.forEach(s=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
+    head.innerHTML=`<span>${esc(s.title)} <span style="color:var(--muted);font-weight:600;">(${s.words.length} words)</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete set";del.onclick=()=>{if(confirm(`Delete set "${s.title}"?`)){state.charades=state.charades.filter(o=>o.id!==s.id);save();renderChList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">${s.words.map(esc).join(", ")}</div>`;box.appendChild(it);list.appendChild(box);});}
+$("wwAdd").onclick=()=>{const out=[],errors=[];$("wwPaste").value.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;const p=t.split("|").map(s=>s.trim());if(p.length<2||!p[0]||!p[1]){errors.push(`Line ${i+1}: need Category | PHRASE`);return;}out.push({id:uid(),category:p[0],phrase:p.slice(1).join("|").trim()});});const r=$("wwParse");r.innerHTML="";
+  if(out.length){state.wordwheel.push(...out);save();r.innerHTML=`<span class="ok">&#10004; Added ${out.length} puzzle${out.length>1?"s":""}.</span>`;$("wwPaste").value="";renderWWList();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!out.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("wwClearPaste").onclick=()=>{$("wwPaste").value="";$("wwParse").innerHTML="";};
+function renderWWList(){const list=$("wwList");list.innerHTML="";if(!state.wordwheel.length){list.innerHTML=`<div class="empty">No puzzles yet.</div>`;return;}
+  const box=document.createElement("div");box.className="listweek";box.appendChild(Object.assign(document.createElement("h3"),{innerHTML:`<span>Puzzles <span style="color:var(--muted);font-weight:600;">(${state.wordwheel.length})</span></span>`}));
+  state.wordwheel.forEach(p=>{const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt"><span class="badge">${esc(p.category)}</span>${esc(p.phrase)}</div>`;
+    const x=document.createElement("button");x.className="xbtn";x.textContent="Delete";x.onclick=()=>{state.wordwheel=state.wordwheel.filter(o=>o.id!==p.id);save();renderWWList();renderHub();};it.appendChild(x);box.appendChild(it);});
+  list.appendChild(box);}
+
 /* settings */
 $("setTimer").onchange=e=>{let v=Math.max(3,Math.min(120,+e.target.value||10));state.settings.timerSeconds=v;e.target.value=v;save();resetTimerDisplay();};
 $("setOrder").onchange=e=>{state.settings.order=e.target.value;save();};
@@ -1122,10 +1367,10 @@ $("importBtn").onclick=()=>$("importFile").click();
 $("importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.teams&&!d.questions)throw 0;
   if(confirm("Import replaces your current teams and games. Continue?")){state=Object.assign({settings:{timerSeconds:10,order:"shuffle",sound:true}},d);ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
 $("clearAllBtn").onclick=()=>{if(confirm("Reset teams and reload the built-in games? Your added content will be removed (export first if unsure).")){localStorage.removeItem(LS);
-  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[]};
+  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[],charades:[],wordwheel:[]};
   applyDefaults();save();renderSetup();renderScoreboard();renderHub();}};
 
-function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
+function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();renderChList();renderWWList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
 
 /* keyboard (quiz) */
 addEventListener("keydown",e=>{if(screen!=="quiz")return;const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea"||tag==="select")return;
@@ -1338,6 +1583,23 @@ const DEFAULT_BEATCLOCK=[
 {id:"bc-13",week:"Bible Lists",prompt:"Name women in the Bible"},
 {id:"bc-14",week:"Bible Lists",prompt:"Name Old Testament prophets"},
 {id:"bc-15",week:"Bible Lists",prompt:"Name parables Jesus told"}
+];
+const DEFAULT_CHARADES=[
+{id:"ch-people",title:"Bible People",words:["Moses","Noah","David","Goliath","Jonah","Daniel","Mary","Peter","Paul","Adam and Eve","Samson","John the Baptist"]},
+{id:"ch-animals",title:"Bible Animals",words:["Lion","Donkey","Dove","Whale","Serpent","Sheep","Camel","Raven","Lamb","Fish","Ox","Locust"]},
+{id:"ch-stories",title:"Bible Stories & Actions",words:["Parting the Red Sea","Walking on water","Noah building the ark","David and Goliath","Jonah and the whale","Daniel in the lions' den","The Last Supper","Jesus washing feet","Feeding the five thousand","Zacchaeus in a tree","Rolling away the stone","Praying"]}
+];
+const DEFAULT_WORDWHEEL=[
+{id:"ww-01",category:"Bible Verse",phrase:"THE LORD IS MY SHEPHERD"},
+{id:"ww-02",category:"Bible Verse",phrase:"GOD IS LOVE"},
+{id:"ww-03",category:"Bible Person",phrase:"JOHN THE BAPTIST"},
+{id:"ww-04",category:"Bible Place",phrase:"THE GARDEN OF EDEN"},
+{id:"ww-05",category:"Bible Event",phrase:"PARTING THE RED SEA"},
+{id:"ww-06",category:"Bible Event",phrase:"WALKING ON WATER"},
+{id:"ww-07",category:"Bible Verse",phrase:"LOVE ONE ANOTHER"},
+{id:"ww-08",category:"Name for Jesus",phrase:"THE GOOD SHEPHERD"},
+{id:"ww-09",category:"Bible Book",phrase:"THE BOOK OF PSALMS"},
+{id:"ww-10",category:"Bible Event",phrase:"DANIEL IN THE LIONS DEN"}
 ];
 
 /* ==================== INIT ==================== */
