@@ -155,6 +155,36 @@
   .concfield input{border:none;background:transparent;color:var(--ink);font-size:15px;min-width:150px;padding:6px;}
   .concfield input:focus{outline:none;}
 
+  /* BEAT THE CLOCK */
+  .bcstage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;gap:10px;min-height:0;text-align:center;}
+  .bctop{width:100%;display:flex;justify-content:space-between;color:var(--muted);font-weight:700;font-size:14px;}
+  .bcprompt{font-weight:900;font-size:clamp(26px,4.4vw,60px);line-height:1.1;text-wrap:balance;}
+  .bcmid{display:flex;gap:40px;align-items:center;justify-content:center;flex-wrap:wrap;margin:6px 0;}
+  .bctimer{font-weight:900;font-size:clamp(60px,14vw,180px);line-height:1;color:var(--gold);}
+  .bctimer.low{color:var(--red);animation:tick 1s ease infinite;}
+  .bctally{background:var(--panel);border:2px solid var(--line);border-radius:18px;padding:10px 26px;}
+  .bctallylabel{color:var(--muted);font-weight:800;letter-spacing:2px;font-size:13px;text-transform:uppercase;}
+  .bctallynum{font-weight:900;font-size:clamp(44px,9vw,110px);line-height:1;color:var(--green);}
+  .bcteamlabel{color:var(--muted);font-weight:700;margin-bottom:6px;}
+  .awardbtn.sel{outline:4px solid #fff;outline-offset:2px;}
+  .bcbanner{font-weight:900;font-size:clamp(20px,3vw,40px);color:var(--gold);min-height:1.2em;letter-spacing:1px;}
+
+  /* RACE TRACK */
+  .racehd{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 6px;flex-wrap:wrap;gap:10px;}
+  .racestage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:12px 18px 18px;min-height:0;}
+  .racelane{display:flex;align-items:center;gap:12px;}
+  .racename{flex:none;width:clamp(90px,12vw,150px);font-weight:900;font-size:clamp(14px,1.7vw,22px);color:var(--tc);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .racetrackrow{flex:1;position:relative;height:clamp(44px,7vh,70px);background:var(--bg2);border:2px solid var(--line);border-radius:14px;display:flex;overflow:hidden;}
+  .racecell{flex:1;border-right:1px dashed var(--line);}
+  .racecell:last-child{border-right:none;}
+  .racetoken{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:clamp(24px,4vw,44px);transition:left .35s cubic-bezier(.4,1.4,.6,1);z-index:2;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));}
+  .raceflag{flex:none;font-size:clamp(24px,4vw,40px);}
+  .racectrl{flex:none;display:flex;gap:6px;}
+  .racebtn{background:var(--line);color:var(--ink);border-radius:10px;padding:10px 12px;font-weight:900;font-size:18px;min-width:46px;}
+  .racebtn.go{background:var(--tc);color:#04101f;}
+  .racebtn.spin{background:var(--gold);color:var(--gold-ink);}
+  .racewin{text-align:center;font-weight:900;font-size:clamp(24px,4vw,52px);color:var(--gold);}
+
   /* overlays */
   .overlay{position:fixed;inset:0;background:rgba(4,8,15,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
   .overlay.show{display:flex;}
@@ -317,6 +347,40 @@
     </div>
   </div>
 
+  <!-- ============ BEAT THE CLOCK ============ -->
+  <div id="beatclock" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div class="bcstage">
+      <div class="bctop"><span id="bcCounter"></span><span id="bcWeek"></span></div>
+      <div class="bcprompt" id="bcPrompt">No categories yet.</div>
+      <div class="bcmid">
+        <div class="bctimer num" id="bcTimer">30</div>
+        <div class="bctally"><div class="bctallylabel">Correct</div><div class="bctallynum num" id="bcTally">0</div></div>
+      </div>
+      <div id="bcTeamPick" style="margin:6px 0;"><div class="bcteamlabel">Which team is playing?</div><div class="awardbar" id="bcTeams"></div></div>
+      <div class="bcbanner num" id="bcBanner"></div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="bcPrev">&#9664; Prev</button>
+      <button class="btn" id="bcMinus" style="min-width:90px;">&minus;1</button>
+      <button class="btn gold big" id="bcPlus">+1 Correct</button>
+      <button class="btn green big" id="bcStart">Start</button>
+      <button class="btn" id="bcNext">Next &#9654;</button>
+    </div>
+  </div>
+
+  <!-- ============ RACE TRACK ============ -->
+  <div id="racetrack" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div class="racehd">
+      <div><h2 style="margin:0;" id="raceTitle">Race to the Finish</h2><div class="roundlabel" id="raceHint">First team to the flag wins +5,000!</div></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span style="color:var(--muted);font-weight:700;">Length:</span>
+        <div class="pills" id="raceLenPills"></div>
+        <button class="sbtn" id="raceNew">New Race</button>
+      </div>
+    </div>
+    <div class="racestage" id="raceLanes"></div>
+  </div>
+
   <!-- ============ SETUP ============ -->
   <div class="setup hidden" id="setup">
 
@@ -390,6 +454,25 @@
     </div>
 
     <div class="card">
+      <h2>&#9201;&#65039; Beat the Clock &mdash; categories</h2>
+      <p class="hint">One category prompt per line &mdash; the kind of thing a team can rattle off. The teacher taps <b>+1</b> for each right answer against the clock.<br>
+        <code>Name the Twelve Disciples</code><br>
+        <code>Name animals that were on Noah's ark</code></p>
+      <label class="fld">Week / label</label>
+      <input type="text" id="bcBatchWeek" placeholder="e.g. Bible Lists">
+      <label class="fld">Paste categories</label>
+      <textarea id="bcPaste" placeholder="Name the Twelve Disciples&#10;Name the books of the Gospels&#10;Name the plagues of Egypt"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="bcAdd">Add categories</button><button class="sbtn ghost" id="bcClearPaste">Clear</button></div>
+      <div class="parseresult" id="bcParse"></div>
+      <div id="bcList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#127937; Race Track</h2>
+      <p class="hint">No setup needed &mdash; it works with your current teams. Ask a question from any game (or out loud), then tap a team's <b>&#9654;</b> to move it one space, or <b>&#127922;</b> to move a random 1&ndash;3. First team to the flag wins <b>+5,000</b>. Pick the track length and hit New Race right on the game screen.</p>
+    </div>
+
+    <div class="card">
       <h2>&#9881;&#65039; Settings</h2>
       <div class="row">
         <div style="flex:0 0 160px;"><label class="fld">Quiz timer (seconds)</label><input type="number" id="setTimer" min="3" max="120" value="10"></div>
@@ -449,7 +532,7 @@ let state={
 let screen="hub";
 
 function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
-function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.teams=state.teams||[];}
+function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.beatclock=state.beatclock||[];state.teams=state.teams||[];}
 function load(){
   try{const d=JSON.parse(localStorage.getItem(LS));
     if(d&&(d.questions||d.teams)){state=Object.assign(state,d);
@@ -458,7 +541,7 @@ function load(){
   ensureArrays();
   if(applyDefaults())save();
 }
-const DEFAULTS_VERSION=4;
+const DEFAULTS_VERSION=6;
 function applyDefaults(){
   const applied=state.defaultsVersion||0;
   if(applied>=DEFAULTS_VERSION)return false;
@@ -469,6 +552,7 @@ function applyDefaults(){
   addBy(state.whoami,DEFAULT_WHOAMI);
   addBy(state.jeopardy,DEFAULT_JEOPARDY);
   addBy(state.concentration,DEFAULT_CONCENTRATION);
+  addBy(state.beatclock,DEFAULT_BEATCLOCK);
   state.defaultsVersion=DEFAULTS_VERSION;
   return true;
 }
@@ -532,6 +616,8 @@ const GAMES=[
   {id:"whoami",ic:"&#128373;&#65039;",tt:"Who Am I?",tc:"#34d399",td:"Five clues, worth more the earlier you guess. Perfect for latecomers.",count:()=>state.whoami.length+" sets"},
   {id:"jeopardy",ic:"&#127942;",tt:"Jeopardy",tc:"#3b82f6",td:"Pick-a-square board with categories, Daily Doubles & Final Jeopardy.",count:()=>state.jeopardy.length+" board"+(state.jeopardy.length===1?"":"s")},
   {id:"concentration",ic:"&#129513;",tt:"Concentration",tc:"#f97316",td:"Match pairs to uncover a hidden picture, then guess it for 5,000.",count:()=>state.concentration.length+" set"+(state.concentration.length===1?"":"s")},
+  {id:"beatclock",ic:"&#9201;&#65039;",tt:"Beat the Clock",tc:"#f43f5e",td:"A team races the clock to name as many as they can. Loud and fast.",count:()=>state.beatclock.length+" categories"},
+  {id:"racetrack",ic:"&#127937;",tt:"Race Track",tc:"#a855f7",td:"Teams race to the finish. Move for right answers or spin to advance.",count:()=>"board game"},
 ];
 function renderHub(){
   const t=$("tiles");t.innerHTML="";
@@ -541,16 +627,18 @@ function renderHub(){
 }
 function showScreen(name){
   screen=name;
-  ["hub","quiz","whoami","jeopardy","concentration","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
+  ["hub","quiz","whoami","jeopardy","concentration","beatclock","racetrack","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
   $("homeBtn").classList.toggle("hidden",name==="hub");
   $("modeBtn").innerHTML=name==="setup"?"&#9654; Back":"&#9881; Setup";
-  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",setup:"Setup"};
+  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",racetrack:"Race Track",setup:"Setup"};
   $("brandText").textContent=titles[name]||"Game Hub";
   if(name==="hub")renderHub();
   if(name==="quiz"){buildQuizOrder();renderQuiz();}
   if(name==="whoami"){buildWhoOrder();renderWho();}
   if(name==="jeopardy")enterJeopardy();
   if(name==="concentration")enterConcentration();
+  if(name==="beatclock")enterBeatClock();
+  if(name==="racetrack")enterRaceTrack();
   if(name==="setup")renderSetup();
 }
 $("homeBtn").onclick=()=>showScreen("hub");
@@ -765,15 +853,21 @@ function buildConcFaces(){
   for(let i=faces.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[faces[i],faces[j]]=[faces[j],faces[i]];}
   return faces;
 }
+function setConcImage(value){
+  const url=concImgUrl(value);const img=$("concImg"),ph=$("concImgPh");
+  if(!url){img.style.backgroundImage="none";ph.style.display="flex";ph.textContent="Type an image filename above (from your repo's images folder) and press Load.";return;}
+  ph.style.display="flex";ph.textContent="Loading "+value+"\u2026";img.style.backgroundImage="none";
+  const test=new Image();
+  test.onload=()=>{img.style.backgroundImage=`url("${url}")`;ph.style.display="none";};
+  test.onerror=()=>{img.style.backgroundImage="none";ph.style.display="flex";ph.innerHTML=`Couldn't find <b>${esc(url)}</b><br>Check the spelling and CAPITALIZATION — it must match your file exactly (e.g. <b>Noah.png</b>, not noah.png).`;};
+  test.src=url;
+}
 function newConcGame(){
   concPlay.image=$("concImgInput").value.trim();
   concPlay.tiles=buildConcFaces().map(f=>({face:f,state:"down"}));
   concPlay.up=[];concPlay.busy=false;concPlay.solved=false;
   const s=curConcSet();$("concTitle").textContent=s?s.title:"Concentration";
-  const url=concImgUrl(concPlay.image);
-  $("concImg").style.backgroundImage=url?`url("${url}")`:"none";
-  $("concImgPh").style.display=url?"none":"flex";
-  $("concImgPh").textContent="Type an image filename above (from your repo's images folder) and press Load.";
+  setConcImage(concPlay.image);
   $("concStatus").textContent="";$("concStatus").className="concstatus";
   $("concStatusTop").textContent="Match the pairs to uncover the picture";
   renderConcGrid();
@@ -807,7 +901,7 @@ function concFlip(i){
 }
 function checkConcCleared(){if(concPlay.tiles.every(t=>t.state==="gone")){$("concStatus").textContent="Board cleared! Who can name the picture?";$("concStatus").className="concstatus good";}}
 function concRevealAll(){concPlay.tiles.forEach(t=>t.state="gone");concPlay.solved=true;renderConcGrid();}
-$("concSetImg").onclick=()=>{concPlay.image=$("concImgInput").value.trim();const url=concImgUrl(concPlay.image);$("concImg").style.backgroundImage=url?`url("${url}")`:"none";$("concImgPh").style.display=url?"none":"flex";};
+$("concSetImg").onclick=()=>{concPlay.image=$("concImgInput").value.trim();setConcImage(concPlay.image);};
 $("concImgInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("concSetImg").onclick();});
 $("concNew").onclick=()=>newConcGame();
 $("concSets").onclick=showConcPicker;
@@ -817,6 +911,80 @@ $("concSolve").onclick=()=>{if(concPlay.solved)return;
   $("concCancel").onclick=()=>$("jeoOverlay").classList.remove("show");
   $("jeoOverlay").classList.add("show");
 };
+
+/* ==================== BEAT THE CLOCK ==================== */
+let bcPlay={order:[],index:0,team:null,phase:"idle",tally:0,timeLeft:30,handle:null,seconds:30};
+function buildBCOrder(){const idx=state.beatclock.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}bcPlay.order=idx;bcPlay.index=0;}
+function curBC(){return state.beatclock[bcPlay.order[bcPlay.index]]||null;}
+function enterBeatClock(){buildBCOrder();bcPlay.phase="idle";bcPlay.team=null;bcPlay.tally=0;stopBC(true);renderBC();}
+function renderBC(){
+  const c=curBC();
+  if(!c){$("bcPrompt").textContent="No categories yet — add some in Setup.";$("bcCounter").textContent="";$("bcWeek").textContent="";$("bcTeams").innerHTML="";$("bcBanner").textContent="";bcButtons();return;}
+  $("bcCounter").textContent=`${bcPlay.index+1} / ${bcPlay.order.length}`;$("bcWeek").textContent=c.week||"";
+  $("bcPrompt").textContent=c.prompt;
+  $("bcTimer").textContent=bcPlay.phase==="idle"?bcPlay.seconds:bcPlay.timeLeft;
+  $("bcTimer").classList.toggle("low",bcPlay.phase==="running"&&bcPlay.timeLeft<=5);
+  $("bcTally").textContent=bcPlay.tally;
+  teamAwardBar($("bcTeams"),i=>{bcPlay.team=i;renderBC();},"");
+  [...$("bcTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===bcPlay.team));
+  if(bcPlay.phase==="done")$("bcBanner").innerHTML=`Time! Tap a team to bank <b>${bcPlay.tally}</b>`;
+  else if(bcPlay.phase==="idle")$("bcBanner").textContent="";
+  bcButtons();
+}
+function bcButtons(){const c=curBC(),has=!!c,run=bcPlay.phase==="running";
+  $("bcStart").disabled=!has||run||bcPlay.team===null;
+  $("bcStart").textContent=bcPlay.phase==="done"?"Play Again":`Start ${bcPlay.seconds}s`;
+  $("bcPlus").disabled=!run;$("bcMinus").disabled=!run;
+  $("bcPrev").disabled=bcPlay.index<=0||run;$("bcNext").disabled=bcPlay.index>=bcPlay.order.length-1||run;
+}
+function startBC(){const c=curBC();if(!c||bcPlay.team===null)return;AC();stopBC(true);bcPlay.phase="running";bcPlay.tally=0;bcPlay.timeLeft=bcPlay.seconds;$("bcBanner").textContent="";renderBC();
+  bcPlay.handle=setInterval(()=>{bcPlay.timeLeft--;if(bcPlay.timeLeft<=0){bcPlay.timeLeft=0;bcExpire();return;}$("bcTimer").textContent=bcPlay.timeLeft;$("bcTimer").classList.toggle("low",bcPlay.timeLeft<=5);if(bcPlay.timeLeft<=5)sTickLow();},1000);sTick();}
+function stopBC(silent){if(bcPlay.handle){clearInterval(bcPlay.handle);bcPlay.handle=null;}}
+function bcExpire(){stopBC(true);bcPlay.phase="done";sBuzzer();$("flash").classList.add("go");setTimeout(()=>$("flash").classList.remove("go"),500);$("app").classList.add("shake");setTimeout(()=>$("app").classList.remove("shake"),500);renderBC();}
+function bcTally(d){if(bcPlay.phase!=="running")return;bcPlay.tally=Math.max(0,bcPlay.tally+d);$("bcTally").textContent=bcPlay.tally;if(d>0)sBlip();}
+function bcBank(){if(bcPlay.phase!=="done"||bcPlay.team===null)return;award(bcPlay.team,bcPlay.tally);sCorrect();if(bcPlay.tally>0)burstConfetti();bcPlay.phase="idle";$("bcBanner").innerHTML=`Banked <b>${bcPlay.tally}</b> for ${esc(state.teams[bcPlay.team].name)}!`;renderBC();}
+function bcNav(d){if(bcPlay.phase==="running")return;const n=bcPlay.index+d;if(n>=0&&n<bcPlay.order.length){bcPlay.index=n;bcPlay.phase="idle";bcPlay.tally=0;$("bcBanner").textContent="";renderBC();}}
+$("bcStart").onclick=startBC;$("bcPlus").onclick=()=>bcTally(1);$("bcMinus").onclick=()=>bcTally(-1);$("bcPrev").onclick=()=>bcNav(-1);$("bcNext").onclick=()=>bcNav(1);
+// when time's up, tapping a team banks the tally to that team
+$("bcTeams").addEventListener("click",()=>{if(bcPlay.phase==="done")setTimeout(bcBank,0);},true);
+
+/* ==================== RACE TRACK ==================== */
+let racePlay={pos:[],length:12,winner:null};
+const RACE_LENS=[{l:"Short",v:8},{l:"Medium",v:12},{l:"Long",v:18}];
+function enterRaceTrack(){
+  if(racePlay.pos.length!==state.teams.length){racePlay.pos=state.teams.map(()=>0);racePlay.winner=null;}
+  renderRaceLenPills();renderRace();
+}
+function renderRaceLenPills(){const el=$("raceLenPills");el.innerHTML="";RACE_LENS.forEach(o=>{const p=document.createElement("span");p.className="pill"+(racePlay.length===o.v?" on":"");p.textContent=o.l;p.onclick=()=>{racePlay.length=o.v;newRace();};el.appendChild(p);});}
+function newRace(){racePlay.pos=state.teams.map(()=>0);racePlay.winner=null;renderRaceLenPills();renderRace();}
+function renderRace(){
+  const stage=$("raceLanes");stage.innerHTML="";
+  if(racePlay.winner!==null){const w=document.createElement("div");w.className="racewin";w.innerHTML=`&#127942; ${esc(state.teams[racePlay.winner].name)} wins the race! +5,000`;stage.appendChild(w);}
+  state.teams.forEach((t,i)=>{
+    const lane=document.createElement("div");lane.className="racelane";lane.style.setProperty("--tc",t.color);
+    const name=document.createElement("div");name.className="racename";name.textContent=t.name;
+    const row=document.createElement("div");row.className="racetrackrow";
+    for(let c=0;c<racePlay.length;c++){const cell=document.createElement("div");cell.className="racecell";row.appendChild(cell);}
+    const token=document.createElement("div");token.className="racetoken";token.textContent="\u25CF";token.style.color=t.color;
+    const frac=Math.min(1,racePlay.pos[i]/racePlay.length);token.style.left=`calc(${frac*100}% ${frac<1?"+ 4px":"- 4px"})`;
+    row.appendChild(token);
+    const flag=document.createElement("div");flag.className="raceflag";flag.textContent="\u{1F3C1}";
+    const ctrl=document.createElement("div");ctrl.className="racectrl";
+    const back=document.createElement("button");back.className="racebtn";back.textContent="\u25C0";back.onclick=()=>raceMove(i,-1);
+    const spin=document.createElement("button");spin.className="racebtn spin";spin.textContent="\u{1F3B2}";spin.onclick=()=>raceMove(i,1+Math.floor(Math.random()*3));
+    const go=document.createElement("button");go.className="racebtn go";go.style.setProperty("--tc",t.color);go.textContent="\u25B6";go.onclick=()=>raceMove(i,1);
+    ctrl.appendChild(back);ctrl.appendChild(spin);ctrl.appendChild(go);
+    lane.appendChild(name);lane.appendChild(row);lane.appendChild(flag);lane.appendChild(ctrl);
+    stage.appendChild(lane);
+  });
+}
+function raceMove(i,d){
+  if(racePlay.winner!==null)return;AC();
+  racePlay.pos[i]=Math.max(0,Math.min(racePlay.length,racePlay.pos[i]+d));
+  if(d>0)sBlip();renderRace();
+  if(racePlay.pos[i]>=racePlay.length){racePlay.winner=i;award(i,5000);sCorrect();burstConfetti();setTimeout(()=>{sCorrect();},250);renderRace();}
+}
+$("raceNew").onclick=newRace;
 
 /* ==================== CONFETTI / EFFECTS ==================== */
 const cv=$("confetti"),cx=cv.getContext("2d");let parts=[],confAnim=null;
@@ -927,6 +1095,22 @@ function renderCList(){const list=$("cList");list.innerHTML="";if(!state.concent
     head.appendChild(del);box.appendChild(head);
     const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">${s.pairs.map(p=>esc(p[0]===p[1]?p[0]:p[0]+"="+p[1])).join(", ")}</div>`;box.appendChild(it);list.appendChild(box);});}
 
+/* beatclock parse */
+function parseBC(raw,week){const out=[];raw.split(/\r?\n/).forEach(line=>{const t=line.trim();if(!t||t.startsWith("#"))return;out.push({id:uid(),prompt:t,week});});return out;}
+$("bcAdd").onclick=()=>{const week=$("bcBatchWeek").value.trim()||"Unlabeled";const out=parseBC($("bcPaste").value,week);const r=$("bcParse");r.innerHTML="";
+  if(out.length){state.beatclock.push(...out);save();r.innerHTML=`<span class="ok">&#10004; Added ${out.length} categor${out.length>1?"ies":"y"} to "${esc(week)}".</span>`;$("bcPaste").value="";renderBCList();renderHub();}
+  else r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("bcClearPaste").onclick=()=>{$("bcPaste").value="";$("bcParse").innerHTML="";};
+function renderBCList(){const list=$("bcList");list.innerHTML="";if(!state.beatclock.length){list.innerHTML=`<div class="empty">No categories yet.</div>`;return;}
+  const weeks={};state.beatclock.forEach(q=>{(weeks[q.week||"Unlabeled"]=weeks[q.week||"Unlabeled"]||[]).push(q);});
+  Object.keys(weeks).forEach(wk=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
+    head.innerHTML=`<span>${esc(wk)} <span style="color:var(--muted);font-weight:600;">(${weeks[wk].length})</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete group";del.onclick=()=>{if(confirm(`Delete all ${weeks[wk].length} in "${wk}"?`)){state.beatclock=state.beatclock.filter(q=>(q.week||"Unlabeled")!==wk);save();renderBCList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    weeks[wk].forEach(q=>{const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt">${esc(q.prompt)}</div>`;
+      const x=document.createElement("button");x.className="xbtn";x.textContent="Delete";x.onclick=()=>{state.beatclock=state.beatclock.filter(o=>o.id!==q.id);save();renderBCList();renderHub();};it.appendChild(x);box.appendChild(it);});
+    list.appendChild(box);});}
+
 /* settings */
 $("setTimer").onchange=e=>{let v=Math.max(3,Math.min(120,+e.target.value||10));state.settings.timerSeconds=v;e.target.value=v;save();resetTimerDisplay();};
 $("setOrder").onchange=e=>{state.settings.order=e.target.value;save();};
@@ -938,10 +1122,10 @@ $("importBtn").onclick=()=>$("importFile").click();
 $("importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.teams&&!d.questions)throw 0;
   if(confirm("Import replaces your current teams and games. Continue?")){state=Object.assign({settings:{timerSeconds:10,order:"shuffle",sound:true}},d);ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
 $("clearAllBtn").onclick=()=>{if(confirm("Reset teams and reload the built-in games? Your added content will be removed (export first if unsure).")){localStorage.removeItem(LS);
-  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[],concentration:[]};
+  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[]};
   applyDefaults();save();renderSetup();renderScoreboard();renderHub();}};
 
-function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
+function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
 
 /* keyboard (quiz) */
 addEventListener("keydown",e=>{if(screen!=="quiz")return;const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea"||tag==="select")return;
@@ -1110,7 +1294,50 @@ const DEFAULT_CONCENTRATION=[
 ["Bread of Life","Bread of Life"],["King of Kings","King of Kings"],["Prince of Peace","Prince of Peace"],
 ["Son of God","Son of God"],["Savior","Savior"],["Immanuel","Immanuel"],
 ["The Word","The Word"],["Alpha and Omega","Alpha and Omega"],["The True Vine","The True Vine"]
+]},
+{id:"cc-ot-books",title:"Old Testament Books",image:"",pairs:[
+["Genesis","Genesis"],["Exodus","Exodus"],["Leviticus","Leviticus"],["Numbers","Numbers"],
+["Deuteronomy","Deuteronomy"],["Joshua","Joshua"],["Judges","Judges"],["Ruth","Ruth"],
+["Psalms","Psalms"],["Proverbs","Proverbs"],["Isaiah","Isaiah"],["Daniel","Daniel"]
+]},
+{id:"cc-nt-books",title:"New Testament Books",image:"",pairs:[
+["Matthew","Matthew"],["Mark","Mark"],["Luke","Luke"],["John","John"],
+["Acts","Acts"],["Romans","Romans"],["Galatians","Galatians"],["Ephesians","Ephesians"],
+["Philippians","Philippians"],["Hebrews","Hebrews"],["James","James"],["Revelation","Revelation"]
+]},
+{id:"cc-disciples",title:"The Twelve Disciples",image:"",pairs:[
+["Peter","Peter"],["Andrew","Andrew"],["James","James"],["John","John"],
+["Philip","Philip"],["Bartholomew","Bartholomew"],["Thomas","Thomas"],["Matthew","Matthew"],
+["Thaddaeus","Thaddaeus"],["Simon the Zealot","Simon the Zealot"],["Judas Iscariot","Judas Iscariot"],["James son of Alphaeus","James son of Alphaeus"]
+]},
+{id:"cc-places",title:"Bible Places",image:"",pairs:[
+["Bethlehem","Jesus was born here"],["Nazareth","Jesus grew up here"],["Jordan River","Where Jesus was baptized"],
+["Jericho","Its walls fell down"],["Red Sea","Moses parted these waters"],["Nineveh","Jonah was sent to preach here"],
+["Bethany","Hometown of Lazarus"],["Sea of Galilee","Jesus calmed its storm"],["Mount Sinai","Moses received the Ten Commandments"],
+["Egypt","Israel was enslaved here"],["Eden","The very first garden"],["Jerusalem","City of the temple"]
+]},
+{id:"cc-animals",title:"Animals of the Bible",image:"",pairs:[
+["Lamb","Lamb"],["Donkey","Donkey"],["Dove","Dove"],["Lion","Lion"],
+["Serpent","Serpent"],["Raven","Raven"],["Ram","Ram"],["Camel","Camel"],
+["Great Fish","Great Fish"],["Sheep","Sheep"],["Ox","Ox"],["Locust","Locust"]
 ]}
+];
+const DEFAULT_BEATCLOCK=[
+{id:"bc-01",week:"Bible Lists",prompt:"Name the Twelve Disciples"},
+{id:"bc-02",week:"Bible Lists",prompt:"Name the four Gospels"},
+{id:"bc-03",week:"Bible Lists",prompt:"Name the Ten Commandments"},
+{id:"bc-04",week:"Bible Lists",prompt:"Name the Fruit of the Spirit"},
+{id:"bc-05",week:"Bible Lists",prompt:"Name the plagues of Egypt"},
+{id:"bc-06",week:"Bible Lists",prompt:"Name animals that were on Noah's ark"},
+{id:"bc-07",week:"Bible Lists",prompt:"Name miracles that Jesus did"},
+{id:"bc-08",week:"Bible Lists",prompt:"Name books of the Old Testament"},
+{id:"bc-09",week:"Bible Lists",prompt:"Name books of the New Testament"},
+{id:"bc-10",week:"Bible Lists",prompt:"Name the sons of Jacob (the twelve tribes)"},
+{id:"bc-11",week:"Bible Lists",prompt:"Name kings of Israel or Judah"},
+{id:"bc-12",week:"Bible Lists",prompt:"Name people in the Bible who prayed"},
+{id:"bc-13",week:"Bible Lists",prompt:"Name women in the Bible"},
+{id:"bc-14",week:"Bible Lists",prompt:"Name Old Testament prophets"},
+{id:"bc-15",week:"Bible Lists",prompt:"Name parables Jesus told"}
 ];
 
 /* ==================== INIT ==================== */
