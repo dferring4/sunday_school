@@ -154,6 +154,8 @@
   .concfield{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;}
   .concfield input{border:none;background:transparent;color:var(--ink);font-size:15px;min-width:150px;padding:6px;}
   .concfield input:focus{outline:none;}
+  #concGrid{transition:opacity .3s;}
+  .concboard.peek #concGrid{opacity:0;pointer-events:none;}
 
   /* BEAT THE CLOCK */
   .bcstage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;gap:10px;min-height:0;text-align:center;}
@@ -200,11 +202,11 @@
   @keyframes litpulse{0%,100%{box-shadow:0 0 10px var(--gold);}50%{box-shadow:0 0 26px var(--gold);transform:scale(1.05);}}
   .wwtile.shown{background:#0c8a4a;border-color:#0a6e3b;color:#fff;}
   .wwmid{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 14px;}
-  .wheelbox{position:relative;width:min(38vw,240px);height:min(38vw,240px);flex:none;display:flex;align-items:center;justify-content:center;}
-  .wheel{width:100%;height:100%;border-radius:50%;border:6px solid var(--line);transition:transform 2.6s cubic-bezier(.17,.67,.24,1);
-    background:conic-gradient(#3b82f6 0 30deg,#111 30deg 60deg,#f97316 60deg 90deg,#a855f7 90deg 120deg,#ef4444 120deg 150deg,#22d3ee 150deg 180deg,#ffc233 180deg 210deg,#34d399 210deg 240deg,#3b82f6 240deg 270deg,#111 270deg 300deg,#f97316 300deg 330deg,#a855f7 330deg 360deg);}
-  .wheelptr{position:absolute;top:-4px;left:50%;transform:translateX(-50%);border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid #fff;z-index:3;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6));}
-  .wheelval{position:absolute;background:rgba(9,15,26,.86);border:2px solid var(--gold);border-radius:12px;padding:8px 12px;font-weight:900;font-size:clamp(15px,2vw,26px);color:var(--gold);min-width:90px;text-align:center;}
+  .wheelbox{position:relative;width:clamp(280px,48vw,480px);height:clamp(280px,48vw,480px);flex:none;display:flex;align-items:center;justify-content:center;}
+  .wheel{width:100%;height:100%;border-radius:50%;transition:transform 3.4s cubic-bezier(.15,.5,.12,1);transform-origin:center center;filter:drop-shadow(0 6px 16px rgba(0,0,0,.5));}
+  .wheel svg{width:100%;height:100%;display:block;}
+  .wheelptr{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:30px solid #EDEDE9;z-index:3;filter:drop-shadow(0 2px 2px rgba(0,0,0,.7));}
+  .wheelval{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(9,15,26,.92);border:3px solid var(--gold);border-radius:14px;padding:8px 14px;font-weight:900;font-size:clamp(16px,2.2vw,30px);color:var(--gold);min-width:96px;text-align:center;z-index:2;pointer-events:none;}
   .wwright{flex:1;min-width:260px;max-width:520px;}
   .wwletters{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;}
   .wwletter{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 0;font-weight:900;font-size:clamp(14px,1.7vw,20px);color:var(--ink);}
@@ -363,12 +365,13 @@
         <div class="concfield"><span style="color:var(--muted);font-weight:700;">&#128247; image:</span><input type="text" id="concImgInput" placeholder="e.g. shepherd.jpg"><button class="sbtn" id="concSetImg">Load</button></div>
       </div>
       <div class="concstage">
-        <div class="concboard"><div id="concImg"></div><div class="concimgph" id="concImgPh"></div><div id="concGrid"></div></div>
+        <div class="concboard" id="concBoard"><div id="concImg"></div><div class="concimgph" id="concImgPh"></div><div id="concGrid"></div></div>
         <div class="concstatus" id="concStatus"></div>
       </div>
     </div>
     <div class="controls" id="concControls">
       <button class="btn" id="concNew">New Game</button>
+      <button class="btn" id="concPeek">&#128065;&#65039; Peek</button>
       <button class="btn green big" id="concSolve">Solve Picture (+5,000)</button>
       <button class="btn" id="concSets">Other Sets</button>
     </div>
@@ -957,7 +960,8 @@ function setConcImage(value){
 function newConcGame(){
   concPlay.image=$("concImgInput").value.trim();
   concPlay.tiles=buildConcFaces().map(f=>({face:f,state:"down"}));
-  concPlay.up=[];concPlay.busy=false;concPlay.solved=false;
+  concPlay.up=[];concPlay.busy=false;concPlay.solved=false;concPlay.peek=false;
+  $("concBoard").classList.remove("peek");$("concPeek").innerHTML="&#128065;&#65039; Peek";
   const s=curConcSet();$("concTitle").textContent=s?s.title:"Concentration";
   setConcImage(concPlay.image);
   $("concStatus").textContent="";$("concStatus").className="concstatus";
@@ -994,6 +998,7 @@ function concFlip(i){
 function checkConcCleared(){if(concPlay.tiles.every(t=>t.state==="gone")){$("concStatus").textContent="Board cleared! Who can name the picture?";$("concStatus").className="concstatus good";}}
 function concRevealAll(){concPlay.tiles.forEach(t=>t.state="gone");concPlay.solved=true;renderConcGrid();}
 $("concSetImg").onclick=()=>{concPlay.image=$("concImgInput").value.trim();setConcImage(concPlay.image);};
+$("concPeek").onclick=()=>{concPlay.peek=!concPlay.peek;$("concBoard").classList.toggle("peek",concPlay.peek);$("concPeek").innerHTML=concPlay.peek?"&#128584; Hide":"&#128065;&#65039; Peek";};
 $("concImgInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("concSetImg").onclick();});
 $("concNew").onclick=()=>newConcGame();
 $("concSets").onclick=showConcPicker;
@@ -1117,10 +1122,9 @@ function chSkip(){if(chPlay.phase!=="running")return;sBlip();chAdvance();}
 $("chStart").onclick=startCh;$("chGotBtn").onclick=chGot;$("chSkip").onclick=chSkip;$("chSets").onclick=showChPicker;
 
 /* ==================== WORD PUZZLE WHEEL ==================== */
-const WHEEL=[
-{t:"$500",v:500,c:"#3b82f6"},{t:"BANKRUPT",v:"bankrupt",c:"#111"},{t:"$700",v:700,c:"#f97316"},{t:"$900",v:900,c:"#a855f7"},
-{t:"LOSE A TURN",v:"lose",c:"#ef4444"},{t:"$600",v:600,c:"#22d3ee"},{t:"$5000",v:5000,c:"#ffc233"},{t:"$800",v:800,c:"#34d399"},
-{t:"$1000",v:1000,c:"#3b82f6"},{t:"BANKRUPT",v:"bankrupt",c:"#111"},{t:"$650",v:650,c:"#f97316"},{t:"$750",v:750,c:"#a855f7"}];
+const WCOL={bankrupt:"#0A0606",lose:"#880044","5000":"#4ECDC4","3500":"#F94144","2000":"#F9C74F","1500":"#4D908E","1000":"#90BE6D","800":"#F3722C","700":"#4D908E","600":"#F8961E","500":"#43AA8B","400":"#F9844A","200":"#F9C74F"};
+const WHEEL=[500,3500,200,800,"bankrupt",1500,600,1000,400,2000,700,5000,500,3500,200,800,"bankrupt",1500,600,1000,400,2000,700,"lose"]
+  .map(v=>({v,t:v==="bankrupt"?"BANKRUPT":v==="lose"?"LOSE A TURN":"$"+v,c:WCOL[v]}));
 let wwPlay={puzzleId:null,tiles:[],guessed:{},active:0,round:[],spinValue:0,phase:"spin",busy:false,rot:0};
 function curWWPuzzle(){return state.wordwheel.find(p=>p.id===wwPlay.puzzleId)||null;}
 function enterWordWheel(){if(!state.wordwheel.length||state.wordwheel.length>1)showWWPicker();else loadWWPuzzle(state.wordwheel[0].id);}
@@ -1130,10 +1134,24 @@ function showWWPicker(){wwPlay.puzzleId=null;$("wwPicker").classList.remove("hid
   state.wordwheel.forEach(p=>{const b=document.createElement("button");b.className="jeopick";b.textContent=p.category+": "+p.phrase.length+" letters";b.onclick=()=>loadWWPuzzle(p.id);list.appendChild(b);});
 }
 function loadWWPuzzle(id){wwPlay.puzzleId=id;$("wwPicker").classList.add("hidden");$("wwPlay").classList.remove("hidden");$("wwControls").style.visibility="visible";setupWWPuzzle();}
+function buildWheel(){
+  const cx=100,cy=100,R=98,LR=56,n=WHEEL.length,seg=360/n;
+  const pt=(r,deg)=>{const a=(deg-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];};
+  let s=`<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="99.5" fill="#0b1220"/>`;
+  for(let i=0;i<n;i++){const a1=i*seg,a2=(i+1)*seg;const p1=pt(R,a1),p2=pt(R,a2);
+    s+=`<path d="M100,100 L${p1[0].toFixed(2)},${p1[1].toFixed(2)} A${R},${R} 0 0 1 ${p2[0].toFixed(2)},${p2[1].toFixed(2)} Z" fill="${WHEEL[i].c}" stroke="#D6CCC2" stroke-width="0.7"/>`;}
+  s+=`<circle cx="100" cy="100" r="98" fill="none" stroke="#D6CCC2" stroke-width="1.6"/>`;
+  for(let i=0;i<n;i++){const mid=i*seg+seg/2;const lp=pt(LR,mid);
+    const t=WHEEL[i].t;const fs=WHEEL[i].v==="lose"?7:WHEEL[i].v==="bankrupt"?8.5:11;
+    s+=`<text x="${lp[0].toFixed(2)}" y="${lp[1].toFixed(2)}" fill="#ffffff" stroke="#0A0606" stroke-width="0.7" paint-order="stroke" font-family="system-ui,Arial,sans-serif" font-size="${fs}" font-weight="900" text-anchor="middle" dominant-baseline="central" transform="rotate(${(mid-90).toFixed(1)} ${lp[0].toFixed(2)} ${lp[1].toFixed(2)})">${t}</text>`;}
+  s+=`<circle cx="100" cy="100" r="14" fill="#EDEDE9" stroke="#D6CCC2" stroke-width="2.5"/></svg>`;
+  $("wwWheel").innerHTML=s;
+}
 function setupWWPuzzle(){
   const p=curWWPuzzle();if(!p)return;
   wwPlay.tiles=p.phrase.toUpperCase().split("").map(ch=>{const isL=/[A-Z]/.test(ch);return{ch,isLetter:isL,state:isL?"blank":"punct"};});
   wwPlay.guessed={};wwPlay.active=0;wwPlay.round=state.teams.map(()=>0);wwPlay.spinValue=0;wwPlay.phase="spin";wwPlay.busy=false;
+  buildWheel();
   $("wwResult").textContent="SPIN";$("wwBanner").textContent="";
   renderWW();
 }
@@ -1173,10 +1191,11 @@ function spinWheel(){
   if(wwPlay.busy||wwPlay.phase!=="spin")return;AC();wwPlay.busy=true;$("wwSpin").disabled=true;
   const finalIdx=Math.floor(Math.random()*WHEEL.length);
   const seg=360/WHEEL.length;
-  wwPlay.rot+=360*4+(360-(finalIdx*seg+seg/2));
+  wwPlay.rot+=360*5+(360-(finalIdx*seg+seg/2));
+  $("wwResult").textContent="\u2026";
   $("wwWheel").style.transform=`rotate(${wwPlay.rot}deg)`;
-  let ticks=0;const ti=setInterval(()=>{sTick();if(++ticks>10)clearInterval(ti);},180);
-  setTimeout(()=>{clearInterval(ti);landWheel(finalIdx);},2650);
+  let ticks=0;const ti=setInterval(()=>{sTick();if(++ticks>16)clearInterval(ti);},190);
+  setTimeout(()=>{clearInterval(ti);landWheel(finalIdx);},3500);
 }
 function landWheel(idx){
   const w=WHEEL[idx];$("wwResult").textContent=w.t;$("wwResult").style.color=w.v==="bankrupt"?"#fff":w.v==="lose"?"#f87171":"#ffe27a";
