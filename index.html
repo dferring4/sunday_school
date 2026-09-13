@@ -36,7 +36,7 @@
   .teamchip:hover{transform:translateY(-2px);}
   .teamchip .tname{font-weight:800;font-size:clamp(12px,1.3vw,18px);color:var(--tc,#3b82f6);text-align:center;line-height:1.1;
     max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .teamchip .tscore{font-weight:900;font-size:clamp(22px,3vw,46px);line-height:1;margin-top:2px;}
+  .teamchip .tscore{font-weight:900;font-size:clamp(19px,2.5vw,40px);line-height:1;margin-top:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
   .teamchip .edithint{position:absolute;top:3px;right:7px;font-size:9px;color:var(--muted);opacity:.6;}
   .teamchip.pulse{animation:pulsefx .7s ease;}
   @keyframes pulsefx{0%{transform:scale(1);}25%{transform:scale(1.12);box-shadow:0 0 40px var(--tc);}100%{transform:scale(1);}}
@@ -246,11 +246,11 @@
   .popover{background:var(--panel);border:2px solid var(--tc,var(--gold));border-radius:20px;padding:24px;width:min(640px,96vw);box-shadow:var(--shadow);}
   .popover h3{margin:0 0 4px;color:var(--tc,var(--gold));font-size:26px;}
   .popover .bigscore{font-weight:900;font-size:60px;text-align:center;margin:6px 0 16px;line-height:1;}
-  .placegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
-  .place{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center;}
-  .place .plabel{color:var(--muted);font-size:12px;font-weight:800;margin:4px 0;}
-  .place .pdig{font-weight:900;font-size:22px;}
-  .stepbtn{width:100%;background:var(--line);color:var(--ink);border-radius:10px;padding:12px 0;font-weight:900;font-size:22px;}
+  .placegrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+  .place{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 3px;text-align:center;}
+  .place .plabel{color:var(--muted);font-size:11px;font-weight:800;margin:3px 0;}
+  .place .pdig{font-weight:900;font-size:20px;}
+  .stepbtn{width:100%;background:var(--line);color:var(--ink);border-radius:9px;padding:11px 0;font-weight:900;font-size:20px;}
   .stepbtn.up{background:var(--green);color:#04241a;} .stepbtn.down{background:var(--red);color:#2a0606;}
   .popfoot{display:flex;gap:10px;justify-content:space-between;margin-top:16px;flex-wrap:wrap;}
 
@@ -674,11 +674,11 @@
 "use strict";
 const LS="quizShowdown.v1";
 const uid=()=>Math.random().toString(36).slice(2,9);
-const PLACES=[{v:10000,l:"10k"},{v:1000,l:"1k"},{v:100,l:"100"},{v:10,l:"10"},{v:1,l:"1"}];
+const PLACES=[{v:1000000,l:"1M"},{v:100000,l:"100k"},{v:10000,l:"10k"},{v:1000,l:"1k"},{v:100,l:"100"},{v:10,l:"10"},{v:1,l:"1"}];
 const TEAM_COLORS=["#ef4444","#3b82f6","#34d399","#a855f7","#f97316"];
 const LETTERS=["A","B","C","D","E","F"];
 const $=id=>document.getElementById(id);
-const clamp=n=>Math.max(-99999,Math.min(99999,n));
+const clamp=n=>Math.max(-9999999,Math.min(9999999,n));
 const fmt=n=>n.toLocaleString("en-US");
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
 
@@ -761,7 +761,7 @@ let openTeamIdx=null;
 function openScore(i){openTeamIdx=i;const t=state.teams[i];$("popTeamName").textContent=t.name;$("popover").style.setProperty("--tc",t.color);drawPop();$("scoreOverlay").classList.add("show");}
 function drawPop(){
   const t=state.teams[openTeamIdx];$("popScore").textContent=fmt(t.score);
-  const grid=$("placeGrid");grid.innerHTML="";const abs=Math.abs(t.score).toString().padStart(5,"0");
+  const grid=$("placeGrid");grid.innerHTML="";const abs=Math.abs(t.score).toString().padStart(7,"0");
   PLACES.forEach((p,idx)=>{const d=document.createElement("div");d.className="place";
     d.innerHTML=`<button class="stepbtn up">+</button><div class="plabel">${p.l}</div><div class="pdig num">${abs[idx]}</div><button class="stepbtn down">&minus;</button>`;
     d.querySelector(".up").onclick=()=>pstep(p.v);d.querySelector(".down").onclick=()=>pstep(-p.v);grid.appendChild(d);});
@@ -1399,7 +1399,7 @@ function updateVoy(dt){
   }
   if(voy.phase!=="playing")return;
   if(state.settings.voyFog){
-    const HOLD=0.86;voy.fogX+=1.35*(HOLD-thr)*dt;
+    const HOLD=0.86;voy.fogX+=1.0*(HOLD-thr)*dt;
     voy.fogX=Math.max(-voy.W*0.1,Math.min(voy.shipX+10,voy.fogX));
     if(voy.fogX>=voy.shipX-voy.H*0.05){fogCaught();return;}
   }
