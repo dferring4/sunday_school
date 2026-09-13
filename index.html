@@ -1167,7 +1167,6 @@ function renderWW(){
     w.forEach(i=>{const t=wwPlay.tiles[i];const el=document.createElement("div");el.className="wwtile";
       if(!t.isLetter){el.classList.add("punct");el.textContent=t.ch;}
       else if(t.state==="blank"){el.classList.add("blank");el.textContent="A";}
-      else if(t.state==="lit"){el.classList.add("lit");el.textContent=t.ch;el.onclick=()=>revealTile(i);}
       else{el.classList.add("shown");el.textContent=t.ch;}
       wd.appendChild(el);});
     board.appendChild(wd);});
@@ -1175,7 +1174,7 @@ function renderWW(){
   teamAwardBar($("wwTeams"),i=>{wwPlay.active=i;renderWW();},"");
   [...$("wwTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===wwPlay.active));
   const at=state.teams[wwPlay.active];
-  const turnMsg={spin:"'s turn — spin the wheel!",pick:" spun "+(typeof wwPlay.spinValue==="number"?"$"+fmt(wwPlay.spinValue):"")+" — pick a letter",reveal:" — press the glowing letters!",solved:""};
+  const turnMsg={spin:"'s turn — spin the wheel!",pick:" spun "+(typeof wwPlay.spinValue==="number"?"$"+fmt(wwPlay.spinValue):"")+" — pick a letter",solved:""};
   $("wwTurn").innerHTML=at?`<span style="color:${at.color}">${esc(at.name)}</span>${turnMsg[wwPlay.phase]||""}`:"";
   // letters
   const grid=$("wwLetters");grid.innerHTML="";
@@ -1210,15 +1209,15 @@ function landWheel(idx){
 function passWWTurn(){wwPlay.active=(wwPlay.active+1)%state.teams.length;wwPlay.spinValue=0;wwPlay.phase="spin";renderWW();}
 function pickLetter(L){
   if(wwPlay.phase!=="pick"||wwPlay.guessed[L])return;AC();wwPlay.guessed[L]=true;
-  const hits=wwPlay.tiles.filter(t=>t.isLetter&&t.state==="blank"&&t.ch===L);
-  if(hits.length){wwPlay.tiles.forEach(t=>{if(t.isLetter&&t.state==="blank"&&t.ch===L)t.state="lit";});wwPlay.phase="reveal";$("wwBanner").innerHTML=`${hits.length} <b>${L}</b>${hits.length>1?"'s":""}! Press each glowing tile.`;sCorrect();renderWW();}
+  const hits=wwPlay.tiles.filter(t=>t.isLetter&&t.state!=="shown"&&t.ch===L).length;
+  if(hits){
+    wwPlay.tiles.forEach(t=>{if(t.isLetter&&t.ch===L)t.state="shown";});
+    const gain=wwPlay.spinValue*hits;award(wwPlay.active,gain);wwPlay.round[wwPlay.active]+=gain;sCorrect();
+    wwPlay.phase="spin";wwPlay.spinValue=0;
+    if(wwSolvedFully())wwWin(wwPlay.active,false);
+    else{$("wwBanner").innerHTML=`${hits} <b>${L}</b>${hits>1?"'s":""} &mdash; +${fmt(gain)}! ${esc(state.teams[wwPlay.active].name)} spins again.`;renderWW();}
+  }
   else{sBuzzer();$("wwBanner").innerHTML=`No <b>${L}</b>. Turn passes.`;passWWTurn();}
-}
-function revealTile(i){
-  const t=wwPlay.tiles[i];if(t.state!=="lit")return;t.state="shown";award(wwPlay.active,wwPlay.spinValue);wwPlay.round[wwPlay.active]+=wwPlay.spinValue;sBlip();
-  const moreLit=wwPlay.tiles.some(x=>x.state==="lit");
-  if(!moreLit){wwPlay.phase="spin";wwPlay.spinValue=0;$("wwBanner").innerHTML=`Nice! ${esc(state.teams[wwPlay.active].name)} spins again.`;if(wwSolvedFully()){wwWin(wwPlay.active,false);}else renderWW();}
-  else renderWW();
 }
 function wwSolvedFully(){return wwPlay.tiles.every(t=>!t.isLetter||t.state==="shown");}
 function wwWin(team,bonus){wwPlay.tiles.forEach(t=>{if(t.isLetter)t.state="shown";});wwPlay.phase="solved";if(bonus)award(team,2000);sCorrect();burstConfetti();$("wwBanner").innerHTML=`&#127942; ${esc(state.teams[team].name)} solved it!${bonus?" +2,000":""} Hit New Puzzle.`;renderWW();}
