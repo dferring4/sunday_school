@@ -221,13 +221,14 @@
   .voyhud-l{font-weight:900;font-size:clamp(14px,1.8vw,22px);white-space:nowrap;}
   .voylevel{color:var(--gold);font-size:.8em;margin-left:6px;}
   .voyverse{flex:1;text-align:center;font-weight:700;font-size:clamp(13px,1.7vw,22px);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .voyverse .done{color:var(--green);} .voyverse .next{color:var(--gold);text-decoration:underline;}
+  .voyverse .done{color:var(--green);} .voyverse .next{color:var(--gold);text-decoration:underline;} .voyverse .blank{color:#5b6b86;}
   .voyhud-r{display:flex;align-items:center;gap:12px;white-space:nowrap;}
   .voyhud-r .voyscore{font-weight:900;font-size:clamp(16px,2.2vw,28px);}
   .voywrap{position:relative;flex:1;min-height:0;overflow:hidden;background:#05070f;}
   #voyCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;}
-  .voysteer{position:absolute;left:14px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;gap:14px;z-index:2;}
-  .voysteerbtn{width:clamp(62px,9vw,96px);height:clamp(62px,9vw,96px);border-radius:20px;background:rgba(124,92,255,.22);border:2px solid #7c5cff;color:#cbbcff;font-size:clamp(24px,4vw,40px);font-weight:900;touch-action:none;user-select:none;}
+  .voysteer{position:absolute;left:14px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;z-index:2;}
+  .voysteerrow{display:flex;gap:8px;}
+  .voysteerbtn{width:clamp(56px,8vw,84px);height:clamp(56px,8vw,84px);border-radius:18px;background:rgba(124,92,255,.22);border:2px solid #7c5cff;color:#cbbcff;font-size:clamp(22px,3.6vw,36px);font-weight:900;touch-action:none;user-select:none;}
   .voysteerbtn:active{background:rgba(124,92,255,.5);}
   .voythrottle{position:absolute;right:16px;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:2;}
   .voythlabel{writing-mode:vertical-rl;font-weight:900;letter-spacing:3px;color:var(--muted);font-size:13px;}
@@ -488,6 +489,7 @@
       <canvas id="voyCanvas"></canvas>
       <div class="voysteer" id="voySteer">
         <button class="voysteerbtn" id="voyUp">&#9650;</button>
+        <div class="voysteerrow"><button class="voysteerbtn" id="voyLeft">&#9664;</button><button class="voysteerbtn" id="voyRight">&#9654;</button></div>
         <button class="voysteerbtn" id="voyDown">&#9660;</button>
       </div>
       <div class="voythrottle" id="voyThrottleBox">
@@ -621,6 +623,7 @@
       <div class="parseresult" id="voyParse"></div>
       <div class="row" style="margin-top:14px;align-items:center;">
         <div style="flex:0 0 auto;"><label class="fld">Chasing fog</label><div class="pills"><span class="pill" id="voyFogPill">&#127787;&#65039; Fog on</span></div></div>
+        <div style="flex:0 0 auto;"><label class="fld">Alien ships</label><div class="pills"><span class="pill" id="voyAlienPill">&#128126; On</span></div></div>
         <div style="flex:0 0 auto;"><label class="fld">Throttle on a 2nd device</label><div class="pills"><span class="pill" id="voyTwoPill">&#128241; Off</span></div></div>
       </div>
       <p class="hint" id="voyTwoNote" style="margin-top:8px;display:none;">The companion-phone throttle is coming in the next update. For now the on-screen throttle lever is used.</p>
@@ -681,7 +684,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 
 let state={
   teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],
-  settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyTwoDevice:false},
+  settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false},
   questions:[], whoami:[], jeopardy:[],
 };
 let screen="hub";
@@ -691,7 +694,7 @@ function ensureArrays(){state.questions=state.questions||[];state.whoami=state.w
 function load(){
   try{const d=JSON.parse(localStorage.getItem(LS));
     if(d&&(d.questions||d.teams)){state=Object.assign(state,d);
-      state.settings=Object.assign({timerSeconds:10,order:"shuffle",sound:true},d.settings||{});}
+      state.settings=Object.assign({timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false},d.settings||{});}
   }catch(e){}
   ensureArrays();
   if(applyDefaults())save();
@@ -1315,50 +1318,56 @@ $("wwNew").onclick=()=>setupWWPuzzle();
 $("wwSets").onclick=showWWPicker;
 
 /* ==================== VERSE VOYAGER ==================== */
-const VOY={STEER:5.2, LANES:3, GATEGAP:1, SHIPXF:0.46};
+const VOY={STEER:6.6, STEERX:0.010, LANES:3};
 let voy={phase:"idle",team:0,lives:3,level:1,verseIdx:0,wordIdx:0,gameScore:0,
-  ship:{y:0,vy:0},steer:0,throttle:0,fogX:0,redTime:0,gate:null,stars:[],parts:[],
-  raf:null,lastTs:0,W:0,H:0,shipX:0,flash:"",flashT:0};
+  ship:{y:0},steer:0,steerX:0,shipXf:0.4,throttle:0,fogX:0,gate:null,stars:[],parts:[],aliens:[],alienTimer:140,
+  hidden:[],hiddenCount:0,raf:null,lastTs:0,W:0,H:0,shipX:0,flash:"",flashT:0};
 const GENERIC_DECOYS=["and","the","for","with","God","Lord","said","came","went","have","will","from","unto","that","them","then"];
 function curVerse(){return state.voyager[voy.verseIdx%Math.max(1,state.voyager.length)]||null;}
 function voyCanvas(){return $("voyCanvas");}
-function voyResize(){const c=voyCanvas();const w=$("voyWrap");c.width=w.clientWidth;c.height=w.clientHeight;voy.W=c.width;voy.H=c.height;voy.shipX=voy.W*VOY.SHIPXF;}
+function voyResize(){const c=voyCanvas();const w=$("voyWrap");c.width=w.clientWidth;c.height=w.clientHeight;voy.W=c.width;voy.H=c.height;voy.shipX=voy.shipXf*voy.W;}
 function enterVoyager(){
   voyResize();
   if(!voy.stars.length)for(let i=0;i<90;i++)voy.stars.push({x:Math.random(),y:Math.random(),z:Math.random()*.8+.2});
   if(!state.voyager.length){voy.phase="idle";showVoyOverlay(`<div class="voycard"><h2>Verse Voyager</h2><p>No verses yet. Add some in Setup, then come back to fly!</p></div>`);return;}
-  voy.team=voy.team%state.teams.length;
-  readyVoy();
+  voy.team=voy.team%state.teams.length;readyVoy();
 }
 function stopVoyager(){if(voy.raf){cancelAnimationFrame(voy.raf);voy.raf=null;}voy.phase="idle";}
 function showVoyOverlay(html){const o=$("voyOverlay");o.innerHTML=html;o.classList.add("show");}
 function hideVoyOverlay(){$("voyOverlay").classList.remove("show");}
 function readyVoy(){
   voy.phase="idle";const t=state.teams[voy.team];
+  const dangers=[];if(state.settings.voyFog)dangers.push("outrun the <b>fog</b> creeping up behind you");if(state.settings.voyAliens)dangers.push("dodge <b>alien ships</b>");
   showVoyOverlay(`<div class="voycard"><h2 style="color:${t.color}">${esc(t.name)}</h2>
-    <p>Steer the ship with the <b>&#9650; / &#9660;</b> buttons (or arrow keys). Slide the <b>throttle</b> to set your speed. Fly into the <b>correct next word</b> of the verse. Wrong word blows up your ship &mdash; you get 3.${state.settings.voyFog?" Don't let the <b>fog</b> catch you &mdash; keep your speed up!":""}</p>
+    <p>Steer with the <b>arrow pad</b> (or arrow keys): up/down to aim, left/right to move forward or hang back. Slide the <b>throttle</b> to set your speed. Fly into the <b>correct next word</b>. A wrong word or a crash blows up your ship &mdash; you get 3.${dangers.length?" Also "+dangers.join(" and ")+"!":""}</p>
     <button class="btn green big" id="voyStartBtn" style="max-width:none;">Start Flight</button></div>`);
-  $("voyStartBtn").onclick=startVoy;
-  drawVoy();
+  $("voyStartBtn").onclick=startVoy;drawVoy();
 }
 function startVoy(){
   hideVoyOverlay();AC();
-  voy.phase="playing";voy.lives=3;voy.level=1;voy.verseIdx=0;voy.wordIdx=0;voy.gameScore=0;
-  voy.ship.y=voy.H/2;voy.ship.vy=0;voy.steer=0;voy.throttle=0.4;$("voyLever").value=40;
-  voy.fogX=-voy.W*0.05;voy.redTime=0;voy.parts=[];voy.flash="";voy.flashT=0;
+  voy.phase="playing";voy.lives=3;voy.level=1;voy.verseIdx=0;voy.hiddenCount=0;voy.gameScore=0;
+  voy.throttle=0.45;$("voyLever").value=45;
+  startRound(true);
+  voy.lastTs=performance.now();if(voy.raf)cancelAnimationFrame(voy.raf);voy.raf=requestAnimationFrame(voyLoop);
+}
+function pickHidden(n,count){const idx=[...Array(n).keys()];for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}return idx.slice(0,Math.max(0,Math.min(n,count))).sort((a,b)=>a-b);}
+function startRound(rebuildHidden){
+  const v=curVerse();if(!v)return;
+  voy.wordIdx=0;voy.ship.y=voy.H/2;voy.shipXf=0.4;voy.shipX=voy.shipXf*voy.W;voy.steer=0;voy.steerX=0;
+  voy.aliens=[];voy.alienTimer=150;voy.parts=[];voy.fogX=-voy.W*0.06;
+  if(rebuildHidden)voy.hidden=pickHidden(v.words.length,voy.hiddenCount);
   spawnGate();updateVoyHud();
-  voy.lastTs=performance.now();voy.raf=requestAnimationFrame(voyLoop);
 }
 function spawnGate(){
   const v=curVerse();if(!v){voy.gate=null;return;}
   if(voy.wordIdx>=v.words.length){verseComplete();return;}
   const correct=v.words[voy.wordIdx];
   const pool=(v.decoys&&v.decoys.length?v.decoys:GENERIC_DECOYS).filter(d=>d.toLowerCase()!==correct.toLowerCase());
-  const picks=[];const used={};
-  while(picks.length<VOY.LANES-1){const d=pool.length?pool[Math.floor(Math.random()*pool.length)]:GENERIC_DECOYS[Math.floor(Math.random()*GENERIC_DECOYS.length)];const key=d.toLowerCase();if(used[key]&&pool.length>=VOY.LANES){continue;}used[key]=1;picks.push(d);if(picks.length>20)break;}
-  const lanes=[...picks,correct];for(let i=lanes.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[lanes[i],lanes[j]]=[lanes[j],lanes[i]];}
-  const correctLane=lanes.indexOf(correct);
-  voy.gate={x:voy.W+120,words:lanes,correct:correctLane,resolved:false};
+  const picks=[];const used={};let guard=0;
+  while(picks.length<VOY.LANES-1&&guard++<40){const d=pool.length?pool[Math.floor(Math.random()*pool.length)]:GENERIC_DECOYS[Math.floor(Math.random()*GENERIC_DECOYS.length)];const key=d.toLowerCase();if(used[key]&&pool.length>=VOY.LANES)continue;used[key]=1;picks.push(d);}
+  const lanes=[...picks,correct];while(lanes.length<VOY.LANES)lanes.push(GENERIC_DECOYS[Math.floor(Math.random()*GENERIC_DECOYS.length)]);
+  for(let i=lanes.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[lanes[i],lanes[j]]=[lanes[j],lanes[i]];}
+  voy.gate={x:voy.W+120,words:lanes,correct:lanes.indexOf(correct),resolved:false};
 }
 function laneOfY(y){const band=voy.H/VOY.LANES;return Math.max(0,Math.min(VOY.LANES-1,Math.floor(y/band)));}
 function voyLoop(ts){
@@ -1367,110 +1376,93 @@ function voyLoop(ts){
   updateVoy(dt);drawVoy();voy.raf=requestAnimationFrame(voyLoop);
 }
 function updateVoy(dt){
-  const speed=voy.throttle; // 0..1
-  const maxScroll=(3.4+voy.level*0.35);
-  const scroll=speed*maxScroll;
-  // ship vertical
-  voy.ship.y+=voy.steer*VOY.STEER*dt;
-  const pad=voy.H*0.06;voy.ship.y=Math.max(pad,Math.min(voy.H-pad,voy.ship.y));
-  // stars
-  voy.stars.forEach(s=>{s.x-=(0.002+s.z*0.01)*(0.3+speed)*dt;if(s.x<0)s.x+=1;});
-  // gate
+  const thr=voy.throttle;
+  const maxScroll=7.5+Math.min(voy.level,12)*0.5;
+  const scroll=(0.34+thr*0.66)*maxScroll;
+  voy.ship.y+=voy.steer*VOY.STEER*dt;const pad=voy.H*0.06;voy.ship.y=Math.max(pad,Math.min(voy.H-pad,voy.ship.y));
+  voy.shipXf+=voy.steerX*VOY.STEERX*dt;voy.shipXf=Math.max(0.20,Math.min(0.74,voy.shipXf));voy.shipX=voy.shipXf*voy.W;
+  voy.stars.forEach(s=>{s.x-=(0.002+s.z*0.01)*(0.4+scroll*0.12)*dt;if(s.x<0)s.x+=1;});
   if(voy.gate&&!voy.gate.resolved){
     voy.gate.x-=scroll*dt;
-    if(voy.gate.x<=voy.shipX){
-      voy.gate.resolved=true;
-      const lane=laneOfY(voy.ship.y);
+    if(voy.gate.x<=voy.shipX){voy.gate.resolved=true;const lane=laneOfY(voy.ship.y);
       if(lane===voy.gate.correct){addVoyScore(500);voy.flash="+500";voy.flashT=40;sBlip();voy.wordIdx++;spawnGate();}
-      else{wrongWord();}
+      else destroyShip("Wrong word!",-1000);
     }
   }
   if(voy.phase!=="playing")return;
-  // fog
+  if(state.settings.voyAliens){
+    voy.alienTimer-=dt;
+    if(voy.alienTimer<=0){const burst=1+Math.floor(Math.random()*3);const tiers=[2.4,3.6,5,7.5,11.5];for(let k=0;k<burst;k++){const sp=tiers[Math.floor(Math.random()*tiers.length)];voy.aliens.push({x:voy.W+40+k*70,y:voy.H*(0.12+Math.random()*0.76),vx:sp+voy.level*0.2,r:15});}voy.alienTimer=70+Math.random()*160;}
+    for(const al of voy.aliens)al.x-=al.vx*dt;
+    voy.aliens=voy.aliens.filter(a=>a.x>-60);
+    for(const al of voy.aliens){if(Math.abs(al.x-voy.shipX)<al.r+16&&Math.abs(al.y-voy.ship.y)<al.r+13){destroyShip("Alien crash!",0);break;}}
+  }
+  if(voy.phase!=="playing")return;
   if(state.settings.voyFog){
-    const RED=0.30,SAFE=0.55;
-    if(speed<RED){voy.fogX+=(0.8+(RED-speed)/RED*1.8)*dt;voy.redTime+=dt;}
-    else if(speed>SAFE){voy.fogX-=(1.5*(speed-SAFE)/(1-SAFE))*dt;voy.redTime=0;}
-    else{voy.fogX-=0.15*dt;voy.redTime=Math.max(0,voy.redTime-dt);}
+    const HOLD=0.86;voy.fogX+=1.35*(HOLD-thr)*dt;
     voy.fogX=Math.max(-voy.W*0.1,Math.min(voy.shipX+10,voy.fogX));
     if(voy.fogX>=voy.shipX-voy.H*0.05){fogCaught();return;}
   }
-  // particles
   voy.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=0.15*dt;p.life-=dt;});
   voy.parts=voy.parts.filter(p=>p.life>0);
   if(voy.flashT>0)voy.flashT-=dt;
 }
 function addVoyScore(n){voy.gameScore+=n;award(voy.team,n);updateVoyHud();}
-function explode(x,y,color){for(let i=0;i<26;i++){const a=Math.random()*Math.PI*2,sp=Math.random()*4+1;voy.parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:24+Math.random()*18,c:color||"#ff7a4d"});}}
-function wrongWord(){
-  addVoyScore(-1000);explode(voy.shipX,voy.ship.y,"#ff5a4d");sBuzzer();voy.flash="Wrong word!";voy.flashT=70;voy.lives--;updateVoyHud();
-  if(voy.lives<=0){gameOverVoy("Out of ships!");return;}
-  voy.wordIdx=0;voy.ship.y=voy.H/2;voy.ship.vy=0;voy.throttle=Math.max(voy.throttle,0.4);$("voyLever").value=Math.round(voy.throttle*100);
-  if(state.settings.voyFog)voy.fogX=-voy.W*0.05;voy.redTime=0;spawnGate();
+function explode(x,y,color){for(let i=0;i<28;i++){const a=Math.random()*Math.PI*2,sp=Math.random()*4+1;voy.parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:24+Math.random()*18,c:color||"#ff7a4d"});}}
+function destroyShip(reason,penalty){
+  if(penalty)addVoyScore(penalty);
+  explode(voy.shipX,voy.ship.y,reason.indexOf("Alien")>=0?"#c084fc":"#ff5a4d");sBuzzer();voy.flash=reason;voy.flashT=70;voy.lives--;updateVoyHud();
+  if(voy.lives<=0){gameOverVoy(reason);return;}
+  startRound(false);
 }
 function verseComplete(){
-  addVoyScore(10000);voy.flash="VERSE COMPLETE! +10,000";voy.flashT=110;sCorrect();burstConfetti();
-  voy.level++;voy.verseIdx++;voy.wordIdx=0;voy.ship.y=voy.H/2;
-  if(state.settings.voyFog)voy.fogX=-voy.W*0.08;voy.redTime=0;
-  spawnGate();updateVoyHud();
+  addVoyScore(10000);voy.flash="VERSE COMPLETE! +10,000";voy.flashT=110;sCorrect();burstConfetti();voy.level++;
+  const v=curVerse();const N=v?v.words.length:0;const step=Math.max(1,Math.ceil(N/4));
+  if(voy.hiddenCount>=N){voy.verseIdx++;voy.hiddenCount=0;}
+  else voy.hiddenCount=Math.min(N,voy.hiddenCount+step);
+  startRound(true);
 }
 function fogCaught(){explode(voy.shipX,voy.ship.y,"#84e36b");sBuzzer();gameOverVoy("The fog got you!");}
 function gameOverVoy(reason){
   if(voy.phase==="gameover")return;voy.phase="gameover";if(voy.raf){cancelAnimationFrame(voy.raf);voy.raf=null;}
   const t=state.teams[voy.team];
-  showVoyOverlay(`<div class="voycard"><h2 style="color:#ff6b6b">Game Over</h2><p>${esc(reason)}</p>
-    <p><span style="color:${t.color}">${esc(t.name)}</span> scored this flight:</p><div class="big num">${fmt(voy.gameScore)}</div>
-    <button class="btn gold big" id="voyNextBtn" style="max-width:none;margin-top:16px;">Next Team &#9654;</button></div>`);
-  $("voyNextBtn").onclick=()=>{voy.team=(voy.team+1)%state.teams.length;readyVoy();};
-  drawVoy();
+  showVoyOverlay(`<div class="voycard"><h2 style="color:#ff6b6b">Game Over</h2><p>${esc(reason)}</p><p><span style="color:${t.color}">${esc(t.name)}</span> scored this flight:</p><div class="big num">${fmt(voy.gameScore)}</div><button class="btn gold big" id="voyNextBtn" style="max-width:none;margin-top:16px;">Next Team &#9654;</button></div>`);
+  $("voyNextBtn").onclick=()=>{voy.team=(voy.team+1)%state.teams.length;readyVoy();};drawVoy();
 }
-/* ---- drawing ---- */
 function drawVoy(){
   const c=voyCanvas(),g=c.getContext("2d"),W=voy.W,H=voy.H;if(!W||!H)return;
-  g.clearRect(0,0,W,H);
-  g.fillStyle="#05070f";g.fillRect(0,0,W,H);
-  // stars
+  g.clearRect(0,0,W,H);g.fillStyle="#05070f";g.fillRect(0,0,W,H);
   g.fillStyle="#9fb2d8";voy.stars.forEach(s=>{const x=s.x*W,y=s.y*H,r=s.z*1.8;g.globalAlpha=.3+s.z*.5;g.fillRect(x,y,r,r);});g.globalAlpha=1;
-  // gate words
-  if(voy.gate){const band=H/VOY.LANES;voy.gate.words.forEach((w,i)=>{
-    const cy=band*i+band/2,x=voy.gate.x;const bw=Math.min(220,W*0.24),bh=Math.min(64,band*0.6);
+  if(voy.gate){const band=H/VOY.LANES;voy.gate.words.forEach((w,i)=>{const cy=band*i+band/2,x=voy.gate.x;const bw=Math.min(220,W*0.24),bh=Math.min(64,band*0.6);
     g.fillStyle="rgba(124,92,255,.16)";g.strokeStyle="#7c5cff";g.lineWidth=2;roundRectVoy(g,x-bw/2,cy-bh/2,bw,bh,12);g.fill();g.stroke();
-    g.fillStyle="#fff";g.font="900 "+Math.min(30,bh*0.5)+"px system-ui,Arial";g.textAlign="center";g.textBaseline="middle";g.fillText(w,x,cy);
-  });}
-  // fog
-  if(state.settings.voyFog&&voy.fogX>-W*0.09){
-    const fx=voy.fogX;const grad=g.createLinearGradient(0,0,fx+40,0);grad.addColorStop(0,"rgba(60,120,50,.95)");grad.addColorStop(.7,"rgba(90,170,70,.75)");grad.addColorStop(1,"rgba(120,220,110,.15)");
-    g.fillStyle=grad;g.beginPath();g.moveTo(0,0);
-    for(let y=0;y<=H;y+=16){const wob=Math.sin(y*0.05+performance.now()*0.004)*14;g.lineTo(fx+wob,y);}
-    g.lineTo(0,H);g.closePath();g.fill();
-  }
-  // ship
+    g.fillStyle="#fff";g.font="900 "+Math.min(30,bh*0.5)+"px system-ui,Arial";g.textAlign="center";g.textBaseline="middle";g.fillText(w,x,cy);});}
+  voy.aliens.forEach(a=>drawAlien(g,a.x,a.y,a.r));
+  if(state.settings.voyFog&&voy.fogX>-W*0.09){const fx=voy.fogX;const grad=g.createLinearGradient(0,0,fx+40,0);grad.addColorStop(0,"rgba(60,120,50,.95)");grad.addColorStop(.7,"rgba(90,170,70,.75)");grad.addColorStop(1,"rgba(120,220,110,.12)");
+    g.fillStyle=grad;g.beginPath();g.moveTo(0,0);for(let y=0;y<=H;y+=16){const wob=Math.sin(y*0.05+performance.now()*0.004)*14;g.lineTo(fx+wob,y);}g.lineTo(0,H);g.closePath();g.fill();}
   drawShip(g,voy.shipX,voy.ship.y,voy.throttle);
-  // particles
   voy.parts.forEach(p=>{g.globalAlpha=Math.max(0,Math.min(1,p.life/24));g.fillStyle=p.c;g.fillRect(p.x,p.y,4,4);});g.globalAlpha=1;
-  // speedometer
   drawSpeedo(g,W-70,H-70,50,voy.throttle);
-  // flash
-  if(voy.flashT>0){g.globalAlpha=Math.min(1,voy.flashT/30);g.fillStyle=voy.flash.indexOf("Wrong")>=0?"#ff6b6b":"#ffd24a";g.font="900 "+Math.min(40,W*0.05)+"px system-ui,Arial";g.textAlign="center";g.textBaseline="middle";g.fillText(voy.flash,W/2,H*0.16);g.globalAlpha=1;}
+  if(voy.flashT>0){const bad=/Wrong|Alien|crash|fog/.test(voy.flash);g.globalAlpha=Math.min(1,voy.flashT/30);g.fillStyle=bad?"#ff6b6b":"#ffd24a";g.font="900 "+Math.min(40,W*0.05)+"px system-ui,Arial";g.textAlign="center";g.textBaseline="middle";g.fillText(voy.flash,W/2,H*0.16);g.globalAlpha=1;}
+}
+function drawAlien(g,x,y,r){
+  g.save();g.translate(x,y);g.strokeStyle="#3a7d1a";g.lineWidth=2;
+  g.fillStyle="#7CFC00";g.beginPath();g.ellipse(0,3,r,r*0.5,0,0,7);g.fill();g.stroke();
+  g.fillStyle="#c084fc";g.beginPath();g.ellipse(0,-1,r*0.55,r*0.55,0,Math.PI,0);g.fill();g.stroke();
+  g.fillStyle="#fef08a";for(let i=-1;i<=1;i++){g.beginPath();g.arc(i*r*0.5,4,2,0,7);g.fill();}
+  g.restore();
 }
 function drawShip(g,x,y,thr){
-  if(voy.phase==="dying"||voy.phase==="gameover")return;
-  // flame
-  const fl=6+thr*22+Math.random()*6;g.fillStyle="#ffb14d";g.beginPath();g.moveTo(x-16,y-7);g.lineTo(x-16-fl,y);g.lineTo(x-16,y+7);g.closePath();g.fill();
+  if(voy.phase==="gameover")return;
+  const fl=6+thr*24+Math.random()*6;g.fillStyle="#ffb14d";g.beginPath();g.moveTo(x-16,y-7);g.lineTo(x-16-fl,y);g.lineTo(x-16,y+7);g.closePath();g.fill();
   g.fillStyle="#ffe27a";g.beginPath();g.moveTo(x-16,y-4);g.lineTo(x-16-fl*0.6,y);g.lineTo(x-16,y+4);g.closePath();g.fill();
-  // body
   g.fillStyle="#cbbcff";g.strokeStyle="#7c5cff";g.lineWidth=2;g.beginPath();g.moveTo(x+22,y);g.lineTo(x-16,y-13);g.lineTo(x-9,y);g.lineTo(x-16,y+13);g.closePath();g.fill();g.stroke();
   g.fillStyle="#7c5cff";g.beginPath();g.arc(x+2,y,4,0,7);g.fill();
 }
 function drawSpeedo(g,cx,cy,r,thr){
   g.save();g.translate(cx,cy);
-  // arc bg
   g.lineWidth=8;g.strokeStyle="#1a2942";g.beginPath();g.arc(0,0,r,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5);g.stroke();
-  // red zone (low end)
   g.strokeStyle="#ef4444";g.beginPath();g.arc(0,0,r,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5*0.30);g.stroke();
-  // green (safe high)
-  g.strokeStyle="#34d399";g.beginPath();g.arc(0,0,r,Math.PI*0.75+Math.PI*1.5*0.55,Math.PI*0.75+Math.PI*1.5);g.stroke();
-  // needle
+  g.strokeStyle="#34d399";g.beginPath();g.arc(0,0,r,Math.PI*0.75+Math.PI*1.5*0.60,Math.PI*0.75+Math.PI*1.5);g.stroke();
   const a=Math.PI*0.75+Math.PI*1.5*Math.max(0,Math.min(1,thr));
   g.strokeStyle=thr<0.30?"#f87171":"#EDEDE9";g.lineWidth=3;g.beginPath();g.moveTo(0,0);g.lineTo(Math.cos(a)*(r-6),Math.sin(a)*(r-6));g.stroke();
   g.fillStyle="#EDEDE9";g.beginPath();g.arc(0,0,4,0,7);g.fill();
@@ -1483,19 +1475,18 @@ function updateVoyHud(){
   $("voyLevel").textContent=voy.phase==="idle"?"":"Level "+voy.level;
   $("voyScore").textContent=fmt(voy.gameScore);
   let lh="";for(let i=0;i<3;i++)lh+=`<span style="opacity:${i<voy.lives?1:.25}">&#128640;</span>`;$("voyLives").innerHTML=lh;
-  if(v){let h="";v.words.forEach((w,i)=>{h+=`<span class="${i<voy.wordIdx?"done":i===voy.wordIdx?"next":""}">${esc(i===voy.wordIdx?"____":w)}</span> `;});$("voyVerse").innerHTML=h;}
+  if(v){let h="";v.words.forEach((w,i)=>{const blank=(voy.hidden&&voy.hidden.indexOf(i)>=0)||i===voy.wordIdx;const cls=i===voy.wordIdx?"next":(blank?"blank":(i<voy.wordIdx?"done":""));h+=`<span class="${cls}">${blank?"____":esc(w)}</span> `;});$("voyVerse").innerHTML=h;}
   else $("voyVerse").innerHTML="";
 }
-/* ---- controls ---- */
-function voySetSteer(d){voy.steer=d;}
 (function(){
-  const up=$("voyUp"),dn=$("voyDown");
-  const press=(el,d)=>{el.addEventListener("pointerdown",e=>{e.preventDefault();voySetSteer(d);});
-    ["pointerup","pointerleave","pointercancel"].forEach(ev=>el.addEventListener(ev,()=>{if(voy.steer===d)voySetSteer(0);}));};
-  press(up,-1);press(dn,1);
+  const hold=(id,on,off)=>{const el=$(id);if(!el)return;el.addEventListener("pointerdown",e=>{e.preventDefault();on();});["pointerup","pointerleave","pointercancel"].forEach(ev=>el.addEventListener(ev,off));};
+  hold("voyUp",()=>voy.steer=-1,()=>{if(voy.steer===-1)voy.steer=0;});
+  hold("voyDown",()=>voy.steer=1,()=>{if(voy.steer===1)voy.steer=0;});
+  hold("voyLeft",()=>voy.steerX=-1,()=>{if(voy.steerX===-1)voy.steerX=0;});
+  hold("voyRight",()=>voy.steerX=1,()=>{if(voy.steerX===1)voy.steerX=0;});
   $("voyLever").addEventListener("input",e=>{voy.throttle=(+e.target.value)/100;});
-  addEventListener("keydown",e=>{if(screen!=="voyager")return;if(e.key==="ArrowUp"){e.preventDefault();voySetSteer(-1);}if(e.key==="ArrowDown"){e.preventDefault();voySetSteer(1);}});
-  addEventListener("keyup",e=>{if(screen!=="voyager")return;if((e.key==="ArrowUp"&&voy.steer===-1)||(e.key==="ArrowDown"&&voy.steer===1))voySetSteer(0);});
+  addEventListener("keydown",e=>{if(screen!=="voyager")return;const k=e.key;if(k==="ArrowUp"){e.preventDefault();voy.steer=-1;}else if(k==="ArrowDown"){e.preventDefault();voy.steer=1;}else if(k==="ArrowLeft"){e.preventDefault();voy.steerX=-1;}else if(k==="ArrowRight"){e.preventDefault();voy.steerX=1;}});
+  addEventListener("keyup",e=>{if(screen!=="voyager")return;const k=e.key;if(k==="ArrowUp"&&voy.steer===-1)voy.steer=0;if(k==="ArrowDown"&&voy.steer===1)voy.steer=0;if(k==="ArrowLeft"&&voy.steerX===-1)voy.steerX=0;if(k==="ArrowRight"&&voy.steerX===1)voy.steerX=0;});
   addEventListener("resize",()=>{if(screen==="voyager"){voyResize();if(voy.phase!=="playing")drawVoy();}});
 })();
 
@@ -1659,11 +1650,14 @@ $("voyClearPaste").onclick=()=>{$("voyPaste").value="";$("voyParse").innerHTML="
 function renderVoyToggles(){
   $("voyFogPill").innerHTML=state.settings.voyFog?"&#127787;&#65039; Fog on":"&#127788;&#65039; Fog off";
   $("voyFogPill").classList.toggle("on",state.settings.voyFog);
+  $("voyAlienPill").innerHTML=state.settings.voyAliens?"&#128126; On":"&#128126; Off";
+  $("voyAlienPill").classList.toggle("on",state.settings.voyAliens);
   $("voyTwoPill").innerHTML=state.settings.voyTwoDevice?"&#128241; On":"&#128241; Off";
   $("voyTwoPill").classList.toggle("on",state.settings.voyTwoDevice);
   $("voyTwoNote").style.display=state.settings.voyTwoDevice?"block":"none";
 }
 $("voyFogPill").onclick=()=>{state.settings.voyFog=!state.settings.voyFog;save();renderVoyToggles();};
+$("voyAlienPill").onclick=()=>{state.settings.voyAliens=!state.settings.voyAliens;save();renderVoyToggles();};
 $("voyTwoPill").onclick=()=>{state.settings.voyTwoDevice=!state.settings.voyTwoDevice;save();renderVoyToggles();};
 function renderVoyList(){renderVoyToggles();const list=$("voyList");list.innerHTML="";if(!state.voyager.length){list.innerHTML=`<div class="empty">No verses yet.</div>`;return;}
   state.voyager.forEach((v,idx)=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
@@ -1681,9 +1675,9 @@ $("soundPill").onclick=()=>{state.settings.sound=!state.settings.sound;$("soundP
 $("exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="game-hub-backup.json";a.click();URL.revokeObjectURL(a.href);};
 $("importBtn").onclick=()=>$("importFile").click();
 $("importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.teams&&!d.questions)throw 0;
-  if(confirm("Import replaces your current teams and games. Continue?")){state=Object.assign({settings:{timerSeconds:10,order:"shuffle",sound:true}},d);ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
+  if(confirm("Import replaces your current teams and games. Continue?")){state=Object.assign({settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false}},d);ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
 $("clearAllBtn").onclick=()=>{if(confirm("Reset teams and reload the built-in games? Your added content will be removed (export first if unsure).")){localStorage.removeItem(LS);
-  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[],charades:[],wordwheel:[],voyager:[]};
+  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[],charades:[],wordwheel:[],voyager:[]};
   applyDefaults();save();renderSetup();renderScoreboard();renderHub();}};
 
 function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();renderChList();renderWWList();renderVoyList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
