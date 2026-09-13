@@ -156,6 +156,8 @@
   .concfield input:focus{outline:none;}
   #concGrid{transition:opacity .3s;}
   .concboard.peek #concGrid{opacity:0;pointer-events:none;}
+  .concturn{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:2em;}
+  .concturnlabel{font-weight:900;font-size:clamp(18px,2.4vw,30px);}
 
   /* BEAT THE CLOCK */
   .bcstage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;gap:10px;min-height:0;text-align:center;}
@@ -365,6 +367,7 @@
         <div class="concfield"><span style="color:var(--muted);font-weight:700;">&#128247; image:</span><input type="text" id="concImgInput" placeholder="e.g. shepherd.jpg"><button class="sbtn" id="concSetImg">Load</button></div>
       </div>
       <div class="concstage">
+        <div class="concturn" id="concTurn"></div>
         <div class="concboard" id="concBoard"><div id="concImg"></div><div class="concimgph" id="concImgPh"></div><div id="concGrid"></div></div>
         <div class="concstatus" id="concStatus"></div>
       </div>
@@ -372,7 +375,7 @@
     <div class="controls" id="concControls">
       <button class="btn" id="concNew">New Game</button>
       <button class="btn" id="concPeek">&#128065;&#65039; Peek</button>
-      <button class="btn green big" id="concSolve">Solve Picture (+5,000)</button>
+      <button class="btn green big" id="concSolve">Solve Picture (+10,000)</button>
       <button class="btn" id="concSets">Other Sets</button>
     </div>
   </div>
@@ -926,7 +929,7 @@ $("jeoReset").onclick=()=>{jeoPlay.used={};jeoPlay.dd={};jeoPlay.round="single";
 $("jeoChoose").onclick=showJeoPicker;
 
 /* ==================== CONCENTRATION ==================== */
-let concPlay={setId:null,image:"",tiles:[],up:[],busy:false,solved:false};
+let concPlay={setId:null,image:"",tiles:[],up:[],busy:false,solved:false,active:null,peek:false};
 const CONC_TILES=25;
 function concImgUrl(v){v=(v||"").trim();if(!v)return"";if(/^https?:\/\//i.test(v)||v.indexOf("/")>=0)return v;return"images/"+v;}
 function curConcSet(){return state.concentration.find(s=>s.id===concPlay.setId)||null;}
@@ -960,13 +963,29 @@ function setConcImage(value){
 function newConcGame(){
   concPlay.image=$("concImgInput").value.trim();
   concPlay.tiles=buildConcFaces().map(f=>({face:f,state:"down"}));
-  concPlay.up=[];concPlay.busy=false;concPlay.solved=false;concPlay.peek=false;
+  concPlay.up=[];concPlay.busy=false;concPlay.solved=false;concPlay.peek=false;concPlay.active=null;
   $("concBoard").classList.remove("peek");$("concPeek").innerHTML="&#128065;&#65039; Peek";
   const s=curConcSet();$("concTitle").textContent=s?s.title:"Concentration";
   setConcImage(concPlay.image);
   $("concStatus").textContent="";$("concStatus").className="concstatus";
-  $("concStatusTop").textContent="Match the pairs to uncover the picture";
-  renderConcGrid();
+  $("concStatusTop").textContent="Match pairs for 1,000 — solve the picture for 10,000";
+  renderConcTurn();renderConcGrid();
+}
+function renderConcTurn(){
+  const el=$("concTurn");el.innerHTML="";
+  if(concPlay.solved){el.innerHTML=`<div class="concturnlabel" style="color:var(--green)">Picture solved!</div>`;return;}
+  if(concPlay.active===null){
+    const lbl=document.createElement("div");lbl.className="concturnlabel";lbl.textContent="Which team goes first?";el.appendChild(lbl);
+    const bar=document.createElement("div");bar.className="awardbar";el.appendChild(bar);
+    teamAwardBar(bar,i=>{concPlay.active=i;renderConcTurn();},"");
+  }else{
+    const t=state.teams[concPlay.active];
+    el.innerHTML=`<div class="concturnlabel"><span style="color:${t.color}">${esc(t.name)}</span>'s turn</div>`;
+  }
+}
+function passConcTurn(){
+  concPlay.active=(concPlay.active+1)%state.teams.length;renderConcTurn();
+  $("concStatus").textContent=`${state.teams[concPlay.active].name}'s turn`;$("concStatus").className="concstatus";
 }
 function renderConcGrid(){
   const grid=$("concGrid");grid.innerHTML="";
@@ -980,33 +999,34 @@ function renderConcGrid(){
   });
 }
 function concFlip(i){
-  if(concPlay.busy||concPlay.solved)return;const tile=concPlay.tiles[i];if(tile.state!=="down")return;AC();
-  if(tile.face.m==="free"){tile.state="up";renderConcGrid();sBlip();setTimeout(()=>{tile.state="gone";renderConcGrid();},500);$("concStatus").textContent="Free space!";$("concStatus").className="concstatus good";return;}
+  if(concPlay.busy||concPlay.solved||concPlay.active===null)return;const tile=concPlay.tiles[i];if(tile.state!=="down")return;AC();
+  if(tile.face.m==="free"){tile.state="up";renderConcGrid();sBlip();setTimeout(()=>{tile.state="gone";renderConcGrid();checkConcCleared();},500);$("concStatus").textContent="Free space — go again!";$("concStatus").className="concstatus good";return;}
   tile.state="up";concPlay.up.push(i);sBlip();renderConcGrid();
   if(concPlay.up.length===2){
     concPlay.busy=true;const [a,b]=concPlay.up;const ta=concPlay.tiles[a],tb=concPlay.tiles[b];
     if(ta.face.m===tb.face.m){
-      ta.state="match";tb.state="match";renderConcGrid();sCorrect();
-      $("concStatus").textContent="Match!";$("concStatus").className="concstatus good";
+      ta.state="match";tb.state="match";renderConcGrid();sCorrect();award(concPlay.active,1000);
+      $("concStatus").textContent=`Match! +1,000 for ${state.teams[concPlay.active].name} — go again`;$("concStatus").className="concstatus good";
       setTimeout(()=>{ta.state="gone";tb.state="gone";concPlay.up=[];concPlay.busy=false;renderConcGrid();checkConcCleared();},800);
     }else{
-      $("concStatus").textContent="No match — try to remember!";$("concStatus").className="concstatus bad";
-      setTimeout(()=>{ta.state="down";tb.state="down";concPlay.up=[];concPlay.busy=false;renderConcGrid();$("concStatus").textContent="";$("concStatus").className="concstatus";},1500);
+      $("concStatus").textContent="No match — turn passes!";$("concStatus").className="concstatus bad";
+      setTimeout(()=>{ta.state="down";tb.state="down";concPlay.up=[];concPlay.busy=false;passConcTurn();renderConcGrid();},1500);
     }
   }
 }
 function checkConcCleared(){if(concPlay.tiles.every(t=>t.state==="gone")){$("concStatus").textContent="Board cleared! Who can name the picture?";$("concStatus").className="concstatus good";}}
-function concRevealAll(){concPlay.tiles.forEach(t=>t.state="gone");concPlay.solved=true;renderConcGrid();}
+function concRevealAll(){concPlay.tiles.forEach(t=>t.state="gone");concPlay.solved=true;renderConcGrid();renderConcTurn();}
 $("concSetImg").onclick=()=>{concPlay.image=$("concImgInput").value.trim();setConcImage(concPlay.image);};
 $("concPeek").onclick=()=>{concPlay.peek=!concPlay.peek;$("concBoard").classList.toggle("peek",concPlay.peek);$("concPeek").innerHTML=concPlay.peek?"&#128584; Hide":"&#128065;&#65039; Peek";};
 $("concImgInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("concSetImg").onclick();});
 $("concNew").onclick=()=>newConcGame();
 $("concSets").onclick=showConcPicker;
-$("concSolve").onclick=()=>{if(concPlay.solved)return;
-  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">&#129513; Who guessed the picture?</div><div class="q" style="font-size:clamp(18px,2.4vw,32px);">Award 5,000 and reveal it in full.</div><div class="awardbar" id="concAward"></div><div class="foot" style="margin-top:12px;"><button class="sbtn ghost" id="concCancel">Cancel</button></div>`;
-  teamAwardBar($("concAward"),i=>{award(i,5000);sCorrect();burstConfetti();concRevealAll();$("jeoOverlay").classList.remove("show");$("concStatus").textContent="Solved! +5,000";$("concStatus").className="concstatus good";$("concStatusTop").textContent="Picture revealed — hit New Game for the next one";},"+5,000  ");
-  $("concCancel").onclick=()=>$("jeoOverlay").classList.remove("show");
-  $("jeoOverlay").classList.add("show");
+$("concSolve").onclick=()=>{
+  if(concPlay.solved)return;
+  if(concPlay.active===null){$("concStatus").textContent="Pick which team goes first up top.";$("concStatus").className="concstatus bad";return;}
+  award(concPlay.active,10000);sCorrect();burstConfetti();concRevealAll();
+  $("concStatus").textContent=`Solved! +10,000 for ${state.teams[concPlay.active].name}`;$("concStatus").className="concstatus good";
+  $("concStatusTop").textContent="Picture revealed — hit New Game for the next one";
 };
 
 /* ==================== BEAT THE CLOCK ==================== */
