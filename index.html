@@ -216,6 +216,29 @@
   .wwletter.used{opacity:.25;pointer-events:none;}
   .wwletter:disabled{opacity:.4;}
 
+  /* VERSE VOYAGER */
+  .voyhud{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;border-bottom:1px solid var(--line);background:rgba(9,15,26,.6);}
+  .voyhud-l{font-weight:900;font-size:clamp(14px,1.8vw,22px);white-space:nowrap;}
+  .voylevel{color:var(--gold);font-size:.8em;margin-left:6px;}
+  .voyverse{flex:1;text-align:center;font-weight:700;font-size:clamp(13px,1.7vw,22px);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .voyverse .done{color:var(--green);} .voyverse .next{color:var(--gold);text-decoration:underline;}
+  .voyhud-r{display:flex;align-items:center;gap:12px;white-space:nowrap;}
+  .voyhud-r .voyscore{font-weight:900;font-size:clamp(16px,2.2vw,28px);}
+  .voywrap{position:relative;flex:1;min-height:0;overflow:hidden;background:#05070f;}
+  #voyCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;}
+  .voysteer{position:absolute;left:14px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;gap:14px;z-index:2;}
+  .voysteerbtn{width:clamp(62px,9vw,96px);height:clamp(62px,9vw,96px);border-radius:20px;background:rgba(124,92,255,.22);border:2px solid #7c5cff;color:#cbbcff;font-size:clamp(24px,4vw,40px);font-weight:900;touch-action:none;user-select:none;}
+  .voysteerbtn:active{background:rgba(124,92,255,.5);}
+  .voythrottle{position:absolute;right:16px;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:2;}
+  .voythlabel{writing-mode:vertical-rl;font-weight:900;letter-spacing:3px;color:var(--muted);font-size:13px;}
+  #voyLever{-webkit-appearance:slider-vertical;appearance:slider-vertical;writing-mode:vertical-lr;direction:rtl;width:34px;height:min(52vh,340px);touch-action:none;accent-color:#7c5cff;}
+  .voyoverlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:5;background:rgba(4,7,15,.78);text-align:center;padding:20px;}
+  .voyoverlay.show{display:flex;}
+  .voycard{max-width:640px;}
+  .voycard h2{font-size:clamp(26px,5vw,54px);font-weight:900;margin:0 0 10px;}
+  .voycard p{color:var(--muted);font-weight:700;font-size:clamp(15px,2vw,22px);margin:0 0 18px;line-height:1.5;}
+  .voycard .big{color:var(--gold);font-size:clamp(30px,6vw,64px);font-weight:900;}
+
   /* overlays */
   .overlay{position:fixed;inset:0;background:rgba(4,8,15,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
   .overlay.show{display:flex;}
@@ -454,6 +477,27 @@
     </div>
   </div>
 
+  <!-- ============ VERSE VOYAGER ============ -->
+  <div id="voyager" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div class="voyhud">
+      <div class="voyhud-l"><span id="voyRef">Verse Voyager</span> <span class="voylevel" id="voyLevel"></span></div>
+      <div class="voyverse" id="voyVerse"></div>
+      <div class="voyhud-r"><span id="voyLives"></span><span class="voyscore num" id="voyScore">0</span></div>
+    </div>
+    <div class="voywrap" id="voyWrap">
+      <canvas id="voyCanvas"></canvas>
+      <div class="voysteer" id="voySteer">
+        <button class="voysteerbtn" id="voyUp">&#9650;</button>
+        <button class="voysteerbtn" id="voyDown">&#9660;</button>
+      </div>
+      <div class="voythrottle" id="voyThrottleBox">
+        <div class="voythlabel">THROTTLE</div>
+        <input type="range" id="voyLever" min="0" max="100" value="0">
+      </div>
+      <div class="voyoverlay" id="voyOverlay"></div>
+    </div>
+  </div>
+
   <!-- ============ SETUP ============ -->
   <div class="setup hidden" id="setup">
 
@@ -567,6 +611,23 @@
     </div>
 
     <div class="card">
+      <h2>&#128640; Verse Voyager &mdash; verses</h2>
+      <p class="hint">One verse per line: <code>Reference | the verse words | decoy1, decoy2, decoy3</code>. The verse words become the sequence the ship must collect in order; the decoys are the wrong words mixed in at each gate. Shorter verses make easier levels &mdash; they're played in the order listed.<br>
+        <code>John 11:35 | Jesus wept | cried, slept, prayed, laughed</code><br>
+        <code>1 John 4:8 | God is love | good, great, light, joy</code></p>
+      <label class="fld">Paste verses</label>
+      <textarea id="voyPaste" placeholder="Reference | verse words | decoy, decoy, decoy"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="voyAdd">Add verses</button><button class="sbtn ghost" id="voyClearPaste">Clear</button></div>
+      <div class="parseresult" id="voyParse"></div>
+      <div class="row" style="margin-top:14px;align-items:center;">
+        <div style="flex:0 0 auto;"><label class="fld">Chasing fog</label><div class="pills"><span class="pill" id="voyFogPill">&#127787;&#65039; Fog on</span></div></div>
+        <div style="flex:0 0 auto;"><label class="fld">Throttle on a 2nd device</label><div class="pills"><span class="pill" id="voyTwoPill">&#128241; Off</span></div></div>
+      </div>
+      <p class="hint" id="voyTwoNote" style="margin-top:8px;display:none;">The companion-phone throttle is coming in the next update. For now the on-screen throttle lever is used.</p>
+      <div id="voyList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
       <h2>&#9881;&#65039; Settings</h2>
       <div class="row">
         <div style="flex:0 0 160px;"><label class="fld">Quiz timer (seconds)</label><input type="number" id="setTimer" min="3" max="120" value="10"></div>
@@ -620,13 +681,13 @@ const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 
 let state={
   teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],
-  settings:{timerSeconds:10,order:"shuffle",sound:true},
+  settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyTwoDevice:false},
   questions:[], whoami:[], jeopardy:[],
 };
 let screen="hub";
 
 function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
-function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.beatclock=state.beatclock||[];state.charades=state.charades||[];state.wordwheel=state.wordwheel||[];state.teams=state.teams||[];}
+function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.beatclock=state.beatclock||[];state.charades=state.charades||[];state.wordwheel=state.wordwheel||[];state.voyager=state.voyager||[];state.teams=state.teams||[];}
 function load(){
   try{const d=JSON.parse(localStorage.getItem(LS));
     if(d&&(d.questions||d.teams)){state=Object.assign(state,d);
@@ -635,7 +696,7 @@ function load(){
   ensureArrays();
   if(applyDefaults())save();
 }
-const DEFAULTS_VERSION=7;
+const DEFAULTS_VERSION=8;
 function applyDefaults(){
   const applied=state.defaultsVersion||0;
   if(applied>=DEFAULTS_VERSION)return false;
@@ -649,6 +710,7 @@ function applyDefaults(){
   addBy(state.beatclock,DEFAULT_BEATCLOCK);
   addBy(state.charades,DEFAULT_CHARADES);
   addBy(state.wordwheel,DEFAULT_WORDWHEEL);
+  addBy(state.voyager,DEFAULT_VOYAGER);
   state.defaultsVersion=DEFAULTS_VERSION;
   return true;
 }
@@ -715,6 +777,7 @@ const GAMES=[
   {id:"beatclock",ic:"&#9201;&#65039;",tt:"Beat the Clock",tc:"#f43f5e",td:"A team races the clock to name as many as they can. Loud and fast.",count:()=>state.beatclock.length+" categories"},
   {id:"charades",ic:"&#127917;",tt:"Reverse Charades",tc:"#22d3ee",td:"The word's on screen — the whole team acts while one guesser faces away.",count:()=>state.charades.length+" word set"+(state.charades.length===1?"":"s")},
   {id:"wordwheel",ic:"&#127942;",tt:"Word Puzzle Wheel",tc:"#eab308",td:"Spin the wheel, call letters, solve the phrase. Watch out for Bankrupt!",count:()=>state.wordwheel.length+" puzzle"+(state.wordwheel.length===1?"":"s")},
+  {id:"voyager",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly the ship into the right words to build a verse — outrun the fog!",count:()=>state.voyager.length+" verse"+(state.voyager.length===1?"":"s")},
 ];
 function renderHub(){
   const t=$("tiles");t.innerHTML="";
@@ -724,10 +787,10 @@ function renderHub(){
 }
 function showScreen(name){
   screen=name;
-  ["hub","quiz","whoami","jeopardy","concentration","beatclock","charades","wordwheel","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
+  ["hub","quiz","whoami","jeopardy","concentration","beatclock","charades","wordwheel","voyager","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
   $("homeBtn").classList.toggle("hidden",name==="hub");
   $("modeBtn").innerHTML=name==="setup"?"&#9654; Back":"&#9881; Setup";
-  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",charades:"Reverse Charades",wordwheel:"Word Puzzle Wheel",setup:"Setup"};
+  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",charades:"Reverse Charades",wordwheel:"Word Puzzle Wheel",voyager:"Verse Voyager",setup:"Setup"};
   $("brandText").textContent=titles[name]||"Game Hub";
   if(name==="hub")renderHub();
   if(name==="quiz"){buildQuizOrder();renderQuiz();}
@@ -737,6 +800,7 @@ function showScreen(name){
   if(name==="beatclock")enterBeatClock();
   if(name==="charades")enterCharades();
   if(name==="wordwheel")enterWordWheel();
+  if(name==="voyager")enterVoyager(); else stopVoyager();
   if(name==="setup")renderSetup();
 }
 $("homeBtn").onclick=()=>showScreen("hub");
@@ -1250,6 +1314,191 @@ $("wwSolve").onclick=()=>{if(wwPlay.phase==="solved"||wwPlay.busy)return;
 $("wwNew").onclick=()=>setupWWPuzzle();
 $("wwSets").onclick=showWWPicker;
 
+/* ==================== VERSE VOYAGER ==================== */
+const VOY={STEER:5.2, LANES:3, GATEGAP:1, SHIPXF:0.46};
+let voy={phase:"idle",team:0,lives:3,level:1,verseIdx:0,wordIdx:0,gameScore:0,
+  ship:{y:0,vy:0},steer:0,throttle:0,fogX:0,redTime:0,gate:null,stars:[],parts:[],
+  raf:null,lastTs:0,W:0,H:0,shipX:0,flash:"",flashT:0};
+const GENERIC_DECOYS=["and","the","for","with","God","Lord","said","came","went","have","will","from","unto","that","them","then"];
+function curVerse(){return state.voyager[voy.verseIdx%Math.max(1,state.voyager.length)]||null;}
+function voyCanvas(){return $("voyCanvas");}
+function voyResize(){const c=voyCanvas();const w=$("voyWrap");c.width=w.clientWidth;c.height=w.clientHeight;voy.W=c.width;voy.H=c.height;voy.shipX=voy.W*VOY.SHIPXF;}
+function enterVoyager(){
+  voyResize();
+  if(!voy.stars.length)for(let i=0;i<90;i++)voy.stars.push({x:Math.random(),y:Math.random(),z:Math.random()*.8+.2});
+  if(!state.voyager.length){voy.phase="idle";showVoyOverlay(`<div class="voycard"><h2>Verse Voyager</h2><p>No verses yet. Add some in Setup, then come back to fly!</p></div>`);return;}
+  voy.team=voy.team%state.teams.length;
+  readyVoy();
+}
+function stopVoyager(){if(voy.raf){cancelAnimationFrame(voy.raf);voy.raf=null;}voy.phase="idle";}
+function showVoyOverlay(html){const o=$("voyOverlay");o.innerHTML=html;o.classList.add("show");}
+function hideVoyOverlay(){$("voyOverlay").classList.remove("show");}
+function readyVoy(){
+  voy.phase="idle";const t=state.teams[voy.team];
+  showVoyOverlay(`<div class="voycard"><h2 style="color:${t.color}">${esc(t.name)}</h2>
+    <p>Steer the ship with the <b>&#9650; / &#9660;</b> buttons (or arrow keys). Slide the <b>throttle</b> to set your speed. Fly into the <b>correct next word</b> of the verse. Wrong word blows up your ship &mdash; you get 3.${state.settings.voyFog?" Don't let the <b>fog</b> catch you &mdash; keep your speed up!":""}</p>
+    <button class="btn green big" id="voyStartBtn" style="max-width:none;">Start Flight</button></div>`);
+  $("voyStartBtn").onclick=startVoy;
+  drawVoy();
+}
+function startVoy(){
+  hideVoyOverlay();AC();
+  voy.phase="playing";voy.lives=3;voy.level=1;voy.verseIdx=0;voy.wordIdx=0;voy.gameScore=0;
+  voy.ship.y=voy.H/2;voy.ship.vy=0;voy.steer=0;voy.throttle=0.4;$("voyLever").value=40;
+  voy.fogX=-voy.W*0.05;voy.redTime=0;voy.parts=[];voy.flash="";voy.flashT=0;
+  spawnGate();updateVoyHud();
+  voy.lastTs=performance.now();voy.raf=requestAnimationFrame(voyLoop);
+}
+function spawnGate(){
+  const v=curVerse();if(!v){voy.gate=null;return;}
+  if(voy.wordIdx>=v.words.length){verseComplete();return;}
+  const correct=v.words[voy.wordIdx];
+  const pool=(v.decoys&&v.decoys.length?v.decoys:GENERIC_DECOYS).filter(d=>d.toLowerCase()!==correct.toLowerCase());
+  const picks=[];const used={};
+  while(picks.length<VOY.LANES-1){const d=pool.length?pool[Math.floor(Math.random()*pool.length)]:GENERIC_DECOYS[Math.floor(Math.random()*GENERIC_DECOYS.length)];const key=d.toLowerCase();if(used[key]&&pool.length>=VOY.LANES){continue;}used[key]=1;picks.push(d);if(picks.length>20)break;}
+  const lanes=[...picks,correct];for(let i=lanes.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[lanes[i],lanes[j]]=[lanes[j],lanes[i]];}
+  const correctLane=lanes.indexOf(correct);
+  voy.gate={x:voy.W+120,words:lanes,correct:correctLane,resolved:false};
+}
+function laneOfY(y){const band=voy.H/VOY.LANES;return Math.max(0,Math.min(VOY.LANES-1,Math.floor(y/band)));}
+function voyLoop(ts){
+  if(voy.phase!=="playing"){voy.raf=null;return;}
+  let dt=(ts-voy.lastTs)/16.667;if(!(dt>0))dt=1;if(dt>3)dt=3;voy.lastTs=ts;
+  updateVoy(dt);drawVoy();voy.raf=requestAnimationFrame(voyLoop);
+}
+function updateVoy(dt){
+  const speed=voy.throttle; // 0..1
+  const maxScroll=(3.4+voy.level*0.35);
+  const scroll=speed*maxScroll;
+  // ship vertical
+  voy.ship.y+=voy.steer*VOY.STEER*dt;
+  const pad=voy.H*0.06;voy.ship.y=Math.max(pad,Math.min(voy.H-pad,voy.ship.y));
+  // stars
+  voy.stars.forEach(s=>{s.x-=(0.002+s.z*0.01)*(0.3+speed)*dt;if(s.x<0)s.x+=1;});
+  // gate
+  if(voy.gate&&!voy.gate.resolved){
+    voy.gate.x-=scroll*dt;
+    if(voy.gate.x<=voy.shipX){
+      voy.gate.resolved=true;
+      const lane=laneOfY(voy.ship.y);
+      if(lane===voy.gate.correct){addVoyScore(500);voy.flash="+500";voy.flashT=40;sBlip();voy.wordIdx++;spawnGate();}
+      else{wrongWord();}
+    }
+  }
+  if(voy.phase!=="playing")return;
+  // fog
+  if(state.settings.voyFog){
+    const RED=0.30,SAFE=0.55;
+    if(speed<RED){voy.fogX+=(0.8+(RED-speed)/RED*1.8)*dt;voy.redTime+=dt;}
+    else if(speed>SAFE){voy.fogX-=(1.5*(speed-SAFE)/(1-SAFE))*dt;voy.redTime=0;}
+    else{voy.fogX-=0.15*dt;voy.redTime=Math.max(0,voy.redTime-dt);}
+    voy.fogX=Math.max(-voy.W*0.1,Math.min(voy.shipX+10,voy.fogX));
+    if(voy.fogX>=voy.shipX-voy.H*0.05){fogCaught();return;}
+  }
+  // particles
+  voy.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=0.15*dt;p.life-=dt;});
+  voy.parts=voy.parts.filter(p=>p.life>0);
+  if(voy.flashT>0)voy.flashT-=dt;
+}
+function addVoyScore(n){voy.gameScore+=n;award(voy.team,n);updateVoyHud();}
+function explode(x,y,color){for(let i=0;i<26;i++){const a=Math.random()*Math.PI*2,sp=Math.random()*4+1;voy.parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:24+Math.random()*18,c:color||"#ff7a4d"});}}
+function wrongWord(){
+  addVoyScore(-1000);explode(voy.shipX,voy.ship.y,"#ff5a4d");sBuzzer();voy.flash="Wrong word!";voy.flashT=70;voy.lives--;updateVoyHud();
+  if(voy.lives<=0){gameOverVoy("Out of ships!");return;}
+  voy.wordIdx=0;voy.ship.y=voy.H/2;voy.ship.vy=0;voy.throttle=Math.max(voy.throttle,0.4);$("voyLever").value=Math.round(voy.throttle*100);
+  if(state.settings.voyFog)voy.fogX=-voy.W*0.05;voy.redTime=0;spawnGate();
+}
+function verseComplete(){
+  addVoyScore(10000);voy.flash="VERSE COMPLETE! +10,000";voy.flashT=110;sCorrect();burstConfetti();
+  voy.level++;voy.verseIdx++;voy.wordIdx=0;voy.ship.y=voy.H/2;
+  if(state.settings.voyFog)voy.fogX=-voy.W*0.08;voy.redTime=0;
+  spawnGate();updateVoyHud();
+}
+function fogCaught(){explode(voy.shipX,voy.ship.y,"#84e36b");sBuzzer();gameOverVoy("The fog got you!");}
+function gameOverVoy(reason){
+  if(voy.phase==="gameover")return;voy.phase="gameover";if(voy.raf){cancelAnimationFrame(voy.raf);voy.raf=null;}
+  const t=state.teams[voy.team];
+  showVoyOverlay(`<div class="voycard"><h2 style="color:#ff6b6b">Game Over</h2><p>${esc(reason)}</p>
+    <p><span style="color:${t.color}">${esc(t.name)}</span> scored this flight:</p><div class="big num">${fmt(voy.gameScore)}</div>
+    <button class="btn gold big" id="voyNextBtn" style="max-width:none;margin-top:16px;">Next Team &#9654;</button></div>`);
+  $("voyNextBtn").onclick=()=>{voy.team=(voy.team+1)%state.teams.length;readyVoy();};
+  drawVoy();
+}
+/* ---- drawing ---- */
+function drawVoy(){
+  const c=voyCanvas(),g=c.getContext("2d"),W=voy.W,H=voy.H;if(!W||!H)return;
+  g.clearRect(0,0,W,H);
+  g.fillStyle="#05070f";g.fillRect(0,0,W,H);
+  // stars
+  g.fillStyle="#9fb2d8";voy.stars.forEach(s=>{const x=s.x*W,y=s.y*H,r=s.z*1.8;g.globalAlpha=.3+s.z*.5;g.fillRect(x,y,r,r);});g.globalAlpha=1;
+  // gate words
+  if(voy.gate){const band=H/VOY.LANES;voy.gate.words.forEach((w,i)=>{
+    const cy=band*i+band/2,x=voy.gate.x;const bw=Math.min(220,W*0.24),bh=Math.min(64,band*0.6);
+    g.fillStyle="rgba(124,92,255,.16)";g.strokeStyle="#7c5cff";g.lineWidth=2;roundRectVoy(g,x-bw/2,cy-bh/2,bw,bh,12);g.fill();g.stroke();
+    g.fillStyle="#fff";g.font="900 "+Math.min(30,bh*0.5)+"px system-ui,Arial";g.textAlign="center";g.textBaseline="middle";g.fillText(w,x,cy);
+  });}
+  // fog
+  if(state.settings.voyFog&&voy.fogX>-W*0.09){
+    const fx=voy.fogX;const grad=g.createLinearGradient(0,0,fx+40,0);grad.addColorStop(0,"rgba(60,120,50,.95)");grad.addColorStop(.7,"rgba(90,170,70,.75)");grad.addColorStop(1,"rgba(120,220,110,.15)");
+    g.fillStyle=grad;g.beginPath();g.moveTo(0,0);
+    for(let y=0;y<=H;y+=16){const wob=Math.sin(y*0.05+performance.now()*0.004)*14;g.lineTo(fx+wob,y);}
+    g.lineTo(0,H);g.closePath();g.fill();
+  }
+  // ship
+  drawShip(g,voy.shipX,voy.ship.y,voy.throttle);
+  // particles
+  voy.parts.forEach(p=>{g.globalAlpha=Math.max(0,Math.min(1,p.life/24));g.fillStyle=p.c;g.fillRect(p.x,p.y,4,4);});g.globalAlpha=1;
+  // speedometer
+  drawSpeedo(g,W-70,H-70,50,voy.throttle);
+  // flash
+  if(voy.flashT>0){g.globalAlpha=Math.min(1,voy.flashT/30);g.fillStyle=voy.flash.indexOf("Wrong")>=0?"#ff6b6b":"#ffd24a";g.font="900 "+Math.min(40,W*0.05)+"px system-ui,Arial";g.textAlign="center";g.textBaseline="middle";g.fillText(voy.flash,W/2,H*0.16);g.globalAlpha=1;}
+}
+function drawShip(g,x,y,thr){
+  if(voy.phase==="dying"||voy.phase==="gameover")return;
+  // flame
+  const fl=6+thr*22+Math.random()*6;g.fillStyle="#ffb14d";g.beginPath();g.moveTo(x-16,y-7);g.lineTo(x-16-fl,y);g.lineTo(x-16,y+7);g.closePath();g.fill();
+  g.fillStyle="#ffe27a";g.beginPath();g.moveTo(x-16,y-4);g.lineTo(x-16-fl*0.6,y);g.lineTo(x-16,y+4);g.closePath();g.fill();
+  // body
+  g.fillStyle="#cbbcff";g.strokeStyle="#7c5cff";g.lineWidth=2;g.beginPath();g.moveTo(x+22,y);g.lineTo(x-16,y-13);g.lineTo(x-9,y);g.lineTo(x-16,y+13);g.closePath();g.fill();g.stroke();
+  g.fillStyle="#7c5cff";g.beginPath();g.arc(x+2,y,4,0,7);g.fill();
+}
+function drawSpeedo(g,cx,cy,r,thr){
+  g.save();g.translate(cx,cy);
+  // arc bg
+  g.lineWidth=8;g.strokeStyle="#1a2942";g.beginPath();g.arc(0,0,r,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5);g.stroke();
+  // red zone (low end)
+  g.strokeStyle="#ef4444";g.beginPath();g.arc(0,0,r,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5*0.30);g.stroke();
+  // green (safe high)
+  g.strokeStyle="#34d399";g.beginPath();g.arc(0,0,r,Math.PI*0.75+Math.PI*1.5*0.55,Math.PI*0.75+Math.PI*1.5);g.stroke();
+  // needle
+  const a=Math.PI*0.75+Math.PI*1.5*Math.max(0,Math.min(1,thr));
+  g.strokeStyle=thr<0.30?"#f87171":"#EDEDE9";g.lineWidth=3;g.beginPath();g.moveTo(0,0);g.lineTo(Math.cos(a)*(r-6),Math.sin(a)*(r-6));g.stroke();
+  g.fillStyle="#EDEDE9";g.beginPath();g.arc(0,0,4,0,7);g.fill();
+  g.fillStyle="#93a4bd";g.font="900 10px system-ui,Arial";g.textAlign="center";g.fillText("SPEED",0,r-6);
+  g.restore();
+}
+function roundRectVoy(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+function updateVoyHud(){
+  const v=curVerse();$("voyRef").textContent=v?v.reference:"Verse Voyager";
+  $("voyLevel").textContent=voy.phase==="idle"?"":"Level "+voy.level;
+  $("voyScore").textContent=fmt(voy.gameScore);
+  let lh="";for(let i=0;i<3;i++)lh+=`<span style="opacity:${i<voy.lives?1:.25}">&#128640;</span>`;$("voyLives").innerHTML=lh;
+  if(v){let h="";v.words.forEach((w,i)=>{h+=`<span class="${i<voy.wordIdx?"done":i===voy.wordIdx?"next":""}">${esc(i===voy.wordIdx?"____":w)}</span> `;});$("voyVerse").innerHTML=h;}
+  else $("voyVerse").innerHTML="";
+}
+/* ---- controls ---- */
+function voySetSteer(d){voy.steer=d;}
+(function(){
+  const up=$("voyUp"),dn=$("voyDown");
+  const press=(el,d)=>{el.addEventListener("pointerdown",e=>{e.preventDefault();voySetSteer(d);});
+    ["pointerup","pointerleave","pointercancel"].forEach(ev=>el.addEventListener(ev,()=>{if(voy.steer===d)voySetSteer(0);}));};
+  press(up,-1);press(dn,1);
+  $("voyLever").addEventListener("input",e=>{voy.throttle=(+e.target.value)/100;});
+  addEventListener("keydown",e=>{if(screen!=="voyager")return;if(e.key==="ArrowUp"){e.preventDefault();voySetSteer(-1);}if(e.key==="ArrowDown"){e.preventDefault();voySetSteer(1);}});
+  addEventListener("keyup",e=>{if(screen!=="voyager")return;if((e.key==="ArrowUp"&&voy.steer===-1)||(e.key==="ArrowDown"&&voy.steer===1))voySetSteer(0);});
+  addEventListener("resize",()=>{if(screen==="voyager"){voyResize();if(voy.phase!=="playing")drawVoy();}});
+})();
+
 /* ==================== CONFETTI / EFFECTS ==================== */
 const cv=$("confetti"),cx=cv.getContext("2d");let parts=[],confAnim=null;
 function sizeCanvas(){cv.width=innerWidth;cv.height=innerHeight;}addEventListener("resize",sizeCanvas);sizeCanvas();
@@ -1397,6 +1646,32 @@ function renderWWList(){const list=$("wwList");list.innerHTML="";if(!state.wordw
     const x=document.createElement("button");x.className="xbtn";x.textContent="Delete";x.onclick=()=>{state.wordwheel=state.wordwheel.filter(o=>o.id!==p.id);save();renderWWList();renderHub();};it.appendChild(x);box.appendChild(it);});
   list.appendChild(box);}
 
+/* voyager setup */
+$("voyAdd").onclick=()=>{const out=[],errors=[];$("voyPaste").value.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;const p=t.split("|").map(s=>s.trim());
+  if(p.length<2||!p[0]||!p[1]){errors.push(`Line ${i+1}: need Reference | verse words | decoys`);return;}
+  const words=p[1].split(/\s+/).filter(Boolean);const decoys=(p[2]||"").split(/[,]+/).map(s=>s.trim()).filter(Boolean);
+  if(words.length<1){errors.push(`Line ${i+1}: no verse words`);return;}
+  out.push({id:uid(),reference:p[0],words,decoys});});const r=$("voyParse");r.innerHTML="";
+  if(out.length){state.voyager.push(...out);save();r.innerHTML=`<span class="ok">&#10004; Added ${out.length} verse${out.length>1?"s":""}.</span>`;$("voyPaste").value="";renderVoyList();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!out.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("voyClearPaste").onclick=()=>{$("voyPaste").value="";$("voyParse").innerHTML="";};
+function renderVoyToggles(){
+  $("voyFogPill").innerHTML=state.settings.voyFog?"&#127787;&#65039; Fog on":"&#127788;&#65039; Fog off";
+  $("voyFogPill").classList.toggle("on",state.settings.voyFog);
+  $("voyTwoPill").innerHTML=state.settings.voyTwoDevice?"&#128241; On":"&#128241; Off";
+  $("voyTwoPill").classList.toggle("on",state.settings.voyTwoDevice);
+  $("voyTwoNote").style.display=state.settings.voyTwoDevice?"block":"none";
+}
+$("voyFogPill").onclick=()=>{state.settings.voyFog=!state.settings.voyFog;save();renderVoyToggles();};
+$("voyTwoPill").onclick=()=>{state.settings.voyTwoDevice=!state.settings.voyTwoDevice;save();renderVoyToggles();};
+function renderVoyList(){renderVoyToggles();const list=$("voyList");list.innerHTML="";if(!state.voyager.length){list.innerHTML=`<div class="empty">No verses yet.</div>`;return;}
+  state.voyager.forEach((v,idx)=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
+    head.innerHTML=`<span><span class="badge">Lvl ${idx+1}</span>${esc(v.reference)} <span style="color:var(--muted);font-weight:600;">(${v.words.length} words)</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete";del.onclick=()=>{if(confirm(`Delete "${v.reference}"?`)){state.voyager=state.voyager.filter(o=>o.id!==v.id);save();renderVoyList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt">${esc(v.words.join(" "))}<div class="ans" style="color:var(--muted);">decoys: ${esc((v.decoys||[]).join(", ")||"(auto)")}</div></div>`;box.appendChild(it);list.appendChild(box);});}
+
 /* settings */
 $("setTimer").onchange=e=>{let v=Math.max(3,Math.min(120,+e.target.value||10));state.settings.timerSeconds=v;e.target.value=v;save();resetTimerDisplay();};
 $("setOrder").onchange=e=>{state.settings.order=e.target.value;save();};
@@ -1408,10 +1683,10 @@ $("importBtn").onclick=()=>$("importFile").click();
 $("importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.teams&&!d.questions)throw 0;
   if(confirm("Import replaces your current teams and games. Continue?")){state=Object.assign({settings:{timerSeconds:10,order:"shuffle",sound:true}},d);ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
 $("clearAllBtn").onclick=()=>{if(confirm("Reset teams and reload the built-in games? Your added content will be removed (export first if unsure).")){localStorage.removeItem(LS);
-  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[],charades:[],wordwheel:[]};
+  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[],charades:[],wordwheel:[],voyager:[]};
   applyDefaults();save();renderSetup();renderScoreboard();renderHub();}};
 
-function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();renderChList();renderWWList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
+function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();renderChList();renderWWList();renderVoyList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
 
 /* keyboard (quiz) */
 addEventListener("keydown",e=>{if(screen!=="quiz")return;const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea"||tag==="select")return;
@@ -1641,6 +1916,15 @@ const DEFAULT_WORDWHEEL=[
 {id:"ww-08",category:"Name for Jesus",phrase:"THE GOOD SHEPHERD"},
 {id:"ww-09",category:"Bible Book",phrase:"THE BOOK OF PSALMS"},
 {id:"ww-10",category:"Bible Event",phrase:"DANIEL IN THE LIONS DEN"}
+];
+const DEFAULT_VOYAGER=[
+{id:"vy-01",reference:"John 11:35",words:["Jesus","wept"],decoys:["cried","slept","prayed","laughed","sang","smiled"]},
+{id:"vy-02",reference:"1 John 4:8",words:["God","is","love"],decoys:["good","great","light","joy","kind","was"]},
+{id:"vy-03",reference:"Psalm 118:24",words:["This","is","the","day","the","Lord","has","made"],decoys:["night","God","king","will","was","gift","time","year"]},
+{id:"vy-04",reference:"Philippians 4:13",words:["I","can","do","all","things","through","Christ"],decoys:["some","want","God","faith","him","try","will","most"]},
+{id:"vy-05",reference:"Psalm 23:1",words:["The","Lord","is","my","shepherd","I","shall","not","want"],decoys:["God","king","friend","will","never","need","fear","guide","was"]},
+{id:"vy-06",reference:"John 3:16",words:["For","God","so","loved","the","world"],decoys:["gave","people","made","earth","much","that","Son","very"]},
+{id:"vy-07",reference:"Genesis 1:1",words:["In","the","beginning","God","created","the","heavens","and","the","earth"],decoys:["made","formed","water","light","stars","sea","sky","world","first","above"]}
 ];
 
 /* ==================== INIT ==================== */
