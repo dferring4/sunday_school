@@ -1,0 +1,1977 @@
+{
+ "updated": "2026-09-24T02:05:18.267Z",
+ "note": "Game Hub games. Upload this file next to hub.html in the GitHub repo.",
+ "defaultsVersion": 8,
+ "settings": {
+  "timerSeconds": 10,
+  "order": "shuffle",
+  "voyFog": true,
+  "voyAliens": true,
+  "voyTwoDevice": false
+ },
+ "questions": [
+  {
+   "id": "a1-01",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "Who does the writer address at the start of Acts?",
+   "choices": [
+    "Theophilus",
+    "Timothy",
+    "Titus",
+    "Thomas"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-02",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "Acts 1:1 says the \"first book\" told all that Jesus began to do and to...",
+   "choices": [
+    "teach",
+    "build",
+    "destroy",
+    "sail"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-03",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "For how many days did Jesus appear to the apostles after his suffering?",
+   "choices": [
+    "40 days",
+    "3 days",
+    "7 days",
+    "12 days"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-04",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "Jesus spoke to the apostles about the kingdom of...",
+   "choices": [
+    "God",
+    "Rome",
+    "David",
+    "Egypt"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-05",
+   "type": "tf",
+   "week": "Acts 1",
+   "text": "Jesus told the apostles to leave Jerusalem right away.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "a1-06",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "What were the apostles told to wait for in Jerusalem?",
+   "choices": [
+    "The promise of the Father",
+    "A new king",
+    "A pile of gold",
+    "A ship"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-07",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "\"John baptized with water, but you will be baptized with the ___.\"",
+   "choices": [
+    "Holy Spirit",
+    "fire only",
+    "oil",
+    "rain"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-08",
+   "type": "tf",
+   "week": "Acts 1",
+   "text": "The apostles asked Jesus if He would restore the kingdom to Israel.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-09",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "Jesus said the times and seasons are fixed by whose authority?",
+   "choices": [
+    "The Father's",
+    "The angels'",
+    "Their own",
+    "Caesar's"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-10",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "The apostles would receive power when what came upon them?",
+   "choices": [
+    "The Holy Spirit",
+    "An army",
+    "Great riches",
+    "A crown"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-12",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "The witnesses would go to Jerusalem, Judea, Samaria, and to the...",
+   "choices": [
+    "end of the earth",
+    "top of the mountain",
+    "Jordan River",
+    "temple gate"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-13",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "How did Jesus leave the earth in Acts 1:9?",
+   "choices": [
+    "A cloud took Him up",
+    "He walked away",
+    "A chariot of fire",
+    "He left at night"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-14",
+   "type": "tf",
+   "week": "Acts 1",
+   "text": "Two men in white robes appeared as the apostles gazed into heaven.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-15",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "What did the two men call the apostles?",
+   "choices": [
+    "Men of Galilee",
+    "Men of Judea",
+    "Sons of Thunder",
+    "Friends of Rome"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-16",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "The two men said Jesus would come back in what way?",
+   "choices": [
+    "The same way He went into heaven",
+    "As a baby again",
+    "As a roaring lion",
+    "In total secret"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-17",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "From which mount did the apostles return to Jerusalem?",
+   "choices": [
+    "Olivet (Mount of Olives)",
+    "Mount Sinai",
+    "Mount Zion",
+    "Mount Carmel"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-19",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "Where did the apostles gather and stay to pray?",
+   "choices": [
+    "The upper room",
+    "The temple courts",
+    "A fishing boat",
+    "A cave"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-20",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "Who is named as praying with the apostles?",
+   "choices": [
+    "Mary, the mother of Jesus",
+    "Pontius Pilate",
+    "John the Baptist",
+    "King Herod"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-21",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "About how many people were gathered together?",
+   "choices": [
+    "About 120",
+    "About 12",
+    "About 500",
+    "About 5,000"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-22",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "Who stood up among the brothers to speak?",
+   "choices": [
+    "Peter",
+    "James",
+    "Paul",
+    "Andrew"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-23",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "What was the field connected to Judas called?",
+   "choices": [
+    "Field of Blood (Akeldama)",
+    "Field of Peace",
+    "Field of Bones",
+    "Garden of Eden"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a1-24",
+   "type": "tf",
+   "week": "Acts 1",
+   "text": "The apostles picked the new apostle by a show of hands.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "a1-25",
+   "type": "mc",
+   "week": "Acts 1",
+   "text": "Who was chosen to replace Judas among the Twelve?",
+   "choices": [
+    "Matthias",
+    "Barsabbas (Justus)",
+    "Stephen",
+    "Barnabas"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a2-01",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "On what day did the Holy Spirit come upon the believers?",
+   "choices": [
+    "Passover",
+    "Pentecost",
+    "The Sabbath",
+    "Christmas"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "a2-02",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "What did the sound from heaven sound like?",
+   "choices": [
+    "A mighty rushing wind",
+    "A trumpet blast",
+    "Rolling thunder",
+    "A quiet whisper"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a2-03",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "What appeared and rested on each believer?",
+   "choices": [
+    "Bright clouds",
+    "Golden crowns",
+    "Tongues as of fire",
+    "White doves"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "a2-04",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "What were the believers suddenly able to do?",
+   "choices": [
+    "Become invisible",
+    "Heal every sickness",
+    "Speak in other languages",
+    "Walk on water"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "a2-05",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "Who stood up and preached to the crowd?",
+   "choices": [
+    "John",
+    "James",
+    "Paul",
+    "Peter"
+   ],
+   "correct": [
+    3
+   ]
+  },
+  {
+   "id": "a2-07",
+   "type": "tf",
+   "week": "Acts 2",
+   "text": "The believers shared what they owned with one another.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a2-08",
+   "type": "tf",
+   "week": "Acts 2",
+   "text": "Peter agreed that the believers were drunk on wine.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "a2-09",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "What time did Peter say it was, proving they weren't drunk?",
+   "choices": [
+    "Noon",
+    "The third hour (9 a.m.)",
+    "The sixth hour",
+    "Midnight"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "a2-10",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "Which prophet did Peter quote about God pouring out His Spirit?",
+   "choices": [
+    "Isaiah",
+    "Daniel",
+    "Joel",
+    "Jeremiah"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "a2-12",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "What two things did Peter tell the crowd to do?",
+   "choices": [
+    "Fast and pray",
+    "Repent and be baptized",
+    "Give away money",
+    "Travel to Rome"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "a2-14",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "When the crowd heard Peter's message, they were \"cut to the ___.\"",
+   "choices": [
+    "bone",
+    "core",
+    "heart",
+    "quick"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "a2-15",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "Peter said God has made Jesus both Lord and ___.",
+   "choices": [
+    "Christ",
+    "King",
+    "Priest",
+    "Judge"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a2-17",
+   "type": "tf",
+   "week": "Acts 2",
+   "text": "Day by day the Lord added to their number those being saved.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "a2-18",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "Some mocked, saying the believers were filled with what?",
+   "choices": [
+    "Fear",
+    "New wine",
+    "Pride",
+    "Anger"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "a2-19",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "The crowd was amazed the speakers came from which region?",
+   "choices": [
+    "Rome",
+    "Egypt",
+    "Samaria",
+    "Galilee"
+   ],
+   "correct": [
+    3
+   ]
+  },
+  {
+   "id": "a2-21",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "Whose tomb did Peter say was still with them that day?",
+   "choices": [
+    "Moses'",
+    "David's",
+    "Abraham's",
+    "Elijah's"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "a2-25",
+   "type": "mc",
+   "week": "Acts 2",
+   "text": "Where did the believers gather together day by day?",
+   "choices": [
+    "In the temple",
+    "In a boat",
+    "In the desert",
+    "In prison"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gb-01",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "\"For God so loved the world, that he gave his only ___.\"",
+   "choices": [
+    "angel",
+    "Son",
+    "prophet",
+    "servant"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "gb-03",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "In what town was Jesus born?",
+   "choices": [
+    "Nazareth",
+    "Jerusalem",
+    "Bethlehem",
+    "Capernaum"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "gb-04",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "Jesus said, \"I am the way, and the truth, and the ___.\"",
+   "choices": [
+    "light",
+    "door",
+    "bread",
+    "life"
+   ],
+   "correct": [
+    3
+   ]
+  },
+  {
+   "id": "gb-05",
+   "type": "tf",
+   "week": "Gospel Basics",
+   "text": "Jesus rose from the dead on the third day.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gb-06",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "Who baptized Jesus in the Jordan River?",
+   "choices": [
+    "Peter",
+    "John the Baptist",
+    "Elijah",
+    "Moses"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "gb-07",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "\"No one comes to the Father except through ___.\"",
+   "choices": [
+    "Moses",
+    "the temple",
+    "me (Jesus)",
+    "the law"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "gb-08",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "How many disciples did Jesus choose?",
+   "choices": [
+    "Seven",
+    "Twelve",
+    "Ten",
+    "Three"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "gb-09",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "John called Jesus \"the ___ of God, who takes away the sin of the world.\"",
+   "choices": [
+    "Lion",
+    "Son",
+    "Lamb",
+    "Bread"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "gb-11",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "Jesus said the Son of Man came to seek and to save the ___.",
+   "choices": [
+    "strong",
+    "proud",
+    "rich",
+    "lost"
+   ],
+   "correct": [
+    3
+   ]
+  },
+  {
+   "id": "gb-12",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "Who betrayed Jesus to the authorities?",
+   "choices": [
+    "Thomas",
+    "Judas",
+    "Andrew",
+    "Philip"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "gb-13",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "What was Jesus' first miracle?",
+   "choices": [
+    "Feeding the 5,000",
+    "Walking on water",
+    "Turning water into wine",
+    "Calming a storm"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "gb-14",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "Asked who Jesus was, Peter answered, \"You are the ___.\"",
+   "choices": [
+    "teacher",
+    "prophet",
+    "Christ",
+    "healer"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "gb-16",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "In the Great Commission, Jesus said go and make ___ of all nations.",
+   "choices": [
+    "disciples",
+    "laws",
+    "temples",
+    "kings"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gb-17",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "The greatest commandment is to love the Lord your God with all your ___.",
+   "choices": [
+    "strength only",
+    "heart",
+    "riches",
+    "words"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "gb-18",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "Jesus called himself \"the good ___,\" who lays down his life for the sheep.",
+   "choices": [
+    "teacher",
+    "king",
+    "servant",
+    "shepherd"
+   ],
+   "correct": [
+    3
+   ]
+  },
+  {
+   "id": "gb-20",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "Which disciple denied knowing Jesus three times?",
+   "choices": [
+    "John",
+    "Peter",
+    "James",
+    "Matthew"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "gb-21",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "\"The Son of Man came... to give his life as a ___ for many.\"",
+   "choices": [
+    "ransom",
+    "gift",
+    "lesson",
+    "sign"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gb-22",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "In Mark, Jesus' first message was \"Repent and ___ in the gospel.\"",
+   "choices": [
+    "wait",
+    "rejoice",
+    "believe",
+    "be baptized"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "gb-23",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "Which disciple doubted until he saw Jesus' wounds?",
+   "choices": [
+    "Philip",
+    "Thomas",
+    "Judas",
+    "Peter"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "gb-24",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "On the cross Jesus prayed, \"Father, ___ them, for they know not what they do.\"",
+   "choices": [
+    "judge",
+    "save",
+    "forgive",
+    "remember"
+   ],
+   "correct": [
+    2
+   ]
+  },
+  {
+   "id": "gb-25",
+   "type": "mc",
+   "week": "Gospel Basics",
+   "text": "After rising, Jesus walked with two disciples on the road to ___.",
+   "choices": [
+    "Jericho",
+    "Emmaus",
+    "Bethany",
+    "Damascus"
+   ],
+   "correct": [
+    1
+   ]
+  }
+ ],
+ "whoami": [
+  {
+   "id": "wa-01",
+   "week": "Bible Heroes",
+   "subject": "Moses",
+   "clues": [
+    "I was born to slaves but raised in a palace.",
+    "I ran away to the desert and became a shepherd.",
+    "God spoke to me from a bush that burned but was not consumed.",
+    "I stood before Pharaoh as God sent ten plagues.",
+    "I stretched out my hand and parted the Red Sea."
+   ]
+  },
+  {
+   "id": "wa-02",
+   "week": "Bible Heroes",
+   "subject": "Noah",
+   "clues": [
+    "God found me righteous in a corrupt generation.",
+    "I was given very unusual building instructions.",
+    "I built a huge boat out of gopher wood.",
+    "I brought the animals aboard two by two.",
+    "After my flood, God set a rainbow in the sky."
+   ]
+  },
+  {
+   "id": "wa-03",
+   "week": "Bible Heroes",
+   "subject": "David",
+   "clues": [
+    "I was the youngest of eight brothers.",
+    "I was a shepherd who played the harp.",
+    "I defeated a giant with a sling and a stone.",
+    "King Saul grew jealous and chased me.",
+    "I became the second king of Israel."
+   ]
+  },
+  {
+   "id": "wa-04",
+   "week": "Bible Heroes",
+   "subject": "Jonah",
+   "clues": [
+    "God gave me a job I really did not want.",
+    "I tried to sail away from what God told me to do.",
+    "A storm hit and I was thrown into the sea.",
+    "A great fish swallowed me for three days.",
+    "I finally preached to the city of Nineveh."
+   ]
+  },
+  {
+   "id": "wa-05",
+   "week": "Bible Heroes",
+   "subject": "Paul",
+   "clues": [
+    "I once persecuted Christians before a big change.",
+    "A blinding light stopped me on a road.",
+    "I met Jesus on the road to Damascus.",
+    "I became a missionary and started many churches.",
+    "I wrote many of the letters in the New Testament."
+   ]
+  },
+  {
+   "id": "wa-06",
+   "week": "Bible Heroes",
+   "subject": "Peter",
+   "clues": [
+    "I was a fisherman before I followed Jesus.",
+    "Jesus said I would become a fisher of men.",
+    "I walked on water toward Jesus, then began to sink.",
+    "On the night Jesus was arrested, I denied him three times.",
+    "I preached at Pentecost and three thousand were saved."
+   ]
+  }
+ ],
+ "jeopardy": [
+  {
+   "id": "jb-bible-basics-v3",
+   "title": "Bible Basics",
+   "single": [
+    {
+     "name": "Old Testament",
+     "clues": [
+      {
+       "value": 100,
+       "q": "Who built an ark to survive the flood?",
+       "a": "Noah"
+      },
+      {
+       "value": 200,
+       "q": "Who led the Israelites out of Egypt?",
+       "a": "Moses"
+      },
+      {
+       "value": 300,
+       "q": "Who was thrown into the lions' den but wasn't harmed?",
+       "a": "Daniel"
+      },
+      {
+       "value": 400,
+       "q": "What did God create on the very first day?",
+       "a": "Light"
+      },
+      {
+       "value": 500,
+       "q": "Which strong man lost his strength when his hair was cut?",
+       "a": "Samson"
+      }
+     ]
+    },
+    {
+     "name": "New Testament",
+     "clues": [
+      {
+       "value": 100,
+       "q": "In what town was Jesus born?",
+       "a": "Bethlehem"
+      },
+      {
+       "value": 200,
+       "q": "Who baptized Jesus in the Jordan River?",
+       "a": "John the Baptist"
+      },
+      {
+       "value": 300,
+       "q": "How many disciples did Jesus choose?",
+       "a": "Twelve"
+      },
+      {
+       "value": 400,
+       "q": "Which disciple denied Jesus three times?",
+       "a": "Peter"
+      },
+      {
+       "value": 500,
+       "q": "Who met Jesus on the Damascus road and wrote many letters?",
+       "a": "Paul"
+      }
+     ]
+    },
+    {
+     "name": "Miracles of Jesus",
+     "clues": [
+      {
+       "value": 100,
+       "q": "Jesus turned water into what at a wedding?",
+       "a": "Wine"
+      },
+      {
+       "value": 200,
+       "q": "Jesus fed 5,000 with five loaves and two of these.",
+       "a": "Fish"
+      },
+      {
+       "value": 300,
+       "q": "Jesus calmed a storm on what body of water?",
+       "a": "The Sea of Galilee"
+      },
+      {
+       "value": 400,
+       "q": "Jesus raised this man from the dead after four days.",
+       "a": "Lazarus"
+      },
+      {
+       "value": 500,
+       "q": "Jesus healed a blind man who then washed in this pool.",
+       "a": "The pool of Siloam"
+      }
+     ]
+    },
+    {
+     "name": "Animals & Nature",
+     "clues": [
+      {
+       "value": 100,
+       "q": "What kind of animal swallowed Jonah?",
+       "a": "A great fish"
+      },
+      {
+       "value": 200,
+       "q": "What animal did Jesus ride into Jerusalem?",
+       "a": "A donkey"
+      },
+      {
+       "value": 300,
+       "q": "What sign did God put in the sky after the flood?",
+       "a": "A rainbow"
+      },
+      {
+       "value": 400,
+       "q": "In the garden of Eden, what creature tempted Eve?",
+       "a": "The serpent (snake)"
+      },
+      {
+       "value": 500,
+       "q": "God provided this animal in a thicket so Abraham wouldn't sacrifice Isaac.",
+       "a": "A ram"
+      }
+     ]
+    },
+    {
+     "name": "Bible Numbers",
+     "clues": [
+      {
+       "value": 100,
+       "q": "How many days and nights did it rain in Noah's flood?",
+       "a": "40"
+      },
+      {
+       "value": 200,
+       "q": "How many people did Jesus feed with the loaves and fish?",
+       "a": "5,000"
+      },
+      {
+       "value": 300,
+       "q": "On which day did God rest from creating?",
+       "a": "The seventh day"
+      },
+      {
+       "value": 400,
+       "q": "How many books are in the whole Bible?",
+       "a": "66"
+      },
+      {
+       "value": 500,
+       "q": "How many commandments did God give Moses on the mountain?",
+       "a": "Ten"
+      }
+     ]
+    }
+   ],
+   "double": [
+    {
+     "name": "Kings of Israel",
+     "clues": [
+      {
+       "value": 200,
+       "q": "Who was the first king of Israel?",
+       "a": "Saul"
+      },
+      {
+       "value": 400,
+       "q": "Which shepherd boy became king after defeating Goliath?",
+       "a": "David"
+      },
+      {
+       "value": 600,
+       "q": "Who was the wisest king, the son of David?",
+       "a": "Solomon"
+      },
+      {
+       "value": 800,
+       "q": "What did Solomon build for God in Jerusalem?",
+       "a": "The temple"
+      },
+      {
+       "value": 1000,
+       "q": "Which queen visited Solomon to test his wisdom?",
+       "a": "The Queen of Sheba"
+      }
+     ]
+    },
+    {
+     "name": "Parables of Jesus",
+     "clues": [
+      {
+       "value": 200,
+       "q": "A shepherd left 99 sheep to find how many lost ones?",
+       "a": "One"
+      },
+      {
+       "value": 400,
+       "q": "A father joyfully welcomed home his lost (prodigal) what?",
+       "a": "Son"
+      },
+      {
+       "value": 600,
+       "q": "A beaten man was helped by a 'Good' man from what region?",
+       "a": "Samaria (the Good Samaritan)"
+      },
+      {
+       "value": 800,
+       "q": "In the parable of the sower, the best seed fell on this kind of soil.",
+       "a": "Good soil"
+      },
+      {
+       "value": 1000,
+       "q": "The wise man built his house on rock instead of this.",
+       "a": "Sand"
+      }
+     ]
+    },
+    {
+     "name": "Words of Jesus",
+     "clues": [
+      {
+       "value": 200,
+       "q": "'I am the ___ of the world,' said Jesus.",
+       "a": "Light"
+      },
+      {
+       "value": 400,
+       "q": "'I am the good ___,' who lays down his life for the sheep.",
+       "a": "Shepherd"
+      },
+      {
+       "value": 600,
+       "q": "'I am the ___ of life; whoever comes to me shall not hunger.'",
+       "a": "Bread"
+      },
+      {
+       "value": 800,
+       "q": "Jesus said to love God and love your ___ as yourself.",
+       "a": "Neighbor"
+      },
+      {
+       "value": 1000,
+       "q": "'I am the way, and the truth, and the ___.'",
+       "a": "Life"
+      }
+     ]
+    },
+    {
+     "name": "Bible Places",
+     "clues": [
+      {
+       "value": 200,
+       "q": "In what garden did Jesus pray the night he was arrested?",
+       "a": "Gethsemane"
+      },
+      {
+       "value": 400,
+       "q": "At what place, 'the place of a skull,' was Jesus crucified?",
+       "a": "Golgotha (Calvary)"
+      },
+      {
+       "value": 600,
+       "q": "In what city did the Holy Spirit come at Pentecost?",
+       "a": "Jerusalem"
+      },
+      {
+       "value": 800,
+       "q": "In what Galilean town did Jesus grow up?",
+       "a": "Nazareth"
+      },
+      {
+       "value": 1000,
+       "q": "On what mountain did Moses receive the Ten Commandments?",
+       "a": "Mount Sinai"
+      }
+     ]
+    },
+    {
+     "name": "People of Faith",
+     "clues": [
+      {
+       "value": 200,
+       "q": "Who was the mother of Jesus?",
+       "a": "Mary"
+      },
+      {
+       "value": 400,
+       "q": "Which brother of Moses became the first high priest?",
+       "a": "Aaron"
+      },
+      {
+       "value": 600,
+       "q": "Who interpreted Pharaoh's dreams and saved Egypt from famine?",
+       "a": "Joseph"
+      },
+      {
+       "value": 800,
+       "q": "Which woman of Jericho hid the Israelite spies?",
+       "a": "Rahab"
+      },
+      {
+       "value": 1000,
+       "q": "Which short tax collector climbed a sycamore tree to see Jesus?",
+       "a": "Zacchaeus"
+      }
+     ]
+    }
+   ],
+   "final": {
+    "category": "The Gospel",
+    "q": "According to John 3:16, God gave his only Son so that whoever believes in him should not perish but have this.",
+    "a": "Eternal life (everlasting life)"
+   }
+  }
+ ],
+ "concentration": [
+  {
+   "id": "cc-names-of-jesus",
+   "title": "Names of Jesus",
+   "image": "",
+   "pairs": [
+    [
+     "Good Shepherd",
+     "Good Shepherd"
+    ],
+    [
+     "Lamb of God",
+     "Lamb of God"
+    ],
+    [
+     "Light of the World",
+     "Light of the World"
+    ],
+    [
+     "Bread of Life",
+     "Bread of Life"
+    ],
+    [
+     "King of Kings",
+     "King of Kings"
+    ],
+    [
+     "Prince of Peace",
+     "Prince of Peace"
+    ],
+    [
+     "Son of God",
+     "Son of God"
+    ],
+    [
+     "Savior",
+     "Savior"
+    ],
+    [
+     "Immanuel",
+     "Immanuel"
+    ],
+    [
+     "The Word",
+     "The Word"
+    ],
+    [
+     "Alpha and Omega",
+     "Alpha and Omega"
+    ],
+    [
+     "The True Vine",
+     "The True Vine"
+    ]
+   ]
+  },
+  {
+   "id": "cc-ot-books",
+   "title": "Old Testament Books",
+   "image": "",
+   "pairs": [
+    [
+     "Genesis",
+     "Genesis"
+    ],
+    [
+     "Exodus",
+     "Exodus"
+    ],
+    [
+     "Leviticus",
+     "Leviticus"
+    ],
+    [
+     "Numbers",
+     "Numbers"
+    ],
+    [
+     "Deuteronomy",
+     "Deuteronomy"
+    ],
+    [
+     "Joshua",
+     "Joshua"
+    ],
+    [
+     "Judges",
+     "Judges"
+    ],
+    [
+     "Ruth",
+     "Ruth"
+    ],
+    [
+     "Psalms",
+     "Psalms"
+    ],
+    [
+     "Proverbs",
+     "Proverbs"
+    ],
+    [
+     "Isaiah",
+     "Isaiah"
+    ],
+    [
+     "Daniel",
+     "Daniel"
+    ]
+   ]
+  },
+  {
+   "id": "cc-nt-books",
+   "title": "New Testament Books",
+   "image": "",
+   "pairs": [
+    [
+     "Matthew",
+     "Matthew"
+    ],
+    [
+     "Mark",
+     "Mark"
+    ],
+    [
+     "Luke",
+     "Luke"
+    ],
+    [
+     "John",
+     "John"
+    ],
+    [
+     "Acts",
+     "Acts"
+    ],
+    [
+     "Romans",
+     "Romans"
+    ],
+    [
+     "Galatians",
+     "Galatians"
+    ],
+    [
+     "Ephesians",
+     "Ephesians"
+    ],
+    [
+     "Philippians",
+     "Philippians"
+    ],
+    [
+     "Hebrews",
+     "Hebrews"
+    ],
+    [
+     "James",
+     "James"
+    ],
+    [
+     "Revelation",
+     "Revelation"
+    ]
+   ]
+  },
+  {
+   "id": "cc-disciples",
+   "title": "The Twelve Disciples",
+   "image": "",
+   "pairs": [
+    [
+     "Peter",
+     "Peter"
+    ],
+    [
+     "Andrew",
+     "Andrew"
+    ],
+    [
+     "James",
+     "James"
+    ],
+    [
+     "John",
+     "John"
+    ],
+    [
+     "Philip",
+     "Philip"
+    ],
+    [
+     "Bartholomew",
+     "Bartholomew"
+    ],
+    [
+     "Thomas",
+     "Thomas"
+    ],
+    [
+     "Matthew",
+     "Matthew"
+    ],
+    [
+     "Thaddaeus",
+     "Thaddaeus"
+    ],
+    [
+     "Simon the Zealot",
+     "Simon the Zealot"
+    ],
+    [
+     "Judas Iscariot",
+     "Judas Iscariot"
+    ],
+    [
+     "James son of Alphaeus",
+     "James son of Alphaeus"
+    ]
+   ]
+  },
+  {
+   "id": "cc-places",
+   "title": "Bible Places",
+   "image": "",
+   "pairs": [
+    [
+     "Bethlehem",
+     "Jesus was born here"
+    ],
+    [
+     "Nazareth",
+     "Jesus grew up here"
+    ],
+    [
+     "Jordan River",
+     "Where Jesus was baptized"
+    ],
+    [
+     "Jericho",
+     "Its walls fell down"
+    ],
+    [
+     "Red Sea",
+     "Moses parted these waters"
+    ],
+    [
+     "Nineveh",
+     "Jonah was sent to preach here"
+    ],
+    [
+     "Bethany",
+     "Hometown of Lazarus"
+    ],
+    [
+     "Sea of Galilee",
+     "Jesus calmed its storm"
+    ],
+    [
+     "Mount Sinai",
+     "Moses received the Ten Commandments"
+    ],
+    [
+     "Egypt",
+     "Israel was enslaved here"
+    ],
+    [
+     "Eden",
+     "The very first garden"
+    ],
+    [
+     "Jerusalem",
+     "City of the temple"
+    ]
+   ]
+  },
+  {
+   "id": "cc-animals",
+   "title": "Animals of the Bible",
+   "image": "",
+   "pairs": [
+    [
+     "Lamb",
+     "Lamb"
+    ],
+    [
+     "Donkey",
+     "Donkey"
+    ],
+    [
+     "Dove",
+     "Dove"
+    ],
+    [
+     "Lion",
+     "Lion"
+    ],
+    [
+     "Serpent",
+     "Serpent"
+    ],
+    [
+     "Raven",
+     "Raven"
+    ],
+    [
+     "Ram",
+     "Ram"
+    ],
+    [
+     "Camel",
+     "Camel"
+    ],
+    [
+     "Great Fish",
+     "Great Fish"
+    ],
+    [
+     "Sheep",
+     "Sheep"
+    ],
+    [
+     "Ox",
+     "Ox"
+    ],
+    [
+     "Locust",
+     "Locust"
+    ]
+   ]
+  }
+ ],
+ "beatclock": [
+  {
+   "id": "bc-01",
+   "week": "Bible Lists",
+   "prompt": "Name the Twelve Disciples"
+  },
+  {
+   "id": "bc-02",
+   "week": "Bible Lists",
+   "prompt": "Name the four Gospels"
+  },
+  {
+   "id": "bc-03",
+   "week": "Bible Lists",
+   "prompt": "Name the Ten Commandments"
+  },
+  {
+   "id": "bc-04",
+   "week": "Bible Lists",
+   "prompt": "Name the Fruit of the Spirit"
+  },
+  {
+   "id": "bc-05",
+   "week": "Bible Lists",
+   "prompt": "Name the plagues of Egypt"
+  },
+  {
+   "id": "bc-06",
+   "week": "Bible Lists",
+   "prompt": "Name animals that were on Noah's ark"
+  },
+  {
+   "id": "bc-07",
+   "week": "Bible Lists",
+   "prompt": "Name miracles that Jesus did"
+  },
+  {
+   "id": "bc-08",
+   "week": "Bible Lists",
+   "prompt": "Name books of the Old Testament"
+  },
+  {
+   "id": "bc-09",
+   "week": "Bible Lists",
+   "prompt": "Name books of the New Testament"
+  },
+  {
+   "id": "bc-10",
+   "week": "Bible Lists",
+   "prompt": "Name the sons of Jacob (the twelve tribes)"
+  },
+  {
+   "id": "bc-11",
+   "week": "Bible Lists",
+   "prompt": "Name kings of Israel or Judah"
+  },
+  {
+   "id": "bc-12",
+   "week": "Bible Lists",
+   "prompt": "Name people in the Bible who prayed"
+  },
+  {
+   "id": "bc-13",
+   "week": "Bible Lists",
+   "prompt": "Name women in the Bible"
+  },
+  {
+   "id": "bc-14",
+   "week": "Bible Lists",
+   "prompt": "Name Old Testament prophets"
+  },
+  {
+   "id": "bc-15",
+   "week": "Bible Lists",
+   "prompt": "Name parables Jesus told"
+  }
+ ],
+ "charades": [
+  {
+   "id": "ch-people",
+   "title": "Bible People",
+   "words": [
+    "Moses",
+    "Noah",
+    "David",
+    "Goliath",
+    "Jonah",
+    "Daniel",
+    "Mary",
+    "Peter",
+    "Paul",
+    "Adam and Eve",
+    "Samson",
+    "John the Baptist"
+   ]
+  },
+  {
+   "id": "ch-animals",
+   "title": "Bible Animals",
+   "words": [
+    "Lion",
+    "Donkey",
+    "Dove",
+    "Whale",
+    "Serpent",
+    "Sheep",
+    "Camel",
+    "Raven",
+    "Lamb",
+    "Fish",
+    "Ox",
+    "Locust"
+   ]
+  },
+  {
+   "id": "ch-stories",
+   "title": "Bible Stories & Actions",
+   "words": [
+    "Parting the Red Sea",
+    "Walking on water",
+    "Noah building the ark",
+    "David and Goliath",
+    "Jonah and the whale",
+    "Daniel in the lions' den",
+    "The Last Supper",
+    "Jesus washing feet",
+    "Feeding the five thousand",
+    "Zacchaeus in a tree",
+    "Rolling away the stone",
+    "Praying"
+   ]
+  }
+ ],
+ "wordwheel": [
+  {
+   "id": "ww-01",
+   "category": "Bible Verse",
+   "phrase": "THE LORD IS MY SHEPHERD"
+  },
+  {
+   "id": "ww-02",
+   "category": "Bible Verse",
+   "phrase": "GOD IS LOVE"
+  },
+  {
+   "id": "ww-03",
+   "category": "Bible Person",
+   "phrase": "JOHN THE BAPTIST"
+  },
+  {
+   "id": "ww-04",
+   "category": "Bible Place",
+   "phrase": "THE GARDEN OF EDEN"
+  },
+  {
+   "id": "ww-05",
+   "category": "Bible Event",
+   "phrase": "PARTING THE RED SEA"
+  },
+  {
+   "id": "ww-06",
+   "category": "Bible Event",
+   "phrase": "WALKING ON WATER"
+  },
+  {
+   "id": "ww-07",
+   "category": "Bible Verse",
+   "phrase": "LOVE ONE ANOTHER"
+  },
+  {
+   "id": "ww-08",
+   "category": "Name for Jesus",
+   "phrase": "THE GOOD SHEPHERD"
+  },
+  {
+   "id": "ww-09",
+   "category": "Bible Book",
+   "phrase": "THE BOOK OF PSALMS"
+  },
+  {
+   "id": "ww-10",
+   "category": "Bible Event",
+   "phrase": "DANIEL IN THE LIONS DEN"
+  }
+ ],
+ "voyager": [
+  {
+   "id": "vy-01",
+   "reference": "John 11:35",
+   "words": [
+    "Jesus",
+    "wept"
+   ],
+   "decoys": [
+    "cried",
+    "slept",
+    "prayed",
+    "laughed",
+    "sang",
+    "smiled"
+   ]
+  },
+  {
+   "id": "vy-02",
+   "reference": "1 John 4:8",
+   "words": [
+    "God",
+    "is",
+    "love"
+   ],
+   "decoys": [
+    "good",
+    "great",
+    "light",
+    "joy",
+    "kind",
+    "was"
+   ]
+  },
+  {
+   "id": "vy-03",
+   "reference": "Psalm 118:24",
+   "words": [
+    "This",
+    "is",
+    "the",
+    "day",
+    "the",
+    "Lord",
+    "has",
+    "made"
+   ],
+   "decoys": [
+    "night",
+    "God",
+    "king",
+    "will",
+    "was",
+    "gift",
+    "time",
+    "year"
+   ]
+  },
+  {
+   "id": "vy-04",
+   "reference": "Philippians 4:13",
+   "words": [
+    "I",
+    "can",
+    "do",
+    "all",
+    "things",
+    "through",
+    "Christ"
+   ],
+   "decoys": [
+    "some",
+    "want",
+    "God",
+    "faith",
+    "him",
+    "try",
+    "will",
+    "most"
+   ]
+  },
+  {
+   "id": "vy-05",
+   "reference": "Psalm 23:1",
+   "words": [
+    "The",
+    "Lord",
+    "is",
+    "my",
+    "shepherd",
+    "I",
+    "shall",
+    "not",
+    "want"
+   ],
+   "decoys": [
+    "God",
+    "king",
+    "friend",
+    "will",
+    "never",
+    "need",
+    "fear",
+    "guide",
+    "was"
+   ]
+  },
+  {
+   "id": "vy-06",
+   "reference": "John 3:16",
+   "words": [
+    "For",
+    "God",
+    "so",
+    "loved",
+    "the",
+    "world"
+   ],
+   "decoys": [
+    "gave",
+    "people",
+    "made",
+    "earth",
+    "much",
+    "that",
+    "Son",
+    "very"
+   ]
+  },
+  {
+   "id": "vy-07",
+   "reference": "Genesis 1:1",
+   "words": [
+    "In",
+    "the",
+    "beginning",
+    "God",
+    "created",
+    "the",
+    "heavens",
+    "and",
+    "the",
+    "earth"
+   ],
+   "decoys": [
+    "made",
+    "formed",
+    "water",
+    "light",
+    "stars",
+    "sea",
+    "sky",
+    "world",
+    "first",
+    "above"
+   ]
+  }
+ ]
+}
