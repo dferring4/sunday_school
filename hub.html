@@ -90,6 +90,23 @@
   .choice.correct{border-color:var(--green);background:rgba(52,211,153,.15);box-shadow:0 0 0 4px rgba(52,211,153,.25),0 0 40px rgba(52,211,153,.35);transform:scale(1.03);}
   .choice.correct .letter{background:var(--green);color:#05271b;}
   .choice.dim{opacity:.35;}
+  /* quiz turns */
+  #quiz .choice{cursor:pointer;}
+  #quiz .choice:hover{border-color:var(--gold);}
+  #quiz.locked .choice{cursor:default;}
+  #quiz.locked .choice:hover{border-color:var(--line);}
+  .choice.wrong{border-color:var(--red-hot);background:rgba(239,68,68,.18);box-shadow:0 0 0 4px rgba(239,68,68,.25),0 0 40px rgba(239,68,68,.35);opacity:1;}
+  .choice.wrong .letter{background:var(--red-hot);color:#fff;}
+  .fbanswer.wrong{border-color:var(--red-hot);background:rgba(239,68,68,.14);color:#fee2e2;box-shadow:0 0 40px rgba(239,68,68,.3);}
+  .turnbox{width:100%;background:var(--bg2);border:3px solid var(--tc,var(--gold));border-radius:16px;padding:10px 12px;margin-bottom:14px;text-align:center;cursor:pointer;color:var(--ink);}
+  .turnbox small{display:block;color:var(--muted);font-weight:800;letter-spacing:2px;font-size:12px;text-transform:uppercase;}
+  .turnbox b{display:block;color:var(--tc,var(--gold));font-weight:900;font-size:clamp(22px,2.6vw,38px);line-height:1.1;}
+  .turnbox span{display:block;color:var(--muted);font-size:11px;font-weight:700;opacity:.7;}
+  .timebanner.good{color:var(--green);}
+  .pickcard{background:var(--panel);border:2px solid var(--gold);border-radius:20px;padding:28px;width:min(720px,96vw);text-align:center;box-shadow:var(--shadow);}
+  .pickcard h3{font-size:clamp(26px,3.4vw,44px);font-weight:900;margin:0 0 6px;}
+  .pickcard p{color:var(--muted);font-weight:700;margin:0 0 20px;}
+  .pickcard .rules{margin-top:18px;font-size:15px;}
   .fbprompt{background:var(--bg2);border:3px dashed var(--line);border-radius:16px;padding:26px;font-size:clamp(20px,2.4vw,34px);font-weight:800;color:var(--muted);text-align:center;}
   .fbanswer{background:rgba(52,211,153,.14);border:3px solid var(--green);border-radius:16px;padding:20px;font-size:clamp(22px,2.8vw,42px);font-weight:900;color:#d1fae5;text-align:center;box-shadow:0 0 40px rgba(52,211,153,.3);}
   .fbanswer small{display:block;color:var(--green);font-size:.5em;font-weight:800;margin-bottom:6px;letter-spacing:1px;}
@@ -326,6 +343,7 @@
         <div id="answerArea"></div>
       </div>
       <div class="tcol">
+        <button class="turnbox" id="turnBox" title="Change whose turn it is"><small>Up now</small><b id="turnName">&mdash;</b><span>tap to change</span></button>
         <div class="timerlabel">Timer</div>
         <div class="timerwrap" id="timerwrap">
           <svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="10"/>
@@ -339,6 +357,8 @@
       <button class="btn" id="prevBtn">&#9664; Prev</button>
       <button class="btn gold big" id="startBtn">Start Timer</button>
       <button class="btn green big" id="revealBtn">Reveal Answer</button>
+      <button class="btn green big hidden" id="judgeRight">&#10004; Right (+1,000)</button>
+      <button class="btn big hidden" id="judgeWrong" style="background:linear-gradient(180deg,var(--red),var(--red-hot));color:#fff;border:none;">&#10008; Wrong (&minus;500)</button>
       <button class="btn" id="nextBtn">Next &#9654;</button>
     </div>
   </div>
@@ -654,6 +674,14 @@
 </div>
 
 <!-- score popover -->
+<div class="overlay" id="quizStartOverlay">
+  <div class="pickcard">
+    <h3>Which team goes first?</h3>
+    <p>That team gets the first question. After that, teams take turns.</p>
+    <div class="awardbar" id="quizStartTeams"></div>
+    <p class="rules">Right answer: +1,000 &nbsp;&bull;&nbsp; Wrong answer or time runs out: &minus;500</p>
+  </div>
+</div>
 <div class="overlay" id="scoreOverlay">
   <div class="popover" id="popover">
     <h3 id="popTeamName">Team</h3>
@@ -774,7 +802,7 @@ $("scoreOverlay").onclick=e=>{if(e.target===$("scoreOverlay"))$("popClose").oncl
 
 /* ---------- ROUTER ---------- */
 const GAMES=[
-  {id:"quiz",ic:"&#127919;",tt:"Quiz Showdown",tc:"#ffc233",td:"Multiple choice, true/false & fill-in. Big timer, buzzer, and confetti.",count:()=>state.questions.length+" questions"},
+  {id:"quiz",ic:"&#127919;",tt:"Quiz Showdown",tc:"#ffc233",td:"Teams take turns: +1,000 for a right answer, \u2212500 for a wrong one or when time runs out.",count:()=>state.questions.length+" questions"},
   {id:"whoami",ic:"&#128373;&#65039;",tt:"Who Am I?",tc:"#34d399",td:"Five clues, worth more the earlier you guess. Perfect for latecomers.",count:()=>state.whoami.length+" sets"},
   {id:"jeopardy",ic:"&#127942;",tt:"Jeopardy",tc:"#3b82f6",td:"Pick-a-square board with categories, Daily Doubles & Final Jeopardy.",count:()=>state.jeopardy.length+" board"+(state.jeopardy.length===1?"":"s")},
   {id:"concentration",ic:"&#129513;",tt:"Concentration",tc:"#f97316",td:"Match pairs to uncover a hidden picture, then guess it for 5,000.",count:()=>state.concentration.length+" set"+(state.concentration.length===1?"":"s")},
@@ -797,7 +825,8 @@ function showScreen(name){
   const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",charades:"Reverse Charades",wordwheel:"Word Puzzle Wheel",voyager:"Verse Voyager",setup:"Setup"};
   $("brandText").textContent=titles[name]||"Game Hub";
   if(name==="hub")renderHub();
-  if(name==="quiz"){buildQuizOrder();renderQuiz();}
+  if(name!=="quiz"){stopTimer(true);$("quizStartOverlay").classList.remove("show");}
+  if(name==="quiz"){buildQuizOrder();renderQuiz();openTurnPicker();}
   if(name==="whoami"){buildWhoOrder();renderWho();}
   if(name==="jeopardy")enterJeopardy();
   if(name==="concentration")enterConcentration();
@@ -812,11 +841,13 @@ $("modeBtn").onclick=()=>showScreen(screen==="setup"?"hub":"setup");
 $("fsBtn").onclick=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen&&document.exitFullscreen();};
 
 /* ==================== QUIZ ==================== */
-let quizPlay={index:0,order:[],phase:"idle",timeLeft:0,handle:null,shuffleMap:{}};
+const QUIZ_RIGHT=1000, QUIZ_WRONG=500;
+let quizPlay={index:0,order:[],phase:"idle",timeLeft:0,handle:null,shuffleMap:{},start:0,results:{}};
+/* phase: idle -> running -> answered (scored)  |  revealed = answer shown, not scored yet */
 function buildQuizOrder(){
   const idx=state.questions.map((_,i)=>i);
   if(state.settings.order==="shuffle")for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
-  quizPlay.order=idx;quizPlay.index=0;quizPlay.shuffleMap={};
+  quizPlay.order=idx;quizPlay.index=0;quizPlay.shuffleMap={};quizPlay.results={};quizPlay.start=0;
 }
 function choiceOrder(q){
   if(q.type==="tf")return[0,1];
@@ -825,35 +856,86 @@ function choiceOrder(q){
   return quizPlay.shuffleMap[q.id];
 }
 function curQ(){return state.questions[quizPlay.order[quizPlay.index]]||null;}
+/* Whose turn: the starting team, moved along one team for every question that has been scored */
+function scoredCount(){return Object.values(quizPlay.results).filter(r=>r.scored).length;}
+function turnTeam(){const n=state.teams.length;if(!n)return -1;const r=quizPlay.results[quizPlay.index];
+  if(r&&r.scored)return r.team;return ((quizPlay.start+scoredCount())%n+n)%n;}
+function renderTurn(){const i=turnTeam(),t=state.teams[i],box=$("turnBox");
+  if(!t){$("turnName").textContent="—";return;}
+  box.style.setProperty("--tc",t.color);$("turnName").textContent=t.name;
+  const r=quizPlay.results[quizPlay.index];box.querySelector("small").textContent=r&&r.scored?"Answered by":"Up now";box.querySelector("span").style.visibility=r&&r.scored?"hidden":"visible";}
+function openTurnPicker(){
+  teamAwardBar($("quizStartTeams"),i=>{const n=state.teams.length;quizPlay.start=((i-scoredCount())%n+n)%n;
+    $("quizStartOverlay").classList.remove("show");AC();renderTurn();});
+  $("quizStartOverlay").classList.add("show");
+}
+$("turnBox").onclick=()=>{const r=quizPlay.results[quizPlay.index];if(r&&r.scored)return;openTurnPicker();};
+
 const RING_LEN=2*Math.PI*52;
 function resetTimerDisplay(){const w=$("timerwrap");w.classList.remove("running","low","expired");$("timernum").textContent=state.settings.timerSeconds;$("ring").style.strokeDashoffset="0";$("ring").setAttribute("stroke-dasharray",RING_LEN);}
 function renderQuiz(){
-  stopTimer(true);quizPlay.phase="idle";const q=curQ();const area=$("answerArea");$("timebanner").textContent="";resetTimerDisplay();
-  if(!q){$("qtext").textContent="No questions yet — add some in Setup.";$("qcounter").textContent="";$("qweek").textContent="";area.innerHTML="";quizButtons();return;}
+  stopTimer(true);quizPlay.phase="idle";const q=curQ();const area=$("answerArea");const tb=$("timebanner");tb.textContent="";tb.classList.remove("good");resetTimerDisplay();
+  if(!q){$("qtext").textContent="No questions yet — add some in Setup.";$("qcounter").textContent="";$("qweek").textContent="";area.innerHTML="";quizButtons();renderTurn();return;}
   $("qcounter").textContent=`Question ${quizPlay.index+1} of ${quizPlay.order.length}`;$("qweek").textContent=q.week||"";$("qtext").textContent=q.text;area.innerHTML="";
-  if(q.type==="fb"){const p=document.createElement("div");p.className="fbprompt";p.textContent="Type or say your answer!";area.appendChild(p);}
-  else{const g=document.createElement("div");g.className="choices";choiceOrder(q).forEach((oi,pos)=>{const b=document.createElement("div");b.className="choice";b.dataset.i=oi;b.innerHTML=`<span class="letter">${LETTERS[pos]}</span><span>${esc(q.choices[oi])}</span>`;g.appendChild(b);});area.appendChild(g);}
-  quizButtons();
+  if(q.type==="fb"){const p=document.createElement("div");p.className="fbprompt";p.textContent="Say your answer!";area.appendChild(p);}
+  else{const g=document.createElement("div");g.className="choices";choiceOrder(q).forEach((oi,pos)=>{const b=document.createElement("div");b.className="choice";b.dataset.i=oi;b.innerHTML=`<span class="letter">${LETTERS[pos]}</span><span>${esc(q.choices[oi])}</span>`;b.onclick=()=>pickAnswer(oi);g.appendChild(b);});area.appendChild(g);}
+  const r=quizPlay.results[quizPlay.index];
+  if(r&&r.scored){quizPlay.phase="answered";paintResult(false);}   // coming back to a question already played: show result, no re-scoring
+  quizButtons();renderTurn();
 }
-function quizButtons(){const q=curQ(),has=!!q;
-  $("startBtn").disabled=!has||quizPlay.phase==="running"||quizPlay.phase==="revealed";
-  $("revealBtn").disabled=!has||quizPlay.phase==="revealed";
+function quizButtons(){const q=curQ(),has=!!q,ph=quizPlay.phase,fb=has&&q.type==="fb";
+  $("quiz").classList.toggle("locked",ph==="answered"||ph==="revealed");
+  $("startBtn").disabled=!has||ph!=="idle";
+  $("startBtn").textContent="Start Timer";
+  $("revealBtn").classList.toggle("hidden",fb&&ph==="revealed");
+  $("revealBtn").disabled=!has||ph==="answered"||ph==="revealed";
+  $("revealBtn").textContent=fb?"Reveal Answer":"Show Answer (no points)";
+  $("judgeRight").classList.toggle("hidden",!(fb&&ph==="revealed"));
+  $("judgeWrong").classList.toggle("hidden",!(fb&&ph==="revealed"));
   $("prevBtn").disabled=quizPlay.index<=0;$("nextBtn").disabled=quizPlay.index>=quizPlay.order.length-1;
-  $("startBtn").textContent=quizPlay.phase==="expired"?"Restart Timer":"Start Timer";
 }
-function startTimer(){const q=curQ();if(!q)return;AC();stopTimer(true);quizPlay.phase="running";quizPlay.timeLeft=state.settings.timerSeconds;
+function startTimer(){const q=curQ();if(!q||quizPlay.phase!=="idle")return;AC();stopTimer(true);quizPlay.phase="running";quizPlay.timeLeft=state.settings.timerSeconds;
   const w=$("timerwrap");w.classList.add("running");w.classList.remove("expired","low");$("timebanner").textContent="";drawTimer();quizButtons();
   quizPlay.handle=setInterval(()=>{quizPlay.timeLeft--;if(quizPlay.timeLeft<=0){quizPlay.timeLeft=0;drawTimer();expire();return;}drawTimer();quizPlay.timeLeft<=3?sTickLow():sTick();},1000);sTick();}
 function drawTimer(){const tot=state.settings.timerSeconds;$("timernum").textContent=quizPlay.timeLeft;const frac=Math.max(0,quizPlay.timeLeft/tot);$("ring").style.strokeDashoffset=(RING_LEN*(1-frac)).toFixed(1);$("timerwrap").classList.toggle("low",quizPlay.timeLeft<=3);}
 function stopTimer(silent){if(quizPlay.handle){clearInterval(quizPlay.handle);quizPlay.handle=null;}if(!silent)$("timerwrap").classList.remove("running");}
-function expire(){stopTimer(true);quizPlay.phase="expired";const w=$("timerwrap");w.classList.remove("running","low");w.classList.add("expired");$("timernum").textContent="0";$("timebanner").textContent="TIME'S UP!";sBuzzer();
-  $("flash").classList.add("go");setTimeout(()=>$("flash").classList.remove("go"),500);$("app").classList.add("shake");setTimeout(()=>$("app").classList.remove("shake"),500);quizButtons();}
-function revealQuiz(){const q=curQ();if(!q)return;stopTimer(true);$("timerwrap").classList.remove("running");quizPlay.phase="revealed";
+function freezeTimer(){stopTimer(true);$("timerwrap").classList.remove("running","low");}
+function expire(){stopTimer(true);const w=$("timerwrap");w.classList.remove("running","low");w.classList.add("expired");$("timernum").textContent="0";
+  if(quizPlay.phase==="answered")return;
+  scoreTurn(false,{timeout:true});}
+/* A team taps an answer (multiple choice / true-false) */
+function pickAnswer(oi){const q=curQ();if(!q||q.type==="fb")return;
+  if(quizPlay.phase==="answered"||quizPlay.phase==="revealed")return;
+  AC();freezeTimer();scoreTurn(q.correct.includes(oi),{pick:oi});}
+function scoreTurn(right,extra){
+  const team=turnTeam();
+  quizPlay.results[quizPlay.index]=Object.assign({team,right,scored:true},extra||{});
+  quizPlay.phase="answered";paintResult(true);
+  if(team>=0)award(team,right?QUIZ_RIGHT:-QUIZ_WRONG);
+  quizButtons();renderTurn();
+}
+function paintResult(withFx){
+  const q=curQ(),r=quizPlay.results[quizPlay.index];if(!q||!r)return;
+  if(q.type==="fb"){const area=$("answerArea");area.innerHTML="";const d=document.createElement("div");d.className="fbanswer"+(r.right?"":" wrong");
+    d.innerHTML=`<small>${r.right?"CORRECT":"THE ANSWER WAS"}</small>${esc(q.answers.join("  /  "))}`;area.appendChild(d);}
+  else{$("answerArea").querySelectorAll(".choice").forEach(el=>{const i=+el.dataset.i;el.classList.remove("correct","wrong","dim");
+    if(q.correct.includes(i))el.classList.add("correct");else if(i===r.pick)el.classList.add("wrong");else el.classList.add("dim");});}
+  const t=state.teams[r.team],name=t?t.name:"",tb=$("timebanner");
+  tb.classList.toggle("good",!!r.right);
+  tb.textContent=r.right?`+${fmt(QUIZ_RIGHT)} ${name}`:(r.timeout?"TIME'S UP! ":"WRONG! ")+`\u2212${fmt(QUIZ_WRONG)}`;
+  if(!withFx)return;
+  if(r.right){sCorrect();burstConfetti();}
+  else{sBuzzer();$("flash").classList.add("go");setTimeout(()=>$("flash").classList.remove("go"),500);$("app").classList.add("shake");setTimeout(()=>$("app").classList.remove("shake"),500);}
+}
+/* Show the answer without scoring (MC), or reveal a fill-in answer so the teacher can judge it */
+function revealQuiz(){const q=curQ();if(!q||quizPlay.phase==="answered"||quizPlay.phase==="revealed")return;freezeTimer();quizPlay.phase="revealed";
   if(q.type==="fb"){const area=$("answerArea");area.innerHTML="";const d=document.createElement("div");d.className="fbanswer";d.innerHTML=`<small>ANSWER</small>${esc(q.answers.join("  /  "))}`;area.appendChild(d);}
   else{$("answerArea").querySelectorAll(".choice").forEach(el=>{const i=+el.dataset.i;q.correct.includes(i)?el.classList.add("correct"):el.classList.add("dim");});}
-  sCorrect();burstConfetti();quizButtons();}
+  quizButtons();}
+function judgeFill(right){if(quizPlay.phase!=="revealed")return;scoreTurn(right);}
 function quizNav(d){const n=quizPlay.index+d;if(n>=0&&n<quizPlay.order.length){quizPlay.index=n;renderQuiz();}}
 $("startBtn").onclick=startTimer;$("revealBtn").onclick=revealQuiz;$("nextBtn").onclick=()=>quizNav(1);$("prevBtn").onclick=()=>quizNav(-1);
+$("judgeRight").onclick=()=>judgeFill(true);$("judgeWrong").onclick=()=>judgeFill(false);
 
 /* ==================== WHO AM I ==================== */
 let whoPlay={order:[],index:0,shown:1,revealed:false};
@@ -1685,8 +1767,12 @@ function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();
 
 /* keyboard (quiz) */
 addEventListener("keydown",e=>{if(screen!=="quiz")return;const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea"||tag==="select")return;
-  if(e.code==="Space"){e.preventDefault();if(quizPlay.phase==="idle"||quizPlay.phase==="expired")startTimer();else if(quizPlay.phase==="running")revealQuiz();else if(quizPlay.phase==="revealed")quizNav(1);return;}
-  if(e.code==="ArrowRight")quizNav(1);if(e.code==="ArrowLeft")quizNav(-1);if(e.key==="r"||e.key==="R")revealQuiz();});
+  if($("quizStartOverlay").classList.contains("show"))return;
+  const q=curQ(),ph=quizPlay.phase;
+  if(e.code==="Space"){e.preventDefault();if(ph==="idle")startTimer();else if(ph==="running"&&q&&q.type==="fb")revealQuiz();else if(ph==="answered"||(ph==="revealed"&&q&&q.type!=="fb"))quizNav(1);return;}
+  if(e.code==="ArrowRight")quizNav(1);if(e.code==="ArrowLeft")quizNav(-1);if(e.key==="r"||e.key==="R")revealQuiz();
+  const k=e.key.toUpperCase(),pos="ABCDEF".indexOf(k)>=0?"ABCDEF".indexOf(k):"123456".indexOf(e.key);
+  if(pos>=0&&q&&q.type!=="fb"){const el=$("answerArea").querySelectorAll(".choice")[pos];if(el)pickAnswer(+el.dataset.i);}});
 ["touchend","pointerdown","click"].forEach(ev=>document.addEventListener(ev,()=>AC(),{passive:true}));
 
 /* ==================== DEFAULT CONTENT ==================== */
