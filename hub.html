@@ -417,7 +417,7 @@
     <div id="concPlay" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
       <div class="jeohd" style="padding:12px 16px 0;">
         <div><h2 id="concTitle">Concentration</h2><div class="roundlabel" id="concStatusTop"></div></div>
-        <div class="concfield"><span style="color:var(--muted);font-weight:700;white-space:nowrap;">&#128247; Picture:</span><select id="concImgSelect"><option>Finding pictures&hellip;</option></select><input type="text" id="concImgInput" class="hidden" placeholder="e.g. shepherd.jpg"><button class="sbtn hidden" id="concSetImg">Load</button></div>
+        <div class="concfield"><span style="color:var(--muted);font-weight:700;white-space:nowrap;">&#128247; Picture:</span><select id="concImgSelect"><option>Finding pictures&hellip;</option></select><button class="sbtn ghost" id="concRescan" title="Look again for new pictures in the images folder" style="padding:7px 10px;">&#8635;</button><input type="text" id="concImgInput" class="hidden" placeholder="e.g. shepherd.jpg"><button class="sbtn hidden" id="concSetImg">Load</button></div>
       </div>
       <div class="concstage">
         <div class="concturn" id="concTurn"></div>
@@ -1157,10 +1157,17 @@ const NUM_WORDS=(()=>{const ones=["one","two","three","four","five","six","seven
   tens.forEach(t=>{out.push(t);if(t!=="fifty")ones.slice(0,9).forEach(o=>out.push(t+"-"+o));});return out;})();   // one ... fifty
 const CONC_DEFAULT_IMG="one.png", CONC_OTHER="__other__";
 let concPics=null;   // null = still looking
-function findConcPics(){
-  if(concPics)return Promise.resolve(concPics);
-  return Promise.all(NUM_WORDS.map(w=>new Promise(res=>{const im=new Image();im.onload=()=>res(w+".png");im.onerror=()=>res(null);im.src="images/"+w+".png";})))
-    .then(list=>{concPics=list.filter(Boolean);return concPics;});
+function probeImg(name,stamp){return new Promise(res=>{const im=new Image();im.onload=()=>res(name);im.onerror=()=>res(null);im.src="images/"+name+"?v="+stamp;});}
+function findConcPics(force){
+  if(concPics&&!force)return Promise.resolve(concPics);
+  const stamp=Date.now();   // skip any stale cached "not found" answers
+  return Promise.all(NUM_WORDS.map(w=>probeImg(w+".png",stamp))).then(async list=>{
+    // For missing numbers near the ones you have, also try common near-misses: .jpg, .jpeg, .PNG, Capitalized
+    let last=-1;list.forEach((n,i)=>{if(n)last=i;});
+    const upto=Math.min(NUM_WORDS.length,last+6);
+    const fixes=await Promise.all(list.slice(0,upto).map((n,i)=>{if(n)return n;const w=NUM_WORDS[i],W=w[0].toUpperCase()+w.slice(1);
+      return [w+".jpg",w+".jpeg",w+".PNG",w+".JPG",W+".png",W+".jpg",W+".PNG"].reduce((p,name)=>p.then(f=>f||probeImg(name,stamp)),Promise.resolve(null));}));
+    concPics=fixes.concat(list.slice(upto)).filter(Boolean);return concPics;});
 }
 function fillConcSelect(current){
   const sel=$("concImgSelect");sel.innerHTML="";
@@ -1177,6 +1184,8 @@ $("concImgSelect").onchange=e=>{const v=e.target.value,other=v===CONC_OTHER;
   if(other){$("concImgInput").value="";$("concImgInput").focus();return;}
   $("concImgInput").value=v;concPlay.image=v;setConcImage(v);};
 findConcPics().then(()=>{if(!$("concPlay").classList.contains("hidden"))fillConcSelect(concPlay.image);});
+$("concRescan").onclick=()=>{const btn=$("concRescan");btn.disabled=true;btn.innerHTML="&hellip;";
+  findConcPics(true).then(list=>{fillConcSelect(concPlay.image);btn.disabled=false;btn.innerHTML="&#8635;";btn.title=`Found ${list.length} picture${list.length===1?"":"s"}. Click to look again.`;});};
 function concImgUrl(v){v=(v||"").trim();if(!v)return"";if(/^https?:\/\//i.test(v)||v.indexOf("/")>=0)return v;return"images/"+v;}
 function curConcSet(){return state.concentration.find(s=>s.id===concPlay.setId)||null;}
 function enterConcentration(){if(!state.concentration.length||state.concentration.length>1)showConcPicker();else loadConcSet(state.concentration[0].id);}
