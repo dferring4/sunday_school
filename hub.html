@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunday School Game Hub</title>
+<style>
+  :root{
+    --bg:#0b1220; --bg2:#101c30; --panel:#17253d; --line:#294061;
+    --ink:#f1f5f9; --muted:#93a4bd;
+    --gold:#ffc233; --gold-deep:#f0a500; --gold-ink:#241900;
+    --green:#34d399; --green-deep:#059669;
+    --red:#f87171; --red-hot:#ef4444;
+    --blue:#3b82f6;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{background:radial-gradient(1200px 700px at 50% -10%, #16273f 0%, var(--bg) 60%);
+    color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow:hidden;}
+  .num{font-variant-numeric:tabular-nums;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .app{display:flex;flex-direction:column;height:100vh;}
+  .hidden{display:none!important;}
+  .empty{color:var(--muted);text-align:center;padding:40px;font-size:18px;font-weight:700;}
+
+  /* top bar + scoreboard */
+  .topbar{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);background:rgba(9,15,26,.6);}
+  .brand{font-weight:900;letter-spacing:.5px;font-size:clamp(15px,1.8vw,22px);display:flex;align-items:center;gap:8px;white-space:nowrap;}
+  .brand .bolt{color:var(--gold);}
+  .scorebar{display:flex;gap:10px;flex:1;overflow:auto;padding:2px;}
+  .teamchip{flex:1 1 0;min-width:120px;background:var(--panel);border:2px solid var(--tc,#3b82f6);border-radius:14px;
+    padding:8px 12px;display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;
+    transition:transform .12s ease, box-shadow .12s ease;}
+  .teamchip:hover{transform:translateY(-2px);}
+  .teamchip .tname{font-weight:800;font-size:clamp(12px,1.3vw,18px);color:var(--tc,#3b82f6);text-align:center;line-height:1.1;
+    max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .teamchip .tscore{font-weight:900;font-size:clamp(19px,2.5vw,40px);line-height:1;margin-top:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
+  .teamchip .edithint{position:absolute;top:3px;right:7px;font-size:9px;color:var(--muted);opacity:.6;}
+  .teamchip.pulse{animation:pulsefx .7s ease;}
+  @keyframes pulsefx{0%{transform:scale(1);}25%{transform:scale(1.12);box-shadow:0 0 40px var(--tc);}100%{transform:scale(1);}}
+  .navbtn{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 15px;font-weight:800;font-size:15px;white-space:nowrap;}
+  .navbtn:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* generic buttons */
+  .btn{border-radius:14px;padding:15px 20px;font-weight:900;font-size:clamp(15px,1.6vw,21px);background:var(--panel);color:var(--ink);border:1px solid var(--line);min-width:110px;transition:transform .1s, filter .15s;}
+  .btn:hover{filter:brightness(1.12);}
+  .btn:active{transform:translateY(2px);}
+  .btn.gold{background:linear-gradient(180deg,var(--gold),var(--gold-deep));color:var(--gold-ink);border:none;}
+  .btn.green{background:linear-gradient(180deg,var(--green),var(--green-deep));color:#04241a;border:none;}
+  .btn.big{flex:1;max-width:340px;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none;}
+  .controls{display:flex;gap:12px;padding:14px 18px;border-top:1px solid var(--line);background:rgba(9,15,26,.6);flex-wrap:wrap;justify-content:center;}
+
+  /* award bar */
+  .awardbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+  .awardbtn{border-radius:14px;padding:14px 20px;font-weight:900;font-size:clamp(15px,1.7vw,22px);
+    background:var(--tc,#3b82f6);color:#04101f;border:none;transition:transform .1s, filter .15s;box-shadow:0 4px 0 rgba(0,0,0,.35);}
+  .awardbtn:hover{filter:brightness(1.1);}
+  .awardbtn:active{transform:translateY(2px);}
+
+  /* HUB */
+  .hub{flex:1;overflow:auto;padding:26px;}
+  .hub h1{font-size:clamp(24px,3.4vw,44px);font-weight:900;margin:6px 0 4px;}
+  .hub .sub{color:var(--muted);font-weight:700;margin:0 0 22px;font-size:16px;}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;text-align:left;
+    display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:transform .12s, box-shadow .12s, border-color .12s;position:relative;overflow:hidden;}
+  .tile:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.45);border-color:var(--tc);}
+  .tile .ic{font-size:46px;}
+  .tile .tt{font-size:24px;font-weight:900;}
+  .tile .td{color:var(--muted);font-weight:600;line-height:1.4;font-size:15px;}
+  .tile .bar{position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--tc,var(--gold));}
+  .tile .count{color:var(--tc);font-weight:800;font-size:13px;margin-top:2px;}
+
+  /* stage shared */
+  .stage{flex:1;display:flex;gap:18px;padding:18px;min-height:0;}
+  .qcol{flex:2;display:flex;flex-direction:column;min-width:0;}
+  .tcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px;min-width:250px;}
+  .qmeta{color:var(--muted);font-weight:700;font-size:14px;margin-bottom:6px;display:flex;justify-content:space-between;}
+  .qtext{font-weight:900;line-height:1.15;font-size:clamp(24px,3.4vw,50px);margin:4px 0 16px;text-wrap:balance;}
+
+  /* QUIZ choices */
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .choice{background:var(--bg2);border:3px solid var(--line);border-radius:16px;padding:16px 20px;font-weight:800;
+    font-size:clamp(17px,2.2vw,32px);display:flex;align-items:center;gap:14px;text-align:left;color:var(--ink);
+    transition:transform .15s, border-color .2s, background .2s, opacity .2s;}
+  .choice .letter{flex:none;width:1.7em;height:1.7em;border-radius:10px;background:var(--line);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8em;}
+  .choice.correct{border-color:var(--green);background:rgba(52,211,153,.15);box-shadow:0 0 0 4px rgba(52,211,153,.25),0 0 40px rgba(52,211,153,.35);transform:scale(1.03);}
+  .choice.correct .letter{background:var(--green);color:#05271b;}
+  .choice.dim{opacity:.35;}
+  .fbprompt{background:var(--bg2);border:3px dashed var(--line);border-radius:16px;padding:26px;font-size:clamp(20px,2.4vw,34px);font-weight:800;color:var(--muted);text-align:center;}
+  .fbanswer{background:rgba(52,211,153,.14);border:3px solid var(--green);border-radius:16px;padding:20px;font-size:clamp(22px,2.8vw,42px);font-weight:900;color:#d1fae5;text-align:center;box-shadow:0 0 40px rgba(52,211,153,.3);}
+  .fbanswer small{display:block;color:var(--green);font-size:.5em;font-weight:800;margin-bottom:6px;letter-spacing:1px;}
+
+  /* timer */
+  .timerlabel{color:var(--muted);font-weight:800;letter-spacing:2px;font-size:13px;text-transform:uppercase;}
+  .timerwrap{position:relative;width:min(34vh,300px);height:min(34vh,300px);margin:8px 0 12px;}
+  .timerwrap svg{transform:rotate(-90deg);width:100%;height:100%;}
+  .ring-bg{stroke:var(--line);}
+  .ring-fg{stroke:var(--gold);stroke-linecap:round;transition:stroke .3s;}
+  .timernum{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:min(18vh,140px);line-height:1;}
+  .timerwrap.low .ring-fg{stroke:var(--red-hot);} .timerwrap.low .timernum{color:var(--red);}
+  .timerwrap.running .timernum{animation:tick 1s ease infinite;}
+  @keyframes tick{0%{transform:scale(1);}12%{transform:scale(1.12);}40%{transform:scale(1);}}
+  .timebanner{font-weight:900;font-size:clamp(18px,2.6vw,36px);color:var(--red);letter-spacing:3px;min-height:1.2em;}
+
+  /* WHO AM I */
+  .whowrap{flex:1;display:flex;flex-direction:column;padding:20px;min-height:0;overflow:auto;}
+  .whotop{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-weight:700;margin-bottom:8px;}
+  .whoworth{font-size:clamp(18px,2.2vw,30px);font-weight:900;color:var(--gold);text-align:center;margin:4px 0 16px;}
+  .whoworth b{font-size:1.5em;}
+  .clues{display:flex;flex-direction:column;gap:12px;max-width:1000px;margin:0 auto;width:100%;}
+  .clue{background:var(--bg2);border:2px solid var(--line);border-radius:14px;padding:16px 18px;font-size:clamp(18px,2.3vw,32px);font-weight:700;display:flex;gap:14px;align-items:flex-start;animation:pop .25s ease;}
+  @keyframes pop{from{transform:scale(.96);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .clue .cluenum{flex:none;width:1.5em;height:1.5em;border-radius:8px;background:var(--gold);color:var(--gold-ink);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85em;}
+  .whoanswer{max-width:1000px;margin:16px auto 0;width:100%;background:rgba(52,211,153,.14);border:3px solid var(--green);border-radius:16px;padding:20px;text-align:center;font-size:clamp(26px,3.4vw,52px);font-weight:900;color:#d1fae5;box-shadow:0 0 40px rgba(52,211,153,.3);}
+
+  /* JEOPARDY */
+  .jeowrap{flex:1;display:flex;flex-direction:column;padding:16px;min-height:0;}
+  .jeohd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .jeohd h2{margin:0;font-size:clamp(20px,2.6vw,34px);font-weight:900;}
+  .jeogrid{flex:1;display:grid;gap:8px;min-height:0;}
+  .jeohead{background:var(--blue);color:#04101f;border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:clamp(12px,1.5vw,20px);padding:8px;line-height:1.1;}
+  .jeocell{background:var(--panel);border:2px solid var(--line);border-radius:10px;font-weight:900;color:var(--gold);font-size:clamp(20px,3vw,44px);transition:transform .1s, background .15s;}
+  .jeocell:hover:not(:disabled){background:var(--bg2);transform:scale(1.03);}
+  .jeocell.done{background:transparent;border-color:transparent;color:transparent;}
+  .jeocell.blank{background:transparent;border-color:transparent;}
+  .jeopick{display:block;width:100%;max-width:520px;margin:10px auto;background:var(--panel);border:2px solid var(--blue);color:var(--ink);border-radius:14px;padding:18px;font-weight:900;font-size:22px;}
+  .jeopick:hover{background:var(--bg2);}
+  .roundlabel{font-weight:900;color:var(--gold);font-size:clamp(12px,1.5vw,18px);letter-spacing:1px;margin-top:2px;}
+  .jeofinalintro{flex:1;display:flex;align-items:center;justify-content:center;}
+  .wager{font-weight:900;font-size:clamp(44px,8vw,96px);line-height:1;color:var(--gold);text-align:center;margin:6px 0;}
+  .fwrow{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .fwrow .wtag{font-weight:900;font-size:26px;min-width:96px;text-align:center;}
+  .minibtn{background:var(--line);color:var(--ink);border-radius:10px;padding:11px 15px;font-weight:900;font-size:18px;}
+  .minibtn:active{transform:translateY(2px);} .minibtn.max{background:var(--gold);color:var(--gold-ink);}
+
+  /* CONCENTRATION */
+  .concstage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:10px;min-height:0;}
+  .concstatus{font-weight:900;font-size:clamp(16px,2vw,26px);min-height:1.3em;color:var(--muted);text-align:center;}
+  .concstatus.good{color:var(--green);} .concstatus.bad{color:var(--red);}
+  .concboard{position:relative;width:min(92vw,900px);max-height:70vh;aspect-ratio:5/4;border:7px solid #c0271b;border-radius:16px;overflow:hidden;background:#5b1717;box-shadow:0 0 0 10px #24406b,var(--shadow);}
+  #concImg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;}
+  .concimgph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#c9b8a0;font-weight:800;font-size:clamp(14px,2vw,22px);text-align:center;padding:20px;}
+  #concGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);}
+  .conctile{border:3px solid #c0271b;background:linear-gradient(180deg,#ffd24a,#eda200);color:#9a2a08;font-weight:900;
+    font-size:clamp(20px,4.2vw,54px);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .25s, background .2s;padding:2px;text-align:center;line-height:1.05;}
+  .conctile:hover:not(.gone){filter:brightness(1.06);}
+  .conctile.up{background:#fff7e6;color:#7a1f1f;font-size:clamp(11px,1.5vw,20px);}
+  .conctile.match{box-shadow:inset 0 0 0 4px var(--green);}
+  .conctile.gone{background:transparent;border-color:transparent;color:transparent;pointer-events:none;}
+  .concfield{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;}
+  .concfield input{border:none;background:transparent;color:var(--ink);font-size:15px;min-width:150px;padding:6px;}
+  .concfield input:focus{outline:none;}
+  #concGrid{transition:opacity .3s;}
+  .concboard.peek #concGrid{opacity:0;pointer-events:none;}
+  .concturn{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:2em;}
+  .concturnlabel{font-weight:900;font-size:clamp(18px,2.4vw,30px);}
+
+  /* BEAT THE CLOCK */
+  .bcstage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;gap:10px;min-height:0;text-align:center;}
+  .bctop{width:100%;display:flex;justify-content:space-between;color:var(--muted);font-weight:700;font-size:14px;}
+  .bcprompt{font-weight:900;font-size:clamp(26px,4.4vw,60px);line-height:1.1;text-wrap:balance;}
+  .bcmid{display:flex;gap:40px;align-items:center;justify-content:center;flex-wrap:wrap;margin:6px 0;}
+  .bctimer{font-weight:900;font-size:clamp(60px,14vw,180px);line-height:1;color:var(--gold);}
+  .bctimer.low{color:var(--red);animation:tick 1s ease infinite;}
+  .bctally{background:var(--panel);border:2px solid var(--line);border-radius:18px;padding:10px 26px;}
+  .bctallylabel{color:var(--muted);font-weight:800;letter-spacing:2px;font-size:13px;text-transform:uppercase;}
+  .bctallynum{font-weight:900;font-size:clamp(44px,9vw,110px);line-height:1;color:var(--green);}
+  .bcteamlabel{color:var(--muted);font-weight:700;margin-bottom:6px;}
+  .awardbtn.sel{outline:4px solid #fff;outline-offset:2px;}
+  .bcbanner{font-weight:900;font-size:clamp(20px,3vw,40px);color:var(--gold);min-height:1.2em;letter-spacing:1px;}
+
+  /* RACE TRACK */
+  .racehd{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 6px;flex-wrap:wrap;gap:10px;}
+  .racestage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:12px 18px 18px;min-height:0;}
+  .racelane{display:flex;align-items:center;gap:12px;}
+  .racename{flex:none;width:clamp(90px,12vw,150px);font-weight:900;font-size:clamp(14px,1.7vw,22px);color:var(--tc);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .racetrackrow{flex:1;position:relative;height:clamp(44px,7vh,70px);background:var(--bg2);border:2px solid var(--line);border-radius:14px;display:flex;overflow:hidden;}
+  .racecell{flex:1;border-right:1px dashed var(--line);}
+  .racecell:last-child{border-right:none;}
+  .racetoken{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:clamp(24px,4vw,44px);transition:left .35s cubic-bezier(.4,1.4,.6,1);z-index:2;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));}
+  .raceflag{flex:none;font-size:clamp(24px,4vw,40px);}
+  .racectrl{flex:none;display:flex;gap:6px;}
+  .racebtn{background:var(--line);color:var(--ink);border-radius:10px;padding:10px 12px;font-weight:900;font-size:18px;min-width:46px;}
+  .racebtn.go{background:var(--tc);color:#04101f;}
+  .racebtn.spin{background:var(--gold);color:var(--gold-ink);}
+  .racewin{text-align:center;font-weight:900;font-size:clamp(24px,4vw,52px);color:var(--gold);}
+
+  /* REVERSE CHARADES */
+  .chword{font-weight:900;font-size:clamp(34px,7vw,96px);line-height:1.05;text-align:center;text-wrap:balance;margin:10px 0;color:var(--gold);}
+
+  /* WORD PUZZLE WHEEL */
+  .wwcat{text-align:center;color:var(--muted);font-weight:800;letter-spacing:3px;text-transform:uppercase;font-size:clamp(13px,1.6vw,20px);padding:12px 10px 4px;}
+  .wwboard{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:10px 14px;}
+  .wwword{display:flex;gap:6px;}
+  .wwtile{width:clamp(26px,4.2vw,56px);height:clamp(34px,5.6vw,74px);border-radius:8px;background:#0c8a4a;border:2px solid #0a6e3b;
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(18px,3vw,40px);color:#fff;transition:transform .15s, box-shadow .2s, background .2s;}
+  .wwtile.punct{background:transparent;border-color:transparent;color:var(--ink);}
+  .wwtile.blank{background:#f4f7fb;border-color:#c7d2e0;color:#f4f7fb;}
+  .wwtile.lit{background:#fff59a;border-color:var(--gold);color:#7a5c00;cursor:pointer;animation:litpulse 1s ease infinite;box-shadow:0 0 20px var(--gold);}
+  @keyframes litpulse{0%,100%{box-shadow:0 0 10px var(--gold);}50%{box-shadow:0 0 26px var(--gold);transform:scale(1.05);}}
+  .wwtile.shown{background:#0c8a4a;border-color:#0a6e3b;color:#fff;}
+  .wwmid{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 14px;}
+  .wheelbox{position:relative;width:clamp(280px,48vw,480px);height:clamp(280px,48vw,480px);flex:none;display:flex;align-items:center;justify-content:center;}
+  .wheel{width:100%;height:100%;border-radius:50%;transition:transform 3.4s cubic-bezier(.15,.5,.12,1);transform-origin:center center;filter:drop-shadow(0 6px 16px rgba(0,0,0,.5));}
+  .wheel svg{width:100%;height:100%;display:block;}
+  .wheelptr{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:30px solid #EDEDE9;z-index:3;filter:drop-shadow(0 2px 2px rgba(0,0,0,.7));}
+  .wheelval{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(9,15,26,.92);border:3px solid var(--gold);border-radius:14px;padding:8px 14px;font-weight:900;font-size:clamp(16px,2.2vw,30px);color:var(--gold);min-width:96px;text-align:center;z-index:2;pointer-events:none;}
+  .wwright{flex:1;min-width:260px;max-width:520px;}
+  .wwletters{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;}
+  .wwletter{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 0;font-weight:900;font-size:clamp(14px,1.7vw,20px);color:var(--ink);}
+  .wwletter:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}
+  .wwletter.used{opacity:.25;pointer-events:none;}
+  .wwletter:disabled{opacity:.4;}
+
+  /* VERSE VOYAGER */
+  .voyhud{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;border-bottom:1px solid var(--line);background:rgba(9,15,26,.6);}
+  .voyhud-l{font-weight:900;font-size:clamp(14px,1.8vw,22px);white-space:nowrap;}
+  .voylevel{color:var(--gold);font-size:.8em;margin-left:6px;}
+  .voyverse{flex:1;text-align:center;font-weight:700;font-size:clamp(13px,1.7vw,22px);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .voyverse .done{color:var(--green);} .voyverse .next{color:var(--gold);text-decoration:underline;} .voyverse .blank{color:#5b6b86;}
+  .voyhud-r{display:flex;align-items:center;gap:12px;white-space:nowrap;}
+  .voyhud-r .voyscore{font-weight:900;font-size:clamp(16px,2.2vw,28px);}
+  .voywrap{position:relative;flex:1;min-height:0;overflow:hidden;background:#05070f;}
+  #voyCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;}
+  .voysteer{position:absolute;left:14px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;z-index:2;}
+  .voysteerrow{display:flex;gap:8px;}
+  .voysteerbtn{width:clamp(56px,8vw,84px);height:clamp(56px,8vw,84px);border-radius:18px;background:rgba(124,92,255,.22);border:2px solid #7c5cff;color:#cbbcff;font-size:clamp(22px,3.6vw,36px);font-weight:900;touch-action:none;user-select:none;}
+  .voysteerbtn:active{background:rgba(124,92,255,.5);}
+  .voythrottle{position:absolute;right:16px;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:2;}
+  .voythlabel{writing-mode:vertical-rl;font-weight:900;letter-spacing:3px;color:var(--muted);font-size:13px;}
+  #voyLever{-webkit-appearance:slider-vertical;appearance:slider-vertical;writing-mode:vertical-lr;direction:rtl;width:34px;height:min(52vh,340px);touch-action:none;accent-color:#7c5cff;}
+  .voyoverlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:5;background:rgba(4,7,15,.78);text-align:center;padding:20px;}
+  .voyoverlay.show{display:flex;}
+  .voycard{max-width:640px;}
+  .voycard h2{font-size:clamp(26px,5vw,54px);font-weight:900;margin:0 0 10px;}
+  .voycard p{color:var(--muted);font-weight:700;font-size:clamp(15px,2vw,22px);margin:0 0 18px;line-height:1.5;}
+  .voycard .big{color:var(--gold);font-size:clamp(30px,6vw,64px);font-weight:900;}
+
+  /* overlays */
+  .overlay{position:fixed;inset:0;background:rgba(4,8,15,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  .overlay.show{display:flex;}
+  .popover{background:var(--panel);border:2px solid var(--tc,var(--gold));border-radius:20px;padding:24px;width:min(640px,96vw);box-shadow:var(--shadow);}
+  .popover h3{margin:0 0 4px;color:var(--tc,var(--gold));font-size:26px;}
+  .popover .bigscore{font-weight:900;font-size:60px;text-align:center;margin:6px 0 16px;line-height:1;}
+  .placegrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+  .place{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 3px;text-align:center;}
+  .place .plabel{color:var(--muted);font-size:11px;font-weight:800;margin:3px 0;}
+  .place .pdig{font-weight:900;font-size:20px;}
+  .stepbtn{width:100%;background:var(--line);color:var(--ink);border-radius:9px;padding:11px 0;font-weight:900;font-size:20px;}
+  .stepbtn.up{background:var(--green);color:#04241a;} .stepbtn.down{background:var(--red);color:#2a0606;}
+  .popfoot{display:flex;gap:10px;justify-content:space-between;margin-top:16px;flex-wrap:wrap;}
+
+  .jeoclue{background:var(--panel);border:3px solid var(--gold);border-radius:22px;padding:30px;width:min(900px,96vw);box-shadow:var(--shadow);text-align:center;}
+  .jeoclue .cat{color:var(--gold);font-weight:900;font-size:clamp(16px,2vw,26px);letter-spacing:1px;margin-bottom:14px;}
+  .jeoclue .q{font-weight:900;font-size:clamp(26px,4vw,60px);line-height:1.15;margin-bottom:18px;text-wrap:balance;}
+  .jeoclue .a{font-weight:900;font-size:clamp(22px,3vw,44px);color:var(--green);background:rgba(52,211,153,.12);border-radius:14px;padding:14px;margin-bottom:18px;}
+  .jeoclue .foot{display:flex;flex-direction:column;gap:14px;}
+
+  /* SETUP */
+  .setup{flex:1;overflow:auto;padding:22px;}
+  .setup h2{font-size:22px;margin:0 0 12px;display:flex;align-items:center;gap:10px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:20px;}
+  .card p.hint{color:var(--muted);margin:0 0 12px;line-height:1.5;font-size:15px;}
+  label.fld{display:block;font-weight:700;margin:12px 0 6px;font-size:14px;color:var(--muted);}
+  input[type=text],input[type=number],select,textarea{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:12px 14px;font-size:16px;font-family:inherit;}
+  textarea{min-height:130px;resize:vertical;line-height:1.5;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:end;}
+  .row>div{flex:1;min-width:140px;}
+  .sbtn{background:var(--gold);color:var(--gold-ink);border-radius:10px;padding:11px 18px;font-weight:800;font-size:15px;}
+  .sbtn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);}
+  .sbtn.danger{background:transparent;color:var(--red);border:1px solid var(--red);}
+  .teamedit{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+  .teamedit input[type=color]{width:46px;height:46px;border:none;border-radius:10px;background:none;padding:0;cursor:pointer;}
+  .listweek{margin-bottom:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .listweek h3{margin:0;padding:12px 16px;background:var(--bg2);font-size:16px;display:flex;justify-content:space-between;align-items:center;}
+  .litem{padding:10px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start;}
+  .litem .lt{flex:1;}
+  .litem .badge{font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--line);margin-right:8px;}
+  .litem .ans{color:var(--green);font-size:13px;font-weight:700;margin-top:3px;}
+  .xbtn{background:transparent;color:var(--red);border:1px solid var(--red);border-radius:8px;padding:5px 10px;font-weight:800;font-size:13px;flex:none;}
+  .parseresult{margin-top:10px;font-size:14px;font-weight:700;}
+  .parseresult .ok{color:var(--green);} .parseresult .err{color:var(--red);white-space:pre-wrap;font-weight:600;}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;}
+  .pill{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:8px 14px;font-weight:700;font-size:14px;cursor:pointer;}
+  .pill.on{background:var(--gold);color:var(--gold-ink);border-color:var(--gold);}
+  code{background:var(--bg2);padding:2px 6px;border-radius:6px;font-size:13px;}
+
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:60;}
+  .flash{position:fixed;inset:0;background:var(--red-hot);opacity:0;pointer-events:none;z-index:40;}
+  .flash.go{animation:flashfx .5s ease;}
+  @keyframes flashfx{0%{opacity:0;}20%{opacity:.5;}100%{opacity:0;}}
+  .shake{animation:shake .5s ease;}
+  @keyframes shake{0%,100%{transform:translate(0,0);}15%{transform:translate(-12px,4px);}30%{transform:translate(12px,-4px);}45%{transform:translate(-10px,-4px);}60%{transform:translate(10px,4px);}75%{transform:translate(-6px,2px);}}
+  @media(max-width:820px){.stage{flex-direction:column;}.choices{grid-template-columns:1fr;}.tcol{min-width:0;}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="bolt">&#9889;</span> <span id="brandText">Game Hub</span></div>
+    <div class="scorebar" id="scorebar"></div>
+    <button class="navbtn hidden" id="homeBtn">&#127968; Home</button>
+    <a class="navbtn" href="./" style="text-decoration:none" title="Back to the start page">&#11013; Start</a>
+    <button class="navbtn" id="modeBtn">&#9881; Setup</button>
+    <button class="navbtn" id="fsBtn" title="Fullscreen">&#9974;</button>
+  </div>
+
+  <!-- ============ HUB ============ -->
+  <div class="hub" id="hub">
+    <h1>Sunday School Game Hub</h1>
+    <p class="sub">Pick a game. The scoreboard up top is shared &mdash; scores carry across every game.</p>
+    <div class="tiles" id="tiles"></div>
+  </div>
+
+  <!-- ============ QUIZ ============ -->
+  <div id="quiz" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div class="stage">
+      <div class="qcol">
+        <div class="qmeta"><span id="qcounter"></span><span id="qweek"></span></div>
+        <div class="qtext" id="qtext">No questions yet.</div>
+        <div id="answerArea"></div>
+      </div>
+      <div class="tcol">
+        <div class="timerlabel">Timer</div>
+        <div class="timerwrap" id="timerwrap">
+          <svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="10"/>
+            <circle class="ring-fg" id="ring" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-dasharray="326.7" stroke-dashoffset="0"/></svg>
+          <div class="timernum num" id="timernum">10</div>
+        </div>
+        <div class="timebanner num" id="timebanner"></div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="prevBtn">&#9664; Prev</button>
+      <button class="btn gold big" id="startBtn">Start Timer</button>
+      <button class="btn green big" id="revealBtn">Reveal Answer</button>
+      <button class="btn" id="nextBtn">Next &#9654;</button>
+    </div>
+  </div>
+
+  <!-- ============ WHO AM I ============ -->
+  <div id="whoami" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div class="whowrap">
+      <div class="whotop"><span id="whoCounter"></span><span>&#128373;&#65039; Who Am I?</span></div>
+      <div class="whoworth" id="whoWorth"></div>
+      <div class="clues" id="whoClues"></div>
+      <div class="whoanswer hidden" id="whoAnswer"></div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="whoPrev">&#9664; Prev</button>
+      <button class="btn gold" id="whoNextClue">Next Clue &#9660;</button>
+      <div class="awardbar" id="whoAward"></div>
+      <button class="btn green" id="whoReveal">Show Answer</button>
+      <button class="btn" id="whoNext">Next &#9654;</button>
+    </div>
+  </div>
+
+  <!-- ============ JEOPARDY ============ -->
+  <div id="jeopardy" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div id="jeoPicker" class="whowrap hidden">
+      <h2 style="text-align:center;">Choose a board</h2>
+      <div id="jeoPickList"></div>
+    </div>
+    <div id="jeoBoardWrap" class="jeowrap hidden">
+      <div class="jeohd">
+        <div><h2 id="jeoTitle">Jeopardy</h2><div class="roundlabel" id="jeoRoundLabel"></div></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button class="sbtn" id="jeoNext">Next Round</button>
+          <button class="sbtn ghost" id="jeoReset">Restart</button>
+          <button class="sbtn ghost" id="jeoChoose">Other boards</button>
+        </div>
+      </div>
+      <div class="jeogrid" id="jeoGrid"></div>
+      <div class="jeofinalintro hidden" id="jeoFinalIntro"></div>
+    </div>
+  </div>
+
+  <!-- ============ CONCENTRATION ============ -->
+  <div id="concentration" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div id="concPicker" class="whowrap hidden">
+      <h2 style="text-align:center;">Choose a match set</h2>
+      <div id="concPickList"></div>
+    </div>
+    <div id="concPlay" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div class="jeohd" style="padding:12px 16px 0;">
+        <div><h2 id="concTitle">Concentration</h2><div class="roundlabel" id="concStatusTop"></div></div>
+        <div class="concfield"><span style="color:var(--muted);font-weight:700;">&#128247; image:</span><input type="text" id="concImgInput" placeholder="e.g. shepherd.jpg"><button class="sbtn" id="concSetImg">Load</button></div>
+      </div>
+      <div class="concstage">
+        <div class="concturn" id="concTurn"></div>
+        <div class="concboard" id="concBoard"><div id="concImg"></div><div class="concimgph" id="concImgPh"></div><div id="concGrid"></div></div>
+        <div class="concstatus" id="concStatus"></div>
+      </div>
+    </div>
+    <div class="controls" id="concControls">
+      <button class="btn" id="concNew">New Game</button>
+      <button class="btn" id="concPeek">&#128065;&#65039; Peek</button>
+      <button class="btn green big" id="concSolve">Solve Picture (+10,000)</button>
+      <button class="btn" id="concSets">Other Sets</button>
+    </div>
+  </div>
+
+  <!-- ============ BEAT THE CLOCK ============ -->
+  <div id="beatclock" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div class="bcstage">
+      <div class="bctop"><span id="bcCounter"></span><span id="bcWeek"></span></div>
+      <div class="bcprompt" id="bcPrompt">No categories yet.</div>
+      <div class="bcmid">
+        <div class="bctimer num" id="bcTimer">30</div>
+        <div class="bctally"><div class="bctallylabel">Correct</div><div class="bctallynum num" id="bcTally">0</div></div>
+      </div>
+      <div id="bcTeamPick" style="margin:6px 0;"><div class="bcteamlabel">Which team is playing?</div><div class="awardbar" id="bcTeams"></div></div>
+      <div class="bcbanner num" id="bcBanner"></div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="bcPrev">&#9664; Prev</button>
+      <button class="btn" id="bcMinus" style="min-width:90px;">&minus;1</button>
+      <button class="btn gold big" id="bcPlus">+1 Correct</button>
+      <button class="btn green big" id="bcStart">Start</button>
+      <button class="btn" id="bcNext">Next &#9654;</button>
+    </div>
+  </div>
+
+  <!-- ============ REVERSE CHARADES ============ -->
+  <div id="charades" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div id="chPicker" class="whowrap hidden">
+      <h2 style="text-align:center;">Choose a word set</h2>
+      <div id="chPickList"></div>
+    </div>
+    <div id="chPlay" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div class="racehd">
+        <div><h2 style="margin:0;" id="chTitle">Reverse Charades</h2><div class="roundlabel">Act it out — one guesser faces away!</div></div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><span style="color:var(--muted);font-weight:700;">Round:</span><div class="pills" id="chLenPills"></div></div>
+      </div>
+      <div class="bcstage" style="padding-top:6px;">
+        <div id="chTeamPick" style="margin:2px 0;"><div class="bcteamlabel">Which team is acting?</div><div class="awardbar" id="chTeams"></div></div>
+        <div class="chword" id="chWord">Pick a team, then Start</div>
+        <div class="bcmid" style="gap:30px;"><div class="bctimer num" id="chTimer">60</div><div class="bctally"><div class="bctallylabel">Guessed</div><div class="bctallynum num" id="chGot">0</div></div></div>
+        <div class="bcbanner num" id="chBanner"></div>
+      </div>
+    </div>
+    <div class="controls" id="chControls">
+      <button class="btn" id="chSets">Other Sets</button>
+      <button class="btn green big" id="chStart">Start Round</button>
+      <button class="btn gold big" id="chGotBtn">Got it! (+1,000)</button>
+      <button class="btn" id="chSkip">Skip &#9654;</button>
+    </div>
+  </div>
+
+  <!-- ============ WORD PUZZLE WHEEL ============ -->
+  <div id="wordwheel" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div id="wwPicker" class="whowrap hidden">
+      <h2 style="text-align:center;">Choose a puzzle</h2>
+      <div id="wwPickList"></div>
+    </div>
+    <div id="wwPlay" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;overflow:auto;">
+      <div class="wwcat" id="wwCat"></div>
+      <div class="wwboard" id="wwBoard"></div>
+      <div class="wwmid">
+        <div class="wheelbox"><div class="wheelptr"></div><div class="wheel" id="wwWheel"></div><div class="wheelval num" id="wwResult">SPIN</div></div>
+        <div class="wwright">
+          <div class="bcteamlabel" id="wwTurn">Spin to begin</div>
+          <div class="awardbar" id="wwTeams" style="margin-bottom:10px;"></div>
+          <div class="wwletters" id="wwLetters"></div>
+        </div>
+      </div>
+      <div class="bcbanner num" id="wwBanner"></div>
+    </div>
+    <div class="controls" id="wwControls">
+      <button class="btn gold big" id="wwSpin">Spin the Wheel</button>
+      <button class="btn green big" id="wwSolve">Solve (+2,000)</button>
+      <button class="btn" id="wwNew">New Puzzle</button>
+      <button class="btn" id="wwSets">Other Puzzles</button>
+    </div>
+  </div>
+
+  <!-- ============ VERSE VOYAGER ============ -->
+  <div id="voyager" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div class="voyhud">
+      <div class="voyhud-l"><span id="voyRef">Verse Voyager</span> <span class="voylevel" id="voyLevel"></span></div>
+      <div class="voyverse" id="voyVerse"></div>
+      <div class="voyhud-r"><span id="voyLives"></span><span class="voyscore num" id="voyScore">0</span></div>
+    </div>
+    <div class="voywrap" id="voyWrap">
+      <canvas id="voyCanvas"></canvas>
+      <div class="voysteer" id="voySteer">
+        <button class="voysteerbtn" id="voyUp">&#9650;</button>
+        <div class="voysteerrow"><button class="voysteerbtn" id="voyLeft">&#9664;</button><button class="voysteerbtn" id="voyRight">&#9654;</button></div>
+        <button class="voysteerbtn" id="voyDown">&#9660;</button>
+      </div>
+      <div class="voythrottle" id="voyThrottleBox">
+        <div class="voythlabel">THROTTLE</div>
+        <input type="range" id="voyLever" min="0" max="100" value="0">
+      </div>
+      <div class="voyoverlay" id="voyOverlay"></div>
+    </div>
+  </div>
+
+  <!-- ============ SETUP ============ -->
+  <div class="setup hidden" id="setup">
+
+    <div class="card">
+      <h2>&#128101; Teams &amp; Scoreboard</h2>
+      <p class="hint">1&ndash;5 teams share the scoreboard across every game. Your room has 3 desk columns, so 3 is the default. Tap a team on the scoreboard anytime to fix its score by any place value.</p>
+      <label class="fld">Number of teams</label>
+      <div class="pills" id="teamCountPills"></div>
+      <div id="teamEditors" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#127919; Quiz &mdash; add questions</h2>
+      <p class="hint">One per line, <code>*</code> marks the correct answer. On-screen answer order is shuffled automatically.<br>
+        <code>MC | Who led Israel out of Egypt? | Moses* | David | Noah | Paul</code><br>
+        <code>TF | Noah built an ark. | True</code><br>
+        <code>FB | Jesus turned water into ___. | wine</code></p>
+      <label class="fld">Week / label</label>
+      <input type="text" id="qBatchWeek" placeholder="e.g. Week of Sept 14">
+      <label class="fld">Paste questions</label>
+      <textarea id="qPaste" placeholder="MC | question | Right* | wrong | wrong | wrong"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="qAddBatch">Add questions</button><button class="sbtn ghost" id="qClearPaste">Clear</button></div>
+      <div class="parseresult" id="qParse"></div>
+      <div id="qBank" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#128373;&#65039; Who Am I? &mdash; add clue sets</h2>
+      <p class="hint">One set per line: the answer first, then clues from <b>hardest to easiest</b> (early guesses are worth more).<br>
+        <code>Moses | Born a slave, raised a prince | Met God in a burning bush | Sent the ten plagues | Parted the Red Sea</code></p>
+      <label class="fld">Week / label</label>
+      <input type="text" id="wBatchWeek" placeholder="e.g. Bible Heroes">
+      <label class="fld">Paste clue sets</label>
+      <textarea id="wPaste" placeholder="Answer | hard clue | clue | clue | easy clue"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="wAddBatch">Add sets</button><button class="sbtn ghost" id="wClearPaste">Clear</button></div>
+      <div class="parseresult" id="wParse"></div>
+      <div id="wList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#127942; Jeopardy &mdash; build a board</h2>
+      <p class="hint">One clue per line. Start each line with the round: <code>S</code> = Jeopardy, <code>D</code> = Double Jeopardy, <code>F</code> = Final. A random Daily Double is hidden each game (2 in the Double round).<br>
+        <code>S | Old Testament | 100 | Who built the ark? | Noah</code><br>
+        <code>D | Kings | 200 | Who was the first king of Israel? | Saul</code><br>
+        <code>F | The Gospel | What must you do to be saved? | Believe in Jesus</code><br>
+        Leaving off <code>S/D/F</code> is treated as a single Jeopardy round.</p>
+      <label class="fld">Board title</label>
+      <input type="text" id="jTitle" placeholder="e.g. Bible Basics">
+      <label class="fld">Paste clues</label>
+      <textarea id="jPaste" placeholder="Category | 100 | question | answer&#10;Category | 200 | question | answer"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="jAddBoard">Create board</button><button class="sbtn ghost" id="jClearPaste">Clear</button></div>
+      <div class="parseresult" id="jParse"></div>
+      <div id="jList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#129513; Concentration &mdash; match sets &amp; pictures</h2>
+      <p class="hint">Each set is a pile of matching pairs (12 are used per game on the 5&times;5 board). One item per line makes a pair of the <i>same</i> word; use <code>A | B</code> to match two <i>different</i> things.<br>
+        <code>Lamb of God</code> &nbsp;(matches another "Lamb of God" tile)<br>
+        <code>Bethlehem | Jesus was born here</code> &nbsp;(matches a place to its fact)<br>
+        <b>Pictures:</b> put image files in an <code>images</code> folder in your repo, then just type the filename (e.g. <code>shepherd.jpg</code>) on the game screen. You can also set a default image below.</p>
+      <label class="fld">Set title</label>
+      <input type="text" id="cTitle" placeholder="e.g. Names of Jesus">
+      <label class="fld">Default image filename (optional)</label>
+      <input type="text" id="cImage" placeholder="e.g. good-shepherd.jpg">
+      <label class="fld">Paste pairs (one per line)</label>
+      <textarea id="cPaste" placeholder="Good Shepherd&#10;Lamb of God&#10;Bethlehem | Jesus was born here"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="cAdd">Create set</button><button class="sbtn ghost" id="cClearPaste">Clear</button></div>
+      <div class="parseresult" id="cParse"></div>
+      <div id="cList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#9201;&#65039; Beat the Clock &mdash; categories</h2>
+      <p class="hint">One category prompt per line &mdash; the kind of thing a team can rattle off. The teacher taps <b>+1</b> for each right answer against the clock.<br>
+        <code>Name the Twelve Disciples</code><br>
+        <code>Name animals that were on Noah's ark</code></p>
+      <label class="fld">Week / label</label>
+      <input type="text" id="bcBatchWeek" placeholder="e.g. Bible Lists">
+      <label class="fld">Paste categories</label>
+      <textarea id="bcPaste" placeholder="Name the Twelve Disciples&#10;Name the books of the Gospels&#10;Name the plagues of Egypt"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="bcAdd">Add categories</button><button class="sbtn ghost" id="bcClearPaste">Clear</button></div>
+      <div class="parseresult" id="bcParse"></div>
+      <div id="bcList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#127917; Reverse Charades &mdash; word sets</h2>
+      <p class="hint">Each set is a title plus words/phrases to act out &mdash; one per line. The word shows big on screen; the acting team's guesser faces away.<br>
+        <code>Parting the Red Sea</code><br>
+        <code>Noah building the ark</code></p>
+      <label class="fld">Set title</label>
+      <input type="text" id="chSetTitle" placeholder="e.g. Bible Stories">
+      <label class="fld">Paste words (one per line)</label>
+      <textarea id="chPaste" placeholder="Moses&#10;Walking on water&#10;Daniel in the lions' den"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="chAdd">Create set</button><button class="sbtn ghost" id="chClearPaste">Clear</button></div>
+      <div class="parseresult" id="chParse"></div>
+      <div id="chList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#127942; Word Puzzle Wheel &mdash; puzzles</h2>
+      <p class="hint">One puzzle per line: <code>Category | PHRASE</code>. Keep phrases fairly short so they fit the board. The wheel already has all the money spaces plus <b>Bankrupt</b>, <b>Lose a Turn</b>, and a <b>$5,000</b> wedge.<br>
+        <code>Bible Verse | THE LORD IS MY SHEPHERD</code><br>
+        <code>Bible Person | JOHN THE BAPTIST</code></p>
+      <label class="fld">Paste puzzles</label>
+      <textarea id="wwPaste" placeholder="Bible Verse | GOD IS LOVE&#10;Bible Place | THE GARDEN OF EDEN"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="wwAdd">Add puzzles</button><button class="sbtn ghost" id="wwClearPaste">Clear</button></div>
+      <div class="parseresult" id="wwParse"></div>
+      <div id="wwList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#128640; Verse Voyager &mdash; verses</h2>
+      <p class="hint">One verse per line: <code>Reference | the verse words | decoy1, decoy2, decoy3</code>. The verse words become the sequence the ship must collect in order; the decoys are the wrong words mixed in at each gate. Shorter verses make easier levels &mdash; they're played in the order listed.<br>
+        <code>John 11:35 | Jesus wept | cried, slept, prayed, laughed</code><br>
+        <code>1 John 4:8 | God is love | good, great, light, joy</code></p>
+      <label class="fld">Paste verses</label>
+      <textarea id="voyPaste" placeholder="Reference | verse words | decoy, decoy, decoy"></textarea>
+      <div class="row" style="margin-top:12px;"><button class="sbtn" id="voyAdd">Add verses</button><button class="sbtn ghost" id="voyClearPaste">Clear</button></div>
+      <div class="parseresult" id="voyParse"></div>
+      <div class="row" style="margin-top:14px;align-items:center;">
+        <div style="flex:0 0 auto;"><label class="fld">Chasing fog</label><div class="pills"><span class="pill" id="voyFogPill">&#127787;&#65039; Fog on</span></div></div>
+        <div style="flex:0 0 auto;"><label class="fld">Alien ships</label><div class="pills"><span class="pill" id="voyAlienPill">&#128126; On</span></div></div>
+        <div style="flex:0 0 auto;"><label class="fld">Throttle on a 2nd device</label><div class="pills"><span class="pill" id="voyTwoPill">&#128241; Off</span></div></div>
+      </div>
+      <p class="hint" id="voyTwoNote" style="margin-top:8px;display:none;">The companion-phone throttle is coming in the next update. For now the on-screen throttle lever is used.</p>
+      <div id="voyList" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>&#9881;&#65039; Settings</h2>
+      <div class="row">
+        <div style="flex:0 0 160px;"><label class="fld">Quiz timer (seconds)</label><input type="number" id="setTimer" min="3" max="120" value="10"></div>
+        <div style="flex:0 0 200px;"><label class="fld">Quiz question order</label><select id="setOrder"><option value="sequential">In order</option><option value="shuffle">Shuffle</option></select></div>
+        <div style="flex:0 0 160px;"><label class="fld">Sound</label><div class="pills"><span class="pill on" id="soundPill">&#128266; On</span></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>&#128190; Backup &amp; Transfer</h2>
+      <p class="hint">Everything saves in this browser automatically. Export to back up or move to another device.</p>
+      <div class="row">
+        <button class="sbtn" id="exportBtn">Export to file</button>
+        <button class="sbtn ghost" id="importBtn">Import from file</button>
+        <input type="file" id="importFile" accept=".json" class="hidden">
+        <button class="sbtn danger" id="clearAllBtn">Reset to built-in games</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- score popover -->
+<div class="overlay" id="scoreOverlay">
+  <div class="popover" id="popover">
+    <h3 id="popTeamName">Team</h3>
+    <div class="bigscore num" id="popScore">0</div>
+    <div class="placegrid" id="placeGrid"></div>
+    <div class="popfoot"><button class="sbtn danger" id="popZero">Set to 0</button><button class="sbtn" id="popClose">Done</button></div>
+  </div>
+</div>
+
+<!-- jeopardy overlay -->
+<div class="overlay" id="jeoOverlay">
+  <div class="jeoclue" id="jeoCard"></div>
+</div>
+
+<canvas id="confetti"></canvas>
+<div class="flash" id="flash"></div>
+
+<script>
+"use strict";
+const LS="quizShowdown.v1";
+const uid=()=>Math.random().toString(36).slice(2,9);
+const PLACES=[{v:1000000,l:"1M"},{v:100000,l:"100k"},{v:10000,l:"10k"},{v:1000,l:"1k"},{v:100,l:"100"},{v:10,l:"10"},{v:1,l:"1"}];
+const TEAM_COLORS=["#ef4444","#3b82f6","#34d399","#a855f7","#f97316"];
+const LETTERS=["A","B","C","D","E","F"];
+const $=id=>document.getElementById(id);
+const clamp=n=>Math.max(-9999999,Math.min(9999999,n));
+const fmt=n=>n.toLocaleString("en-US");
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
+
+let state={
+  teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],
+  settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false},
+  questions:[], whoami:[], jeopardy:[],
+};
+let screen="hub";
+
+function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
+function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.beatclock=state.beatclock||[];state.charades=state.charades||[];state.wordwheel=state.wordwheel||[];state.voyager=state.voyager||[];state.teams=state.teams||[];}
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(LS));
+    if(d&&(d.questions||d.teams)){state=Object.assign(state,d);
+      state.settings=Object.assign({timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false},d.settings||{});}
+  }catch(e){}
+  ensureArrays();
+  if(applyDefaults())save();
+}
+const DEFAULTS_VERSION=8;
+function applyDefaults(){
+  const applied=state.defaultsVersion||0;
+  if(applied>=DEFAULTS_VERSION)return false;
+  state.questions=state.questions.filter(q=>q.week!=="Sample questions (delete me)");
+  if(applied<3)state.jeopardy=state.jeopardy.filter(b=>b.id!=="jb-bible-basics");
+  const addBy=(arr,defs)=>{const have=new Set(arr.map(x=>x.id));defs.forEach(x=>{if(!have.has(x.id))arr.push(JSON.parse(JSON.stringify(x)));});};
+  addBy(state.questions,DEFAULT_QUESTIONS);
+  addBy(state.whoami,DEFAULT_WHOAMI);
+  addBy(state.jeopardy,DEFAULT_JEOPARDY);
+  addBy(state.concentration,DEFAULT_CONCENTRATION);
+  addBy(state.beatclock,DEFAULT_BEATCLOCK);
+  addBy(state.charades,DEFAULT_CHARADES);
+  addBy(state.wordwheel,DEFAULT_WORDWHEEL);
+  addBy(state.voyager,DEFAULT_VOYAGER);
+  state.defaultsVersion=DEFAULTS_VERSION;
+  return true;
+}
+
+/* ---------- SOUND ---------- */
+let actx=null,audioUnlocked=false;
+function AC(){
+  if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}
+    try{if(navigator.audioSession)navigator.audioSession.type="playback";}catch(e){}}
+  if(actx&&actx.state==="suspended")actx.resume();
+  if(actx&&!audioUnlocked){try{const b=actx.createBuffer(1,1,22050),s=actx.createBufferSource();s.buffer=b;s.connect(actx.destination);s.start(0);audioUnlocked=true;}catch(e){}}
+  return actx;
+}
+function tone(freq,dur,type="sine",vol=.25,when=0){
+  if(!state.settings.sound)return;const c=AC();if(!c)return;
+  const t=c.currentTime+when,o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.value=freq;o.connect(g);g.connect(c.destination);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.start(t);o.stop(t+dur+.02);
+}
+const sTick=()=>tone(880,.06,"square",.12);
+const sTickLow=()=>tone(1100,.08,"square",.18);
+function sBuzzer(){tone(140,.6,"sawtooth",.3);tone(90,.6,"sawtooth",.3);}
+function sCorrect(){[[523,0],[659,.1],[784,.2],[1047,.3]].forEach(([f,w])=>tone(f,.25,"triangle",.25,w));}
+const sBlip=()=>tone(660,.05,"square",.15);
+
+/* ---------- SCOREBOARD ---------- */
+function renderScoreboard(){
+  const bar=$("scorebar");bar.innerHTML="";
+  state.teams.forEach((t,i)=>{
+    const c=document.createElement("div");c.className="teamchip";c.style.setProperty("--tc",t.color);
+    c.innerHTML=`<span class="edithint">tap</span><div class="tname">${esc(t.name)}</div><div class="tscore num">${fmt(t.score)}</div>`;
+    c.onclick=()=>openScore(i);bar.appendChild(c);
+  });
+}
+function award(i,pts){state.teams[i].score=clamp(state.teams[i].score+pts);save();renderScoreboard();pulseTeam(i);}
+function pulseTeam(i){const chips=$("scorebar").children;if(chips[i]){chips[i].classList.remove("pulse");void chips[i].offsetWidth;chips[i].classList.add("pulse");}}
+function teamAwardBar(container,onPick,prefix){
+  container.innerHTML="";
+  state.teams.forEach((t,i)=>{const b=document.createElement("button");b.className="awardbtn";b.style.setProperty("--tc",t.color);
+    b.textContent=(prefix||"")+t.name;b.onclick=()=>onPick(i);container.appendChild(b);});
+}
+
+/* ---------- SCORE POPOVER ---------- */
+let openTeamIdx=null;
+function openScore(i){openTeamIdx=i;const t=state.teams[i];$("popTeamName").textContent=t.name;$("popover").style.setProperty("--tc",t.color);drawPop();$("scoreOverlay").classList.add("show");}
+function drawPop(){
+  const t=state.teams[openTeamIdx];$("popScore").textContent=fmt(t.score);
+  const grid=$("placeGrid");grid.innerHTML="";const abs=Math.abs(t.score).toString().padStart(7,"0");
+  PLACES.forEach((p,idx)=>{const d=document.createElement("div");d.className="place";
+    d.innerHTML=`<button class="stepbtn up">+</button><div class="plabel">${p.l}</div><div class="pdig num">${abs[idx]}</div><button class="stepbtn down">&minus;</button>`;
+    d.querySelector(".up").onclick=()=>pstep(p.v);d.querySelector(".down").onclick=()=>pstep(-p.v);grid.appendChild(d);});
+}
+function pstep(delta){const t=state.teams[openTeamIdx];t.score=clamp(t.score+delta);sBlip();save();drawPop();renderScoreboard();}
+$("popClose").onclick=()=>$("scoreOverlay").classList.remove("show");
+$("popZero").onclick=()=>{state.teams[openTeamIdx].score=0;sBlip();save();drawPop();renderScoreboard();};
+$("scoreOverlay").onclick=e=>{if(e.target===$("scoreOverlay"))$("popClose").onclick();};
+
+/* ---------- ROUTER ---------- */
+const GAMES=[
+  {id:"quiz",ic:"&#127919;",tt:"Quiz Showdown",tc:"#ffc233",td:"Multiple choice, true/false & fill-in. Big timer, buzzer, and confetti.",count:()=>state.questions.length+" questions"},
+  {id:"whoami",ic:"&#128373;&#65039;",tt:"Who Am I?",tc:"#34d399",td:"Five clues, worth more the earlier you guess. Perfect for latecomers.",count:()=>state.whoami.length+" sets"},
+  {id:"jeopardy",ic:"&#127942;",tt:"Jeopardy",tc:"#3b82f6",td:"Pick-a-square board with categories, Daily Doubles & Final Jeopardy.",count:()=>state.jeopardy.length+" board"+(state.jeopardy.length===1?"":"s")},
+  {id:"concentration",ic:"&#129513;",tt:"Concentration",tc:"#f97316",td:"Match pairs to uncover a hidden picture, then guess it for 5,000.",count:()=>state.concentration.length+" set"+(state.concentration.length===1?"":"s")},
+  {id:"beatclock",ic:"&#9201;&#65039;",tt:"Beat the Clock",tc:"#f43f5e",td:"A team races the clock to name as many as they can. Loud and fast.",count:()=>state.beatclock.length+" categories"},
+  {id:"charades",ic:"&#127917;",tt:"Reverse Charades",tc:"#22d3ee",td:"The word's on screen — the whole team acts while one guesser faces away.",count:()=>state.charades.length+" word set"+(state.charades.length===1?"":"s")},
+  {id:"wordwheel",ic:"&#127942;",tt:"Word Puzzle Wheel",tc:"#eab308",td:"Spin the wheel, call letters, solve the phrase. Watch out for Bankrupt!",count:()=>state.wordwheel.length+" puzzle"+(state.wordwheel.length===1?"":"s")},
+  {id:"voyager",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly the ship into the right words to build a verse — outrun the fog!",count:()=>state.voyager.length+" verse"+(state.voyager.length===1?"":"s")},
+];
+function renderHub(){
+  const t=$("tiles");t.innerHTML="";
+  GAMES.forEach(g=>{const d=document.createElement("div");d.className="tile";d.style.setProperty("--tc",g.tc);
+    d.innerHTML=`<div class="bar"></div><div class="ic">${g.ic}</div><div class="tt">${g.tt}</div><div class="td">${g.td}</div><div class="count">${g.count()}</div>`;
+    d.onclick=()=>showScreen(g.id);t.appendChild(d);});
+}
+function showScreen(name){
+  screen=name;
+  ["hub","quiz","whoami","jeopardy","concentration","beatclock","charades","wordwheel","voyager","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
+  $("homeBtn").classList.toggle("hidden",name==="hub");
+  $("modeBtn").innerHTML=name==="setup"?"&#9654; Back":"&#9881; Setup";
+  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",charades:"Reverse Charades",wordwheel:"Word Puzzle Wheel",voyager:"Verse Voyager",setup:"Setup"};
+  $("brandText").textContent=titles[name]||"Game Hub";
+  if(name==="hub")renderHub();
+  if(name==="quiz"){buildQuizOrder();renderQuiz();}
+  if(name==="whoami"){buildWhoOrder();renderWho();}
+  if(name==="jeopardy")enterJeopardy();
+  if(name==="concentration")enterConcentration();
+  if(name==="beatclock")enterBeatClock();
+  if(name==="charades")enterCharades();
+  if(name==="wordwheel")enterWordWheel();
+  if(name==="voyager")enterVoyager(); else stopVoyager();
+  if(name==="setup")renderSetup();
+}
+$("homeBtn").onclick=()=>showScreen("hub");
+$("modeBtn").onclick=()=>showScreen(screen==="setup"?"hub":"setup");
+$("fsBtn").onclick=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen&&document.exitFullscreen();};
+
+/* ==================== QUIZ ==================== */
+let quizPlay={index:0,order:[],phase:"idle",timeLeft:0,handle:null,shuffleMap:{}};
+function buildQuizOrder(){
+  const idx=state.questions.map((_,i)=>i);
+  if(state.settings.order==="shuffle")for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+  quizPlay.order=idx;quizPlay.index=0;quizPlay.shuffleMap={};
+}
+function choiceOrder(q){
+  if(q.type==="tf")return[0,1];
+  if(!quizPlay.shuffleMap[q.id]){const idx=q.choices.map((_,i)=>i);
+    for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}quizPlay.shuffleMap[q.id]=idx;}
+  return quizPlay.shuffleMap[q.id];
+}
+function curQ(){return state.questions[quizPlay.order[quizPlay.index]]||null;}
+const RING_LEN=2*Math.PI*52;
+function resetTimerDisplay(){const w=$("timerwrap");w.classList.remove("running","low","expired");$("timernum").textContent=state.settings.timerSeconds;$("ring").style.strokeDashoffset="0";$("ring").setAttribute("stroke-dasharray",RING_LEN);}
+function renderQuiz(){
+  stopTimer(true);quizPlay.phase="idle";const q=curQ();const area=$("answerArea");$("timebanner").textContent="";resetTimerDisplay();
+  if(!q){$("qtext").textContent="No questions yet — add some in Setup.";$("qcounter").textContent="";$("qweek").textContent="";area.innerHTML="";quizButtons();return;}
+  $("qcounter").textContent=`Question ${quizPlay.index+1} of ${quizPlay.order.length}`;$("qweek").textContent=q.week||"";$("qtext").textContent=q.text;area.innerHTML="";
+  if(q.type==="fb"){const p=document.createElement("div");p.className="fbprompt";p.textContent="Type or say your answer!";area.appendChild(p);}
+  else{const g=document.createElement("div");g.className="choices";choiceOrder(q).forEach((oi,pos)=>{const b=document.createElement("div");b.className="choice";b.dataset.i=oi;b.innerHTML=`<span class="letter">${LETTERS[pos]}</span><span>${esc(q.choices[oi])}</span>`;g.appendChild(b);});area.appendChild(g);}
+  quizButtons();
+}
+function quizButtons(){const q=curQ(),has=!!q;
+  $("startBtn").disabled=!has||quizPlay.phase==="running"||quizPlay.phase==="revealed";
+  $("revealBtn").disabled=!has||quizPlay.phase==="revealed";
+  $("prevBtn").disabled=quizPlay.index<=0;$("nextBtn").disabled=quizPlay.index>=quizPlay.order.length-1;
+  $("startBtn").textContent=quizPlay.phase==="expired"?"Restart Timer":"Start Timer";
+}
+function startTimer(){const q=curQ();if(!q)return;AC();stopTimer(true);quizPlay.phase="running";quizPlay.timeLeft=state.settings.timerSeconds;
+  const w=$("timerwrap");w.classList.add("running");w.classList.remove("expired","low");$("timebanner").textContent="";drawTimer();quizButtons();
+  quizPlay.handle=setInterval(()=>{quizPlay.timeLeft--;if(quizPlay.timeLeft<=0){quizPlay.timeLeft=0;drawTimer();expire();return;}drawTimer();quizPlay.timeLeft<=3?sTickLow():sTick();},1000);sTick();}
+function drawTimer(){const tot=state.settings.timerSeconds;$("timernum").textContent=quizPlay.timeLeft;const frac=Math.max(0,quizPlay.timeLeft/tot);$("ring").style.strokeDashoffset=(RING_LEN*(1-frac)).toFixed(1);$("timerwrap").classList.toggle("low",quizPlay.timeLeft<=3);}
+function stopTimer(silent){if(quizPlay.handle){clearInterval(quizPlay.handle);quizPlay.handle=null;}if(!silent)$("timerwrap").classList.remove("running");}
+function expire(){stopTimer(true);quizPlay.phase="expired";const w=$("timerwrap");w.classList.remove("running","low");w.classList.add("expired");$("timernum").textContent="0";$("timebanner").textContent="TIME'S UP!";sBuzzer();
+  $("flash").classList.add("go");setTimeout(()=>$("flash").classList.remove("go"),500);$("app").classList.add("shake");setTimeout(()=>$("app").classList.remove("shake"),500);quizButtons();}
+function revealQuiz(){const q=curQ();if(!q)return;stopTimer(true);$("timerwrap").classList.remove("running");quizPlay.phase="revealed";
+  if(q.type==="fb"){const area=$("answerArea");area.innerHTML="";const d=document.createElement("div");d.className="fbanswer";d.innerHTML=`<small>ANSWER</small>${esc(q.answers.join("  /  "))}`;area.appendChild(d);}
+  else{$("answerArea").querySelectorAll(".choice").forEach(el=>{const i=+el.dataset.i;q.correct.includes(i)?el.classList.add("correct"):el.classList.add("dim");});}
+  sCorrect();burstConfetti();quizButtons();}
+function quizNav(d){const n=quizPlay.index+d;if(n>=0&&n<quizPlay.order.length){quizPlay.index=n;renderQuiz();}}
+$("startBtn").onclick=startTimer;$("revealBtn").onclick=revealQuiz;$("nextBtn").onclick=()=>quizNav(1);$("prevBtn").onclick=()=>quizNav(-1);
+
+/* ==================== WHO AM I ==================== */
+let whoPlay={order:[],index:0,shown:1,revealed:false};
+function buildWhoOrder(){const idx=state.whoami.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}whoPlay.order=idx;whoPlay.index=0;whoPlay.shown=1;whoPlay.revealed=false;}
+function curWho(){return state.whoami[whoPlay.order[whoPlay.index]]||null;}
+function whoWorth(q){return Math.max(1000,(q.clues.length-whoPlay.shown+1)*1000);}
+function renderWho(){
+  const q=curWho();
+  if(!q){$("whoWorth").textContent="No 'Who Am I?' sets yet — add some in Setup.";$("whoClues").innerHTML="";$("whoAnswer").classList.add("hidden");$("whoAward").innerHTML="";$("whoCounter").textContent="";$("whoNextClue").disabled=true;$("whoReveal").disabled=true;$("whoPrev").disabled=true;$("whoNext").disabled=true;return;}
+  $("whoCounter").textContent=`${whoPlay.index+1} / ${whoPlay.order.length}`;
+  let h="";q.clues.forEach((c,idx)=>{if(idx<whoPlay.shown)h+=`<div class="clue"><span class="cluenum">${idx+1}</span><span>${esc(c)}</span></div>`;});
+  $("whoClues").innerHTML=h;
+  const w=whoWorth(q);
+  $("whoWorth").innerHTML=whoPlay.revealed?"&#9989; Answer":`Worth <b>${fmt(w)}</b> points`;
+  const ans=$("whoAnswer");if(whoPlay.revealed){ans.textContent=q.subject;ans.classList.remove("hidden");}else{ans.classList.add("hidden");ans.textContent="";}
+  $("whoNextClue").disabled=whoPlay.revealed||whoPlay.shown>=q.clues.length;
+  $("whoReveal").disabled=whoPlay.revealed;
+  teamAwardBar($("whoAward"),i=>{award(i,whoWorth(q));doWhoReveal();},"+ ");
+  $("whoPrev").disabled=whoPlay.index<=0;$("whoNext").disabled=whoPlay.index>=whoPlay.order.length-1;
+}
+function whoNextClue(){const q=curWho();if(q&&whoPlay.shown<q.clues.length){whoPlay.shown++;sBlip();renderWho();}}
+function doWhoReveal(){whoPlay.revealed=true;sCorrect();burstConfetti();renderWho();}
+function whoNav(d){const n=whoPlay.index+d;if(n>=0&&n<whoPlay.order.length){whoPlay.index=n;whoPlay.shown=1;whoPlay.revealed=false;renderWho();}}
+$("whoNextClue").onclick=whoNextClue;$("whoReveal").onclick=doWhoReveal;$("whoPrev").onclick=()=>whoNav(-1);$("whoNext").onclick=()=>whoNav(1);
+
+/* ==================== JEOPARDY ==================== */
+let jeoPlay={boardId:null,round:"single",used:{},dd:{},openKey:null,ddTeam:null,ddWager:0,finalWagers:[]};
+function boardRounds(b){if(b.single||b.double||b.final)return{single:b.single||[],double:b.double||[],final:b.final||null};return{single:b.categories||[],double:[],final:null};}
+function curBoard(){return state.jeopardy.find(b=>b.id===jeoPlay.boardId)||null;}
+function roundList(b){const r=boardRounds(b);const l=["single"];if(r.double.length)l.push("double");if(r.final)l.push("final");return l;}
+function roundCats(){const r=boardRounds(curBoard());return jeoPlay.round==="double"?r.double:r.single;}
+function roundMaxValue(){let m=0;roundCats().forEach(c=>c.clues.forEach(cl=>{if(cl.value>m)m=cl.value;}));return m||500;}
+function enterJeopardy(){if(!state.jeopardy.length||state.jeopardy.length>1)showJeoPicker();else loadBoard(state.jeopardy[0].id);}
+function showJeoPicker(){jeoPlay.boardId=null;$("jeoOverlay").classList.remove("show");$("jeoPicker").classList.remove("hidden");$("jeoBoardWrap").classList.add("hidden");
+  const list=$("jeoPickList");list.innerHTML="";
+  if(!state.jeopardy.length){list.innerHTML=`<div class="empty">No boards yet — build one in Setup.</div>`;return;}
+  state.jeopardy.forEach(b=>{const btn=document.createElement("button");btn.className="jeopick";btn.textContent=b.title;btn.onclick=()=>loadBoard(b.id);list.appendChild(btn);});
+}
+function loadBoard(id){jeoPlay.boardId=id;jeoPlay.used={};jeoPlay.dd={};jeoPlay.round="single";jeoPlay.openKey=null;$("jeoOverlay").classList.remove("show");$("jeoPicker").classList.add("hidden");$("jeoBoardWrap").classList.remove("hidden");genDD("single");renderRound();}
+function genDD(round){if(jeoPlay.dd[round])return;const r=boardRounds(curBoard());const cats=round==="double"?r.double:r.single;const tiles=[];cats.forEach((c,ci)=>c.clues.forEach((cl,ri)=>tiles.push(ci+"-"+ri)));const count=round==="double"?2:1;const picks=[];for(let k=0;k<count&&tiles.length;k++){const idx=Math.floor(Math.random()*tiles.length);picks.push(tiles.splice(idx,1)[0]);}jeoPlay.dd[round]=picks;}
+function isDD(ci,ri){return (jeoPlay.dd[jeoPlay.round]||[]).indexOf(ci+"-"+ri)>=0;}
+function renderRound(){
+  const b=curBoard();if(!b)return;const r=boardRounds(b);$("jeoTitle").textContent=b.title;
+  const labels={single:"Round 1 \u2014 Jeopardy",double:"Round 2 \u2014 Double Jeopardy",final:"Final Jeopardy"};
+  $("jeoRoundLabel").textContent=labels[jeoPlay.round];
+  const rl=roundList(b),idx=rl.indexOf(jeoPlay.round),nb=$("jeoNext");
+  if(idx<rl.length-1){const nxt=rl[idx+1];nb.classList.remove("hidden");nb.textContent=(nxt==="double"?"Double Jeopardy":"Final Jeopardy")+" \u2192";nb.onclick=()=>gotoRound(nxt);}else nb.classList.add("hidden");
+  if(jeoPlay.round==="final"){$("jeoGrid").classList.add("hidden");$("jeoFinalIntro").classList.remove("hidden");renderFinalIntro(r.final);}
+  else{$("jeoFinalIntro").classList.add("hidden");$("jeoGrid").classList.remove("hidden");renderGrid();}
+}
+function gotoRound(round){jeoPlay.round=round;if(round!=="final")genDD(round);renderRound();}
+function renderGrid(){
+  const cats=roundCats();const grid=$("jeoGrid");grid.style.gridTemplateColumns=`repeat(${cats.length||1},1fr)`;grid.innerHTML="";
+  cats.forEach(c=>{const h=document.createElement("div");h.className="jeohead";h.textContent=c.name;grid.appendChild(h);});
+  const rows=cats.length?Math.max.apply(null,cats.map(c=>c.clues.length)):0;
+  for(let ri=0;ri<rows;ri++)cats.forEach((c,ci)=>{const clue=c.clues[ri];const cell=document.createElement("button");cell.className="jeocell";
+    if(!clue){cell.classList.add("blank");cell.disabled=true;}
+    else{const key=jeoPlay.round+"-"+ci+"-"+ri;if(jeoPlay.used[key]){cell.classList.add("done");cell.disabled=true;}else{cell.textContent=clue.value;cell.onclick=()=>openTile(ci,ri);}}
+    grid.appendChild(cell);});
+}
+function openTile(ci,ri){const cats=roundCats();const clue=cats[ci].clues[ri];jeoPlay.openKey=jeoPlay.round+"-"+ci+"-"+ri;AC();
+  if(isDD(ci,ri))renderDDsetup(cats[ci],clue);else renderNormal(cats[ci],clue);$("jeoOverlay").classList.add("show");}
+function markUsed(){if(jeoPlay.openKey)jeoPlay.used[jeoPlay.openKey]=true;}
+function closeTile(mk){if(mk)markUsed();$("jeoOverlay").classList.remove("show");jeoPlay.openKey=null;jeoPlay.ddTeam=null;jeoPlay.ddWager=0;renderRound();}
+function renderNormal(cat,clue){
+  $("jeoCard").innerHTML=`<div class="cat">${esc(cat.name)} \u2014 ${clue.value}</div><div class="q">${esc(clue.q)}</div><div class="a hidden" id="jeoA">${esc(clue.a)}</div>`+
+    `<div class="foot"><button class="btn gold big" id="jeoRevealBtn" style="max-width:none;">Reveal Answer</button><div class="awardbar hidden" id="jeoAwardBar"></div><button class="sbtn ghost" id="jeoSkipBtn">Close (no one got it)</button></div>`;
+  $("jeoRevealBtn").onclick=()=>{$("jeoA").classList.remove("hidden");$("jeoRevealBtn").classList.add("hidden");const bar=$("jeoAwardBar");bar.classList.remove("hidden");teamAwardBar(bar,i=>{award(i,clue.value);sCorrect();burstConfetti();closeTile(true);},"+"+clue.value+"  ");sBlip();};
+  $("jeoSkipBtn").onclick=()=>closeTile(true);
+}
+function renderDDsetup(cat,clue){
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);font-size:clamp(22px,3.4vw,44px);">\u2b50 DAILY DOUBLE!</div><div class="q" style="font-size:clamp(20px,2.6vw,36px);">Which team found it?</div><div class="awardbar" id="jeoDDteams"></div>`;
+  teamAwardBar($("jeoDDteams"),i=>{jeoPlay.ddTeam=i;jeoPlay.ddWager=0;renderDDwager(cat,clue);},"");
+}
+function renderDDwager(cat,clue){
+  const t=state.teams[jeoPlay.ddTeam],maxW=Math.max(roundMaxValue(),t.score);
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">\u2b50 DAILY DOUBLE \u2014 ${esc(t.name)}</div>`+
+    `<div class="q" style="font-size:clamp(18px,2.2vw,30px);">Decide your wager <b>before</b> the clue!</div>`+
+    `<div class="wager num" id="jeoWagerNum">0</div><div style="color:var(--muted);font-weight:700;margin-bottom:12px;">Max wager: ${fmt(maxW)}</div>`+
+    `<div class="fwrow" id="jeoWagerBtns"></div><div class="foot" style="margin-top:16px;"><button class="btn green big" id="jeoWagerGo" style="max-width:none;">Reveal the Clue \u25b6</button></div>`;
+  const setW=v=>{jeoPlay.ddWager=Math.max(0,Math.min(maxW,v));$("jeoWagerNum").textContent=fmt(jeoPlay.ddWager);};
+  const box=$("jeoWagerBtns"),mk=(l,f,c)=>{const b=document.createElement("button");b.className="minibtn"+(c?" "+c:"");b.textContent=l;b.onclick=f;return b;};
+  [["\u2212500",()=>setW(jeoPlay.ddWager-500)],["\u2212100",()=>setW(jeoPlay.ddWager-100)],["+100",()=>setW(jeoPlay.ddWager+100)],["+500",()=>setW(jeoPlay.ddWager+500)],["+1000",()=>setW(jeoPlay.ddWager+1000)]].forEach(a=>box.appendChild(mk(a[0],a[1])));
+  box.appendChild(mk("MAX",()=>setW(maxW),"max"));box.appendChild(mk("Clear",()=>setW(0)));setW(0);
+  $("jeoWagerGo").onclick=()=>renderDDclue(cat,clue);
+}
+function renderDDclue(cat,clue){
+  const t=state.teams[jeoPlay.ddTeam];
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">\u2b50 ${esc(t.name)} \u2022 Wager ${fmt(jeoPlay.ddWager)}</div><div class="q">${esc(clue.q)}</div><div class="a hidden" id="jeoA">${esc(clue.a)}</div>`+
+    `<div class="foot"><button class="btn gold big" id="jeoRevealBtn" style="max-width:none;">Reveal Answer</button><div class="awardbar hidden" id="jeoDDresult"></div></div>`;
+  $("jeoRevealBtn").onclick=()=>{$("jeoA").classList.remove("hidden");$("jeoRevealBtn").classList.add("hidden");const bar=$("jeoDDresult");bar.classList.remove("hidden");bar.innerHTML="";
+    const ok=document.createElement("button");ok.className="awardbtn";ok.style.setProperty("--tc","#34d399");ok.textContent="Correct  +"+fmt(jeoPlay.ddWager);ok.onclick=()=>{award(jeoPlay.ddTeam,jeoPlay.ddWager);sCorrect();burstConfetti();closeTile(true);};
+    const no=document.createElement("button");no.className="awardbtn";no.style.setProperty("--tc","#f87171");no.textContent="Wrong  \u2212"+fmt(jeoPlay.ddWager);no.onclick=()=>{award(jeoPlay.ddTeam,-jeoPlay.ddWager);sBuzzer();closeTile(true);};
+    bar.appendChild(ok);bar.appendChild(no);sBlip();};
+}
+function renderFinalIntro(final){
+  if(!final){$("jeoFinalIntro").innerHTML=`<div class="empty">This board has no Final Jeopardy.</div>`;return;}
+  $("jeoFinalIntro").innerHTML=`<div style="text-align:center;max-width:760px;"><div class="cat" style="color:var(--gold);font-size:clamp(22px,3.4vw,44px);margin-bottom:10px;">&#127942; FINAL JEOPARDY</div>`+
+    `<div style="font-weight:900;font-size:clamp(24px,3.4vw,48px);margin-bottom:10px;">Category: ${esc(final.category)}</div>`+
+    `<p style="color:var(--muted);font-weight:700;margin:0 auto 20px;">Each team secretly decides a wager (up to their own score). Then everyone answers the same clue.</p>`+
+    `<button class="btn gold big" id="jeoFinalStart" style="max-width:none;">Set Wagers \u25b6</button></div>`;
+  $("jeoFinalStart").onclick=()=>renderFinalWager(final);
+}
+function renderFinalWager(final){
+  jeoPlay.finalWagers=state.teams.map(()=>0);
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">&#127942; FINAL JEOPARDY \u2014 ${esc(final.category)}</div>`+
+    `<div class="q" style="font-size:clamp(18px,2.2vw,30px);">Set each team's wager (up to their score):</div>`+
+    `<div id="jeoFinalRows" style="display:flex;flex-direction:column;gap:12px;margin:16px 0;"></div>`+
+    `<div class="foot"><button class="btn green big" id="jeoFinalReveal" style="max-width:none;">Reveal the Clue \u25b6</button></div>`;
+  const rows=$("jeoFinalRows");
+  state.teams.forEach((t,i)=>{const max=Math.max(0,t.score);const row=document.createElement("div");row.className="fwrow";
+    const name=document.createElement("span");name.style.cssText="font-weight:900;min-width:110px;text-align:right;color:"+t.color;name.textContent=t.name;
+    const minus=document.createElement("button");minus.className="minibtn";minus.textContent="\u2212100";
+    const val=document.createElement("span");val.className="wtag num";val.textContent="0";
+    const plus=document.createElement("button");plus.className="minibtn";plus.textContent="+100";
+    const mx=document.createElement("button");mx.className="minibtn max";mx.textContent="MAX";
+    const cap=document.createElement("span");cap.style.cssText="color:var(--muted);font-weight:700;";cap.textContent="/ "+fmt(max);
+    const setW=v=>{jeoPlay.finalWagers[i]=Math.max(0,Math.min(max,v));val.textContent=fmt(jeoPlay.finalWagers[i]);};
+    minus.onclick=()=>setW(jeoPlay.finalWagers[i]-100);plus.onclick=()=>setW(jeoPlay.finalWagers[i]+100);mx.onclick=()=>setW(max);
+    [name,minus,val,plus,mx,cap].forEach(el=>row.appendChild(el));rows.appendChild(row);});
+  $("jeoFinalReveal").onclick=()=>renderFinalClue(final);
+  $("jeoOverlay").classList.add("show");
+}
+function renderFinalClue(final){
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">&#127942; FINAL JEOPARDY</div><div class="q">${esc(final.q)}</div><div class="a hidden" id="jeoA">${esc(final.a)}</div>`+
+    `<div class="foot"><button class="btn gold big" id="jeoRevealBtn" style="max-width:none;">Reveal Answer</button><div id="jeoFinalResults" class="hidden" style="display:flex;flex-direction:column;gap:12px;"></div><button class="sbtn ghost hidden" id="jeoFinalDone">Done</button></div>`;
+  $("jeoRevealBtn").onclick=()=>{$("jeoA").classList.remove("hidden");$("jeoRevealBtn").classList.add("hidden");const res=$("jeoFinalResults");res.classList.remove("hidden");res.innerHTML="";
+    state.teams.forEach((t,i)=>{const w=jeoPlay.finalWagers[i]||0;const row=document.createElement("div");row.className="fwrow";
+      const name=document.createElement("span");name.style.cssText="font-weight:900;min-width:130px;text-align:right;color:"+t.color;name.textContent=t.name+" ("+fmt(w)+")";
+      const ok=document.createElement("button");ok.className="awardbtn";ok.style.setProperty("--tc","#34d399");ok.textContent="Correct +"+fmt(w);
+      const no=document.createElement("button");no.className="awardbtn";no.style.setProperty("--tc","#f87171");no.textContent="Wrong \u2212"+fmt(w);
+      let done=false;
+      ok.onclick=()=>{if(done)return;done=true;award(i,w);sCorrect();no.disabled=true;no.style.opacity=".3";ok.style.filter="brightness(1.3)";};
+      no.onclick=()=>{if(done)return;done=true;award(i,-w);sBlip();ok.disabled=true;ok.style.opacity=".3";no.style.filter="brightness(1.3)";};
+      [name,ok,no].forEach(el=>row.appendChild(el));res.appendChild(row);});
+    const done=$("jeoFinalDone");done.classList.remove("hidden");done.onclick=()=>{$("jeoOverlay").classList.remove("show");burstConfetti();};sBlip();};
+  $("jeoOverlay").classList.add("show");
+}
+$("jeoOverlay").onclick=e=>{if(e.target===$("jeoOverlay"))closeTile(false);};
+$("jeoReset").onclick=()=>{jeoPlay.used={};jeoPlay.dd={};jeoPlay.round="single";jeoPlay.openKey=null;$("jeoOverlay").classList.remove("show");genDD("single");renderRound();};
+$("jeoChoose").onclick=showJeoPicker;
+
+/* ==================== CONCENTRATION ==================== */
+let concPlay={setId:null,image:"",tiles:[],up:[],busy:false,solved:false,active:null,peek:false};
+const CONC_TILES=25;
+function concImgUrl(v){v=(v||"").trim();if(!v)return"";if(/^https?:\/\//i.test(v)||v.indexOf("/")>=0)return v;return"images/"+v;}
+function curConcSet(){return state.concentration.find(s=>s.id===concPlay.setId)||null;}
+function enterConcentration(){if(!state.concentration.length||state.concentration.length>1)showConcPicker();else loadConcSet(state.concentration[0].id);}
+function showConcPicker(){concPlay.setId=null;$("concPicker").classList.remove("hidden");$("concPlay").classList.add("hidden");$("concControls").style.visibility="hidden";
+  const list=$("concPickList");list.innerHTML="";
+  if(!state.concentration.length){list.innerHTML=`<div class="empty">No match sets yet — create one in Setup.</div>`;return;}
+  state.concentration.forEach(s=>{const b=document.createElement("button");b.className="jeopick";b.textContent=s.title;b.onclick=()=>loadConcSet(s.id);list.appendChild(b);});
+}
+function loadConcSet(id){concPlay.setId=id;const s=curConcSet();concPlay.image=s&&s.image?s.image:"";$("concImgInput").value=concPlay.image;
+  $("concPicker").classList.add("hidden");$("concPlay").classList.remove("hidden");$("concControls").style.visibility="visible";
+  newConcGame();}
+function buildConcFaces(){
+  const s=curConcSet();let pairs=(s&&s.pairs?s.pairs.slice():[]);
+  for(let i=pairs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pairs[i],pairs[j]]=[pairs[j],pairs[i]];}
+  const maxPairs=Math.floor(CONC_TILES/2);pairs=pairs.slice(0,maxPairs);
+  const faces=[];pairs.forEach((p,idx)=>{faces.push({m:idx,t:p[0]});faces.push({m:idx,t:p[1]});});
+  while(faces.length<CONC_TILES)faces.push({m:"free",t:"FREE"});
+  for(let i=faces.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[faces[i],faces[j]]=[faces[j],faces[i]];}
+  return faces;
+}
+function setConcImage(value){
+  const url=concImgUrl(value);const img=$("concImg"),ph=$("concImgPh");
+  if(!url){img.style.backgroundImage="none";ph.style.display="flex";ph.textContent="Type an image filename above (from your repo's images folder) and press Load.";return;}
+  ph.style.display="flex";ph.textContent="Loading "+value+"\u2026";img.style.backgroundImage="none";
+  const test=new Image();
+  test.onload=()=>{img.style.backgroundImage=`url("${url}")`;ph.style.display="none";};
+  test.onerror=()=>{img.style.backgroundImage="none";ph.style.display="flex";ph.innerHTML=`Couldn't find <b>${esc(url)}</b><br>Check the spelling and CAPITALIZATION — it must match your file exactly (e.g. <b>Noah.png</b>, not noah.png).`;};
+  test.src=url;
+}
+function newConcGame(){
+  concPlay.image=$("concImgInput").value.trim();
+  concPlay.tiles=buildConcFaces().map(f=>({face:f,state:"down"}));
+  concPlay.up=[];concPlay.busy=false;concPlay.solved=false;concPlay.peek=false;concPlay.active=null;
+  $("concBoard").classList.remove("peek");$("concPeek").innerHTML="&#128065;&#65039; Peek";
+  const s=curConcSet();$("concTitle").textContent=s?s.title:"Concentration";
+  setConcImage(concPlay.image);
+  $("concStatus").textContent="";$("concStatus").className="concstatus";
+  $("concStatusTop").textContent="Match pairs for 1,000 — solve the picture for 10,000";
+  renderConcTurn();renderConcGrid();
+}
+function renderConcTurn(){
+  const el=$("concTurn");el.innerHTML="";
+  if(concPlay.solved){el.innerHTML=`<div class="concturnlabel" style="color:var(--green)">Picture solved!</div>`;return;}
+  if(concPlay.active===null){
+    const lbl=document.createElement("div");lbl.className="concturnlabel";lbl.textContent="Which team goes first?";el.appendChild(lbl);
+    const bar=document.createElement("div");bar.className="awardbar";el.appendChild(bar);
+    teamAwardBar(bar,i=>{concPlay.active=i;renderConcTurn();},"");
+  }else{
+    const t=state.teams[concPlay.active];
+    el.innerHTML=`<div class="concturnlabel"><span style="color:${t.color}">${esc(t.name)}</span>'s turn</div>`;
+  }
+}
+function passConcTurn(){
+  concPlay.active=(concPlay.active+1)%state.teams.length;renderConcTurn();
+  $("concStatus").textContent=`${state.teams[concPlay.active].name}'s turn`;$("concStatus").className="concstatus";
+}
+function renderConcGrid(){
+  const grid=$("concGrid");grid.innerHTML="";
+  concPlay.tiles.forEach((tile,i)=>{
+    const b=document.createElement("button");b.className="conctile";
+    if(tile.state==="gone"){b.classList.add("gone");}
+    else if(tile.state==="up"||tile.state==="match"){b.classList.add("up");if(tile.state==="match")b.classList.add("match");b.textContent=tile.face.t;}
+    else{b.textContent=(i+1);}
+    if(tile.state==="down")b.onclick=()=>concFlip(i);
+    grid.appendChild(b);
+  });
+}
+function concFlip(i){
+  if(concPlay.busy||concPlay.solved||concPlay.active===null)return;const tile=concPlay.tiles[i];if(tile.state!=="down")return;AC();
+  if(tile.face.m==="free"){tile.state="up";renderConcGrid();sBlip();setTimeout(()=>{tile.state="gone";renderConcGrid();checkConcCleared();},500);$("concStatus").textContent="Free space — go again!";$("concStatus").className="concstatus good";return;}
+  tile.state="up";concPlay.up.push(i);sBlip();renderConcGrid();
+  if(concPlay.up.length===2){
+    concPlay.busy=true;const [a,b]=concPlay.up;const ta=concPlay.tiles[a],tb=concPlay.tiles[b];
+    if(ta.face.m===tb.face.m){
+      ta.state="match";tb.state="match";renderConcGrid();sCorrect();award(concPlay.active,1000);
+      $("concStatus").textContent=`Match! +1,000 for ${state.teams[concPlay.active].name} — go again`;$("concStatus").className="concstatus good";
+      setTimeout(()=>{ta.state="gone";tb.state="gone";concPlay.up=[];concPlay.busy=false;renderConcGrid();checkConcCleared();},800);
+    }else{
+      $("concStatus").textContent="No match — turn passes!";$("concStatus").className="concstatus bad";
+      setTimeout(()=>{ta.state="down";tb.state="down";concPlay.up=[];concPlay.busy=false;passConcTurn();renderConcGrid();},1500);
+    }
+  }
+}
+function checkConcCleared(){if(concPlay.tiles.every(t=>t.state==="gone")){$("concStatus").textContent="Board cleared! Who can name the picture?";$("concStatus").className="concstatus good";}}
+function concRevealAll(){concPlay.tiles.forEach(t=>t.state="gone");concPlay.solved=true;renderConcGrid();renderConcTurn();}
+$("concSetImg").onclick=()=>{concPlay.image=$("concImgInput").value.trim();setConcImage(concPlay.image);};
+$("concPeek").onclick=()=>{concPlay.peek=!concPlay.peek;$("concBoard").classList.toggle("peek",concPlay.peek);$("concPeek").innerHTML=concPlay.peek?"&#128584; Hide":"&#128065;&#65039; Peek";};
+$("concImgInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("concSetImg").onclick();});
+$("concNew").onclick=()=>newConcGame();
+$("concSets").onclick=showConcPicker;
+$("concSolve").onclick=()=>{
+  if(concPlay.solved)return;
+  if(concPlay.active===null){$("concStatus").textContent="Pick which team goes first up top.";$("concStatus").className="concstatus bad";return;}
+  award(concPlay.active,10000);sCorrect();burstConfetti();concRevealAll();
+  $("concStatus").textContent=`Solved! +10,000 for ${state.teams[concPlay.active].name}`;$("concStatus").className="concstatus good";
+  $("concStatusTop").textContent="Picture revealed — hit New Game for the next one";
+};
+
+/* ==================== BEAT THE CLOCK ==================== */
+let bcPlay={order:[],index:0,team:null,phase:"idle",tally:0,timeLeft:30,handle:null,seconds:30};
+function buildBCOrder(){const idx=state.beatclock.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}bcPlay.order=idx;bcPlay.index=0;}
+function curBC(){return state.beatclock[bcPlay.order[bcPlay.index]]||null;}
+function enterBeatClock(){buildBCOrder();bcPlay.phase="idle";bcPlay.team=null;bcPlay.tally=0;stopBC(true);renderBC();}
+function renderBC(){
+  const c=curBC();
+  if(!c){$("bcPrompt").textContent="No categories yet — add some in Setup.";$("bcCounter").textContent="";$("bcWeek").textContent="";$("bcTeams").innerHTML="";$("bcBanner").textContent="";bcButtons();return;}
+  $("bcCounter").textContent=`${bcPlay.index+1} / ${bcPlay.order.length}`;$("bcWeek").textContent=c.week||"";
+  $("bcPrompt").textContent=c.prompt;
+  $("bcTimer").textContent=bcPlay.phase==="idle"?bcPlay.seconds:bcPlay.timeLeft;
+  $("bcTimer").classList.toggle("low",bcPlay.phase==="running"&&bcPlay.timeLeft<=5);
+  $("bcTally").textContent=bcPlay.tally;
+  teamAwardBar($("bcTeams"),i=>{bcPlay.team=i;renderBC();},"");
+  [...$("bcTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===bcPlay.team));
+  if(bcPlay.phase==="done")$("bcBanner").innerHTML=`Tap a team to bank <b>${fmt(bcPlay.tally*200)}</b>`;
+  else if(bcPlay.phase==="idle")$("bcBanner").textContent="";
+  bcButtons();
+}
+function bcButtons(){const c=curBC(),has=!!c,run=bcPlay.phase==="running";const b=$("bcStart");
+  if(run){b.disabled=false;b.textContent="Stop & Tally";}
+  else{b.disabled=!has||bcPlay.team===null;b.textContent=bcPlay.phase==="done"?"Play Again":`Start ${bcPlay.seconds}s`;}
+  $("bcPlus").disabled=!run;$("bcMinus").disabled=!run;
+  $("bcPrev").disabled=bcPlay.index<=0||run;$("bcNext").disabled=bcPlay.index>=bcPlay.order.length-1||run;
+}
+function startBC(){const c=curBC();if(!c||bcPlay.team===null)return;AC();stopBC(true);bcPlay.phase="running";bcPlay.tally=0;bcPlay.timeLeft=bcPlay.seconds;$("bcBanner").textContent="";renderBC();
+  bcPlay.handle=setInterval(()=>{bcPlay.timeLeft--;if(bcPlay.timeLeft<=0){bcPlay.timeLeft=0;bcExpire();return;}$("bcTimer").textContent=bcPlay.timeLeft;$("bcTimer").classList.toggle("low",bcPlay.timeLeft<=5);if(bcPlay.timeLeft<=5)sTickLow();},1000);sTick();}
+function stopBC(silent){if(bcPlay.handle){clearInterval(bcPlay.handle);bcPlay.handle=null;}}
+function bcExpire(){stopBC(true);bcPlay.phase="done";sBuzzer();$("flash").classList.add("go");setTimeout(()=>$("flash").classList.remove("go"),500);$("app").classList.add("shake");setTimeout(()=>$("app").classList.remove("shake"),500);renderBC();}
+function bcTally(d){if(bcPlay.phase!=="running")return;bcPlay.tally=Math.max(0,bcPlay.tally+d);$("bcTally").textContent=bcPlay.tally;if(d>0)sBlip();}
+function bcBank(){if(bcPlay.phase!=="done"||bcPlay.team===null)return;const pts=bcPlay.tally*200;award(bcPlay.team,pts);sCorrect();if(pts>0)burstConfetti();bcPlay.phase="idle";$("bcBanner").innerHTML=`Banked <b>${fmt(pts)}</b> for ${esc(state.teams[bcPlay.team].name)}!`;renderBC();}
+function bcNav(d){if(bcPlay.phase==="running")return;const n=bcPlay.index+d;if(n>=0&&n<bcPlay.order.length){bcPlay.index=n;bcPlay.phase="idle";bcPlay.tally=0;$("bcBanner").textContent="";renderBC();}}
+function bcStop(){if(bcPlay.phase!=="running")return;stopBC();bcPlay.phase="done";sBlip();renderBC();}
+$("bcStart").onclick=()=>{if(bcPlay.phase==="running")bcStop();else startBC();};$("bcPlus").onclick=()=>bcTally(1);$("bcMinus").onclick=()=>bcTally(-1);$("bcPrev").onclick=()=>bcNav(-1);$("bcNext").onclick=()=>bcNav(1);
+// when time's up, tapping a team banks the tally to that team
+$("bcTeams").addEventListener("click",()=>{if(bcPlay.phase==="done")setTimeout(bcBank,0);},true);
+
+/* ==================== RACE TRACK ==================== */
+let racePlay={pos:[],length:12,winner:null};
+const RACE_LENS=[{l:"Short",v:8},{l:"Medium",v:12},{l:"Long",v:18}];
+function enterRaceTrack(){
+  if(racePlay.pos.length!==state.teams.length){racePlay.pos=state.teams.map(()=>0);racePlay.winner=null;}
+  renderRaceLenPills();renderRace();
+}
+function renderRaceLenPills(){const el=$("raceLenPills");el.innerHTML="";RACE_LENS.forEach(o=>{const p=document.createElement("span");p.className="pill"+(racePlay.length===o.v?" on":"");p.textContent=o.l;p.onclick=()=>{racePlay.length=o.v;newRace();};el.appendChild(p);});}
+function newRace(){racePlay.pos=state.teams.map(()=>0);racePlay.winner=null;renderRaceLenPills();renderRace();}
+function renderRace(){
+  const stage=$("raceLanes");stage.innerHTML="";
+  if(racePlay.winner!==null){const w=document.createElement("div");w.className="racewin";w.innerHTML=`&#127942; ${esc(state.teams[racePlay.winner].name)} wins the race! +5,000`;stage.appendChild(w);}
+  state.teams.forEach((t,i)=>{
+    const lane=document.createElement("div");lane.className="racelane";lane.style.setProperty("--tc",t.color);
+    const name=document.createElement("div");name.className="racename";name.textContent=t.name;
+    const row=document.createElement("div");row.className="racetrackrow";
+    for(let c=0;c<racePlay.length;c++){const cell=document.createElement("div");cell.className="racecell";row.appendChild(cell);}
+    const token=document.createElement("div");token.className="racetoken";token.textContent="\u25CF";token.style.color=t.color;
+    const frac=Math.min(1,racePlay.pos[i]/racePlay.length);token.style.left=`calc(${frac*100}% ${frac<1?"+ 4px":"- 4px"})`;
+    row.appendChild(token);
+    const flag=document.createElement("div");flag.className="raceflag";flag.textContent="\u{1F3C1}";
+    const ctrl=document.createElement("div");ctrl.className="racectrl";
+    const back=document.createElement("button");back.className="racebtn";back.textContent="\u25C0";back.onclick=()=>raceMove(i,-1);
+    const spin=document.createElement("button");spin.className="racebtn spin";spin.textContent="\u{1F3B2}";spin.onclick=()=>raceMove(i,1+Math.floor(Math.random()*3));
+    const go=document.createElement("button");go.className="racebtn go";go.style.setProperty("--tc",t.color);go.textContent="\u25B6";go.onclick=()=>raceMove(i,1);
+    ctrl.appendChild(back);ctrl.appendChild(spin);ctrl.appendChild(go);
+    lane.appendChild(name);lane.appendChild(row);lane.appendChild(flag);lane.appendChild(ctrl);
+    stage.appendChild(lane);
+  });
+}
+function raceMove(i,d){
+  if(racePlay.winner!==null)return;AC();
+  racePlay.pos[i]=Math.max(0,Math.min(racePlay.length,racePlay.pos[i]+d));
+  if(d>0)sBlip();renderRace();
+  if(racePlay.pos[i]>=racePlay.length){racePlay.winner=i;award(i,5000);sCorrect();burstConfetti();setTimeout(()=>{sCorrect();},250);renderRace();}
+}
+
+/* ==================== REVERSE CHARADES ==================== */
+let chPlay={setId:null,order:[],index:0,team:null,seconds:60,timeLeft:60,handle:null,phase:"idle",got:0};
+function curChSet(){return state.charades.find(s=>s.id===chPlay.setId)||null;}
+function enterCharades(){if(!state.charades.length||state.charades.length>1)showChPicker();else loadChSet(state.charades[0].id);}
+function showChPicker(){chPlay.setId=null;stopCh(true);$("chPicker").classList.remove("hidden");$("chPlay").classList.add("hidden");$("chControls").style.visibility="hidden";
+  const list=$("chPickList");list.innerHTML="";
+  if(!state.charades.length){list.innerHTML=`<div class="empty">No word sets yet — create one in Setup.</div>`;return;}
+  state.charades.forEach(s=>{const b=document.createElement("button");b.className="jeopick";b.textContent=s.title;b.onclick=()=>loadChSet(s.id);list.appendChild(b);});
+}
+function loadChSet(id){chPlay.setId=id;chPlay.team=null;chPlay.phase="idle";chPlay.got=0;stopCh(true);buildChOrder();
+  $("chPicker").classList.add("hidden");$("chPlay").classList.remove("hidden");$("chControls").style.visibility="visible";renderChLenPills();renderCh();}
+function buildChOrder(){const s=curChSet();const idx=(s?s.words:[]).map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}chPlay.order=idx;chPlay.index=0;}
+function curChWord(){const s=curChSet();if(!s||!chPlay.order.length)return null;return s.words[chPlay.order[chPlay.index]];}
+function renderChLenPills(){const el=$("chLenPills");el.innerHTML="";[30,60,90].forEach(v=>{const p=document.createElement("span");p.className="pill"+(chPlay.seconds===v?" on":"");p.textContent=v+"s";p.onclick=()=>{if(chPlay.phase!=="running"){chPlay.seconds=v;renderCh();}};el.appendChild(p);});}
+function renderCh(){
+  const s=curChSet();$("chTitle").textContent=s?s.title:"Reverse Charades";
+  teamAwardBar($("chTeams"),i=>{if(chPlay.phase!=="running"){chPlay.team=i;renderCh();}},"");
+  [...$("chTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===chPlay.team));
+  renderChLenPills();
+  $("chGot").textContent=chPlay.got;
+  $("chTimer").textContent=chPlay.phase==="idle"?chPlay.seconds:chPlay.timeLeft;
+  $("chTimer").classList.toggle("low",chPlay.phase==="running"&&chPlay.timeLeft<=5);
+  if(chPlay.phase==="running")$("chWord").textContent=curChWord()||"—";
+  else if(chPlay.phase==="done")$("chWord").textContent="Round over!";
+  else $("chWord").textContent="Pick a team, then Start";
+  $("chStart").disabled=!s||chPlay.phase==="running"||chPlay.team===null;
+  $("chStart").textContent=chPlay.phase==="done"?"Play Again":`Start ${chPlay.seconds}s`;
+  $("chGotBtn").disabled=chPlay.phase!=="running";$("chSkip").disabled=chPlay.phase!=="running";
+}
+function startCh(){const s=curChSet();if(!s||chPlay.team===null)return;AC();stopCh(true);chPlay.phase="running";chPlay.got=0;chPlay.timeLeft=chPlay.seconds;buildChOrder();$("chBanner").textContent="";renderCh();
+  chPlay.handle=setInterval(()=>{chPlay.timeLeft--;if(chPlay.timeLeft<=0){chPlay.timeLeft=0;chExpire();return;}$("chTimer").textContent=chPlay.timeLeft;$("chTimer").classList.toggle("low",chPlay.timeLeft<=5);if(chPlay.timeLeft<=5)sTickLow();},1000);sTick();}
+function stopCh(){if(chPlay.handle){clearInterval(chPlay.handle);chPlay.handle=null;}}
+function chExpire(){stopCh();chPlay.phase="done";sBuzzer();$("flash").classList.add("go");setTimeout(()=>$("flash").classList.remove("go"),500);$("chBanner").innerHTML=`Round over — <b>${chPlay.got}</b> guessed for ${chPlay.team!==null?esc(state.teams[chPlay.team].name):""}!`;renderCh();}
+function chAdvance(){chPlay.index++;if(chPlay.index>=chPlay.order.length)buildChOrder();renderCh();}
+function chGot(){if(chPlay.phase!=="running"||chPlay.team===null)return;award(chPlay.team,1000);chPlay.got++;sCorrect();chAdvance();}
+function chSkip(){if(chPlay.phase!=="running")return;sBlip();chAdvance();}
+$("chStart").onclick=startCh;$("chGotBtn").onclick=chGot;$("chSkip").onclick=chSkip;$("chSets").onclick=showChPicker;
+
+/* ==================== WORD PUZZLE WHEEL ==================== */
+const WCOL={bankrupt:"#0A0606",lose:"#880044","5000":"#4ECDC4","3500":"#F94144","2000":"#F9C74F","1500":"#4D908E","1000":"#90BE6D","800":"#F3722C","700":"#4D908E","600":"#F8961E","500":"#43AA8B","400":"#F9844A","200":"#F9C74F"};
+const WHEEL=[500,3500,200,800,"bankrupt",1500,600,1000,400,2000,700,5000,500,3500,200,800,"bankrupt",1500,600,1000,400,2000,700,"lose"]
+  .map(v=>({v,t:v==="bankrupt"?"BANKRUPT":v==="lose"?"LOSE A TURN":"$"+v,c:WCOL[v]}));
+let wwPlay={puzzleId:null,tiles:[],guessed:{},active:0,round:[],spinValue:0,phase:"spin",busy:false,rot:0};
+function curWWPuzzle(){return state.wordwheel.find(p=>p.id===wwPlay.puzzleId)||null;}
+function enterWordWheel(){if(!state.wordwheel.length||state.wordwheel.length>1)showWWPicker();else loadWWPuzzle(state.wordwheel[0].id);}
+function showWWPicker(){wwPlay.puzzleId=null;$("wwPicker").classList.remove("hidden");$("wwPlay").classList.add("hidden");$("wwControls").style.visibility="hidden";
+  const list=$("wwPickList");list.innerHTML="";
+  if(!state.wordwheel.length){list.innerHTML=`<div class="empty">No puzzles yet — add some in Setup.</div>`;return;}
+  state.wordwheel.forEach(p=>{const b=document.createElement("button");b.className="jeopick";b.textContent=p.category+": "+p.phrase.length+" letters";b.onclick=()=>loadWWPuzzle(p.id);list.appendChild(b);});
+}
+function loadWWPuzzle(id){wwPlay.puzzleId=id;$("wwPicker").classList.add("hidden");$("wwPlay").classList.remove("hidden");$("wwControls").style.visibility="visible";setupWWPuzzle();}
+function buildWheel(){
+  const cx=100,cy=100,R=98,LR=56,n=WHEEL.length,seg=360/n;
+  const pt=(r,deg)=>{const a=(deg-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];};
+  let s=`<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="99.5" fill="#0b1220"/>`;
+  for(let i=0;i<n;i++){const a1=i*seg,a2=(i+1)*seg;const p1=pt(R,a1),p2=pt(R,a2);
+    s+=`<path d="M100,100 L${p1[0].toFixed(2)},${p1[1].toFixed(2)} A${R},${R} 0 0 1 ${p2[0].toFixed(2)},${p2[1].toFixed(2)} Z" fill="${WHEEL[i].c}" stroke="#D6CCC2" stroke-width="0.7"/>`;}
+  s+=`<circle cx="100" cy="100" r="98" fill="none" stroke="#D6CCC2" stroke-width="1.6"/>`;
+  for(let i=0;i<n;i++){const mid=i*seg+seg/2;const lp=pt(LR,mid);
+    const t=WHEEL[i].t;const fs=WHEEL[i].v==="lose"?7:WHEEL[i].v==="bankrupt"?8.5:11;
+    s+=`<text x="${lp[0].toFixed(2)}" y="${lp[1].toFixed(2)}" fill="#ffffff" stroke="#0A0606" stroke-width="0.7" paint-order="stroke" font-family="system-ui,Arial,sans-serif" font-size="${fs}" font-weight="900" text-anchor="middle" dominant-baseline="central" transform="rotate(${(mid-90).toFixed(1)} ${lp[0].toFixed(2)} ${lp[1].toFixed(2)})">${t}</text>`;}
+  s+=`<circle cx="100" cy="100" r="14" fill="#EDEDE9" stroke="#D6CCC2" stroke-width="2.5"/></svg>`;
+  $("wwWheel").innerHTML=s;
+}
+function setupWWPuzzle(){
+  const p=curWWPuzzle();if(!p)return;
+  wwPlay.tiles=p.phrase.toUpperCase().split("").map(ch=>{const isL=/[A-Z]/.test(ch);return{ch,isLetter:isL,state:isL?"blank":"punct"};});
+  wwPlay.guessed={};wwPlay.active=0;wwPlay.round=state.teams.map(()=>0);wwPlay.spinValue=0;wwPlay.phase="spin";wwPlay.busy=false;
+  buildWheel();
+  $("wwResult").textContent="SPIN";$("wwBanner").textContent="";
+  renderWW();
+}
+function renderWW(){
+  const p=curWWPuzzle();if(!p){return;}
+  $("wwCat").textContent=p.category;
+  // board
+  const board=$("wwBoard");board.innerHTML="";
+  const words=[];let cur=[];
+  wwPlay.tiles.forEach((t,i)=>{if(t.ch===" "){if(cur.length){words.push(cur);cur=[];}}else{cur.push(i);}});
+  if(cur.length)words.push(cur);
+  words.forEach(w=>{const wd=document.createElement("div");wd.className="wwword";
+    w.forEach(i=>{const t=wwPlay.tiles[i];const el=document.createElement("div");el.className="wwtile";
+      if(!t.isLetter){el.classList.add("punct");el.textContent=t.ch;}
+      else if(t.state==="blank"){el.classList.add("blank");el.textContent="A";}
+      else{el.classList.add("shown");el.textContent=t.ch;}
+      wd.appendChild(el);});
+    board.appendChild(wd);});
+  // teams / turn
+  teamAwardBar($("wwTeams"),i=>{wwPlay.active=i;renderWW();},"");
+  [...$("wwTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===wwPlay.active));
+  const at=state.teams[wwPlay.active];
+  const turnMsg={spin:"'s turn — spin the wheel!",pick:" spun "+(typeof wwPlay.spinValue==="number"?"$"+fmt(wwPlay.spinValue):"")+" — pick a letter",solved:""};
+  $("wwTurn").innerHTML=at?`<span style="color:${at.color}">${esc(at.name)}</span>${turnMsg[wwPlay.phase]||""}`:"";
+  // letters
+  const grid=$("wwLetters");grid.innerHTML="";
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(L=>{const b=document.createElement("button");b.className="wwletter";b.textContent=L;
+    if(wwPlay.guessed[L])b.classList.add("used");
+    b.disabled=wwPlay.phase!=="pick"||!!wwPlay.guessed[L];
+    b.onclick=()=>pickLetter(L);grid.appendChild(b);});
+  // buttons
+  $("wwSpin").disabled=wwPlay.busy||wwPlay.phase!=="spin";
+  $("wwSolve").disabled=wwPlay.phase==="solved"||wwPlay.busy;
+}
+function spinWheel(){
+  if(wwPlay.busy||wwPlay.phase!=="spin")return;AC();wwPlay.busy=true;$("wwSpin").disabled=true;
+  const finalIdx=Math.floor(Math.random()*WHEEL.length);
+  const seg=360/WHEEL.length;
+  const targetMod=(360-(finalIdx*seg+seg/2))%360;
+  const currentMod=((wwPlay.rot%360)+360)%360;
+  let delta=targetMod-currentMod;if(delta<0)delta+=360;
+  wwPlay.rot+=360*5+delta;
+  $("wwResult").textContent="\u2026";
+  $("wwWheel").style.transform=`rotate(${wwPlay.rot}deg)`;
+  let ticks=0;const ti=setInterval(()=>{sTick();if(++ticks>16)clearInterval(ti);},190);
+  setTimeout(()=>{clearInterval(ti);landWheel(finalIdx);},3500);
+}
+function landWheel(idx){
+  const w=WHEEL[idx];$("wwResult").textContent=w.t;$("wwResult").style.color=w.v==="bankrupt"?"#fff":w.v==="lose"?"#f87171":"#ffe27a";
+  wwPlay.busy=false;
+  if(w.v==="bankrupt"){sBuzzer();const lost=wwPlay.round[wwPlay.active];if(lost>0)award(wwPlay.active,-lost);wwPlay.round[wwPlay.active]=0;$("wwBanner").innerHTML=`&#128176; BANKRUPT! ${esc(state.teams[wwPlay.active].name)} loses this round's ${fmt(lost)}.`;passWWTurn();}
+  else if(w.v==="lose"){sBuzzer();$("wwBanner").innerHTML=`&#10060; Lose a turn!`;passWWTurn();}
+  else{sCorrect();wwPlay.spinValue=w.v;wwPlay.phase="pick";$("wwBanner").innerHTML=`Pick a letter for <b>$${fmt(w.v)}</b> each!`;renderWW();}
+}
+function passWWTurn(){wwPlay.active=(wwPlay.active+1)%state.teams.length;wwPlay.spinValue=0;wwPlay.phase="spin";renderWW();}
+function pickLetter(L){
+  if(wwPlay.phase!=="pick"||wwPlay.guessed[L])return;AC();wwPlay.guessed[L]=true;
+  const hits=wwPlay.tiles.filter(t=>t.isLetter&&t.state!=="shown"&&t.ch===L).length;
+  if(hits){
+    wwPlay.tiles.forEach(t=>{if(t.isLetter&&t.ch===L)t.state="shown";});
+    const gain=wwPlay.spinValue*hits;award(wwPlay.active,gain);wwPlay.round[wwPlay.active]+=gain;sCorrect();
+    wwPlay.phase="spin";wwPlay.spinValue=0;
+    if(wwSolvedFully())wwWin(wwPlay.active,false);
+    else{$("wwBanner").innerHTML=`${hits} <b>${L}</b>${hits>1?"'s":""} &mdash; +${fmt(gain)}! ${esc(state.teams[wwPlay.active].name)} spins again.`;renderWW();}
+  }
+  else{sBuzzer();$("wwBanner").innerHTML=`No <b>${L}</b>. Turn passes.`;passWWTurn();}
+}
+function wwSolvedFully(){return wwPlay.tiles.every(t=>!t.isLetter||t.state==="shown");}
+function wwWin(team,bonus){wwPlay.tiles.forEach(t=>{if(t.isLetter)t.state="shown";});wwPlay.phase="solved";if(bonus)award(team,2000);sCorrect();burstConfetti();$("wwBanner").innerHTML=`&#127942; ${esc(state.teams[team].name)} solved it!${bonus?" +2,000":""} Hit New Puzzle.`;renderWW();}
+$("wwSpin").onclick=spinWheel;
+$("wwSolve").onclick=()=>{if(wwPlay.phase==="solved"||wwPlay.busy)return;
+  $("jeoCard").innerHTML=`<div class="cat" style="color:var(--gold);">&#127942; Who solved the puzzle?</div><div class="q" style="font-size:clamp(18px,2.4vw,32px);">Reveal it and award +2,000.</div><div class="awardbar" id="wwSolveTeams"></div><div class="foot" style="margin-top:12px;"><button class="sbtn ghost" id="wwSolveCancel">Cancel</button></div>`;
+  teamAwardBar($("wwSolveTeams"),i=>{$("jeoOverlay").classList.remove("show");wwWin(i,true);},"");
+  $("wwSolveCancel").onclick=()=>$("jeoOverlay").classList.remove("show");
+  $("jeoOverlay").classList.add("show");};
+$("wwNew").onclick=()=>setupWWPuzzle();
+$("wwSets").onclick=showWWPicker;
+
+/* ==================== VERSE VOYAGER ==================== */
+const VOY={STEER:6.6, STEERX:0.010, LANES:3};
+let voy={phase:"idle",team:0,lives:3,level:1,verseIdx:0,wordIdx:0,gameScore:0,
+  ship:{y:0},steer:0,steerX:0,shipXf:0.4,throttle:0,fogX:0,gate:null,stars:[],parts:[],aliens:[],alienTimer:140,
+  hidden:[],hiddenCount:0,raf:null,lastTs:0,W:0,H:0,shipX:0,flash:"",flashT:0};
+const GENERIC_DECOYS=["and","the","for","with","God","Lord","said","came","went","have","will","from","unto","that","them","then"];
+function curVerse(){return state.voyager[voy.verseIdx%Math.max(1,state.voyager.length)]||null;}
+function voyCanvas(){return $("voyCanvas");}
+function voyResize(){const c=voyCanvas();const w=$("voyWrap");c.width=w.clientWidth;c.height=w.clientHeight;voy.W=c.width;voy.H=c.height;voy.shipX=voy.shipXf*voy.W;}
+function enterVoyager(){
+  voyResize();
+  if(!voy.stars.length)for(let i=0;i<90;i++)voy.stars.push({x:Math.random(),y:Math.random(),z:Math.random()*.8+.2});
+  if(!state.voyager.length){voy.phase="idle";showVoyOverlay(`<div class="voycard"><h2>Verse Voyager</h2><p>No verses yet. Add some in Setup, then come back to fly!</p></div>`);return;}
+  voy.team=voy.team%state.teams.length;readyVoy();
+}
+function stopVoyager(){if(voy.raf){cancelAnimationFrame(voy.raf);voy.raf=null;}voy.phase="idle";}
+function showVoyOverlay(html){const o=$("voyOverlay");o.innerHTML=html;o.classList.add("show");}
+function hideVoyOverlay(){$("voyOverlay").classList.remove("show");}
+function readyVoy(){
+  voy.phase="idle";const t=state.teams[voy.team];
+  const dangers=[];if(state.settings.voyFog)dangers.push("outrun the <b>fog</b> creeping up behind you");if(state.settings.voyAliens)dangers.push("dodge <b>alien ships</b>");
+  showVoyOverlay(`<div class="voycard"><h2 style="color:${t.color}">${esc(t.name)}</h2>
+    <p>Steer with the <b>arrow pad</b> (or arrow keys): up/down to aim, left/right to move forward or hang back. Slide the <b>throttle</b> to set your speed. Fly into the <b>correct next word</b>. A wrong word or a crash blows up your ship &mdash; you get 3.${dangers.length?" Also "+dangers.join(" and ")+"!":""}</p>
+    <button class="btn green big" id="voyStartBtn" style="max-width:none;">Start Flight</button></div>`);
+  $("voyStartBtn").onclick=startVoy;drawVoy();
+}
+function startVoy(){
+  hideVoyOverlay();AC();
+  voy.phase="playing";voy.lives=3;voy.level=1;voy.verseIdx=0;voy.hiddenCount=0;voy.gameScore=0;
+  voy.throttle=0.45;$("voyLever").value=45;
+  startRound(true);
+  voy.lastTs=performance.now();if(voy.raf)cancelAnimationFrame(voy.raf);voy.raf=requestAnimationFrame(voyLoop);
+}
+function pickHidden(n,count){const idx=[...Array(n).keys()];for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}return idx.slice(0,Math.max(0,Math.min(n,count))).sort((a,b)=>a-b);}
+function startRound(rebuildHidden){
+  const v=curVerse();if(!v)return;
+  voy.wordIdx=0;voy.ship.y=voy.H/2;voy.shipXf=0.4;voy.shipX=voy.shipXf*voy.W;voy.steer=0;voy.steerX=0;
+  voy.aliens=[];voy.alienTimer=150;voy.parts=[];voy.fogX=-voy.W*0.06;
+  if(rebuildHidden)voy.hidden=pickHidden(v.words.length,voy.hiddenCount);
+  spawnGate();updateVoyHud();
+}
+function spawnGate(){
+  const v=curVerse();if(!v){voy.gate=null;return;}
+  if(voy.wordIdx>=v.words.length){verseComplete();return;}
+  const correct=v.words[voy.wordIdx];
+  const pool=(v.decoys&&v.decoys.length?v.decoys:GENERIC_DECOYS).filter(d=>d.toLowerCase()!==correct.toLowerCase());
+  const picks=[];const used={};let guard=0;
+  while(picks.length<VOY.LANES-1&&guard++<40){const d=pool.length?pool[Math.floor(Math.random()*pool.length)]:GENERIC_DECOYS[Math.floor(Math.random()*GENERIC_DECOYS.length)];const key=d.toLowerCase();if(used[key]&&pool.length>=VOY.LANES)continue;used[key]=1;picks.push(d);}
+  const lanes=[...picks,correct];while(lanes.length<VOY.LANES)lanes.push(GENERIC_DECOYS[Math.floor(Math.random()*GENERIC_DECOYS.length)]);
+  for(let i=lanes.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[lanes[i],lanes[j]]=[lanes[j],lanes[i]];}
+  voy.gate={x:voy.W+120,words:lanes,correct:lanes.indexOf(correct),resolved:false};
+}
+function laneOfY(y){const band=voy.H/VOY.LANES;return Math.max(0,Math.min(VOY.LANES-1,Math.floor(y/band)));}
+function voyLoop(ts){
+  if(voy.phase!=="playing"){voy.raf=null;return;}
+  let dt=(ts-voy.lastTs)/16.667;if(!(dt>0))dt=1;if(dt>3)dt=3;voy.lastTs=ts;
+  updateVoy(dt);drawVoy();voy.raf=requestAnimationFrame(voyLoop);
+}
+function updateVoy(dt){
+  const thr=voy.throttle;
+  const maxScroll=7.5+Math.min(voy.level,12)*0.5;
+  const scroll=(0.34+thr*0.66)*maxScroll;
+  voy.ship.y+=voy.steer*VOY.STEER*dt;const pad=voy.H*0.06;voy.ship.y=Math.max(pad,Math.min(voy.H-pad,voy.ship.y));
+  voy.shipXf+=voy.steerX*VOY.STEERX*dt;voy.shipXf=Math.max(0.20,Math.min(0.74,voy.shipXf));voy.shipX=voy.shipXf*voy.W;
+  voy.stars.forEach(s=>{s.x-=(0.002+s.z*0.01)*(0.4+scroll*0.12)*dt;if(s.x<0)s.x+=1;});
+  if(voy.gate&&!voy.gate.resolved){
+    voy.gate.x-=scroll*dt;
+    if(voy.gate.x<=voy.shipX){voy.gate.resolved=true;const lane=laneOfY(voy.ship.y);
+      if(lane===voy.gate.correct){addVoyScore(500);voy.flash="+500";voy.flashT=40;sBlip();voy.wordIdx++;spawnGate();}
+      else destroyShip("Wrong word!",-1000);
+    }
+  }
+  if(voy.phase!=="playing")return;
+  if(state.settings.voyAliens){
+    voy.alienTimer-=dt;
+    if(voy.alienTimer<=0){const burst=1+Math.floor(Math.random()*3);const tiers=[2.4,3.6,5,7.5,11.5];for(let k=0;k<burst;k++){const sp=tiers[Math.floor(Math.random()*tiers.length)];voy.aliens.push({x:voy.W+40+k*70,y:voy.H*(0.12+Math.random()*0.76),vx:sp+voy.level*0.2,r:15});}voy.alienTimer=70+Math.random()*160;}
+    for(const al of voy.aliens)al.x-=al.vx*dt;
+    voy.aliens=voy.aliens.filter(a=>a.x>-60);
+    for(const al of voy.aliens){if(Math.abs(al.x-voy.shipX)<al.r+16&&Math.abs(al.y-voy.ship.y)<al.r+13){destroyShip("Alien crash!",0);break;}}
+  }
+  if(voy.phase!=="playing")return;
+  if(state.settings.voyFog){
+    const HOLD=0.86;voy.fogX+=1.0*(HOLD-thr)*dt;
+    voy.fogX=Math.max(-voy.W*0.1,Math.min(voy.shipX+10,voy.fogX));
+    if(voy.fogX>=voy.shipX-voy.H*0.05){fogCaught();return;}
+  }
+  voy.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=0.15*dt;p.life-=dt;});
+  voy.parts=voy.parts.filter(p=>p.life>0);
+  if(voy.flashT>0)voy.flashT-=dt;
+}
+function addVoyScore(n){voy.gameScore+=n;award(voy.team,n);updateVoyHud();}
+function explode(x,y,color){for(let i=0;i<28;i++){const a=Math.random()*Math.PI*2,sp=Math.random()*4+1;voy.parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:24+Math.random()*18,c:color||"#ff7a4d"});}}
+function destroyShip(reason,penalty){
+  if(penalty)addVoyScore(penalty);
+  explode(voy.shipX,voy.ship.y,reason.indexOf("Alien")>=0?"#c084fc":"#ff5a4d");sBuzzer();voy.flash=reason;voy.flashT=70;voy.lives--;updateVoyHud();
+  if(voy.lives<=0){gameOverVoy(reason);return;}
+  startRound(false);
+}
+function verseComplete(){
+  addVoyScore(10000);voy.flash="VERSE COMPLETE! +10,000";voy.flashT=110;sCorrect();burstConfetti();voy.level++;
+  const v=curVerse();const N=v?v.words.length:0;const step=Math.max(1,Math.ceil(N/4));
+  if(voy.hiddenCount>=N){voy.verseIdx++;voy.hiddenCount=0;}
+  else voy.hiddenCount=Math.min(N,voy.hiddenCount+step);
+  startRound(true);
+}
+function fogCaught(){explode(voy.shipX,voy.ship.y,"#84e36b");sBuzzer();gameOverVoy("The fog got you!");}
+function gameOverVoy(reason){
+  if(voy.phase==="gameover")return;voy.phase="gameover";if(voy.raf){cancelAnimationFrame(voy.raf);voy.raf=null;}
+  const t=state.teams[voy.team];
+  showVoyOverlay(`<div class="voycard"><h2 style="color:#ff6b6b">Game Over</h2><p>${esc(reason)}</p><p><span style="color:${t.color}">${esc(t.name)}</span> scored this flight:</p><div class="big num">${fmt(voy.gameScore)}</div><button class="btn gold big" id="voyNextBtn" style="max-width:none;margin-top:16px;">Next Team &#9654;</button></div>`);
+  $("voyNextBtn").onclick=()=>{voy.team=(voy.team+1)%state.teams.length;readyVoy();};drawVoy();
+}
+function drawVoy(){
+  const c=voyCanvas(),g=c.getContext("2d"),W=voy.W,H=voy.H;if(!W||!H)return;
+  g.clearRect(0,0,W,H);g.fillStyle="#05070f";g.fillRect(0,0,W,H);
+  g.fillStyle="#9fb2d8";voy.stars.forEach(s=>{const x=s.x*W,y=s.y*H,r=s.z*1.8;g.globalAlpha=.3+s.z*.5;g.fillRect(x,y,r,r);});g.globalAlpha=1;
+  if(voy.gate){const band=H/VOY.LANES;voy.gate.words.forEach((w,i)=>{const cy=band*i+band/2,x=voy.gate.x;const bw=Math.min(220,W*0.24),bh=Math.min(64,band*0.6);
+    g.fillStyle="rgba(124,92,255,.16)";g.strokeStyle="#7c5cff";g.lineWidth=2;roundRectVoy(g,x-bw/2,cy-bh/2,bw,bh,12);g.fill();g.stroke();
+    g.fillStyle="#fff";g.font="900 "+Math.min(30,bh*0.5)+"px system-ui,Arial";g.textAlign="center";g.textBaseline="middle";g.fillText(w,x,cy);});}
+  voy.aliens.forEach(a=>drawAlien(g,a.x,a.y,a.r));
+  if(state.settings.voyFog&&voy.fogX>-W*0.09){const fx=voy.fogX;const grad=g.createLinearGradient(0,0,fx+40,0);grad.addColorStop(0,"rgba(60,120,50,.95)");grad.addColorStop(.7,"rgba(90,170,70,.75)");grad.addColorStop(1,"rgba(120,220,110,.12)");
+    g.fillStyle=grad;g.beginPath();g.moveTo(0,0);for(let y=0;y<=H;y+=16){const wob=Math.sin(y*0.05+performance.now()*0.004)*14;g.lineTo(fx+wob,y);}g.lineTo(0,H);g.closePath();g.fill();}
+  drawShip(g,voy.shipX,voy.ship.y,voy.throttle);
+  voy.parts.forEach(p=>{g.globalAlpha=Math.max(0,Math.min(1,p.life/24));g.fillStyle=p.c;g.fillRect(p.x,p.y,4,4);});g.globalAlpha=1;
+  drawSpeedo(g,W-70,H-70,50,voy.throttle);
+  if(voy.flashT>0){const bad=/Wrong|Alien|crash|fog/.test(voy.flash);g.globalAlpha=Math.min(1,voy.flashT/30);g.fillStyle=bad?"#ff6b6b":"#ffd24a";g.font="900 "+Math.min(40,W*0.05)+"px system-ui,Arial";g.textAlign="center";g.textBaseline="middle";g.fillText(voy.flash,W/2,H*0.16);g.globalAlpha=1;}
+}
+function drawAlien(g,x,y,r){
+  g.save();g.translate(x,y);g.strokeStyle="#3a7d1a";g.lineWidth=2;
+  g.fillStyle="#7CFC00";g.beginPath();g.ellipse(0,3,r,r*0.5,0,0,7);g.fill();g.stroke();
+  g.fillStyle="#c084fc";g.beginPath();g.ellipse(0,-1,r*0.55,r*0.55,0,Math.PI,0);g.fill();g.stroke();
+  g.fillStyle="#fef08a";for(let i=-1;i<=1;i++){g.beginPath();g.arc(i*r*0.5,4,2,0,7);g.fill();}
+  g.restore();
+}
+function drawShip(g,x,y,thr){
+  if(voy.phase==="gameover")return;
+  const fl=6+thr*24+Math.random()*6;g.fillStyle="#ffb14d";g.beginPath();g.moveTo(x-16,y-7);g.lineTo(x-16-fl,y);g.lineTo(x-16,y+7);g.closePath();g.fill();
+  g.fillStyle="#ffe27a";g.beginPath();g.moveTo(x-16,y-4);g.lineTo(x-16-fl*0.6,y);g.lineTo(x-16,y+4);g.closePath();g.fill();
+  g.fillStyle="#cbbcff";g.strokeStyle="#7c5cff";g.lineWidth=2;g.beginPath();g.moveTo(x+22,y);g.lineTo(x-16,y-13);g.lineTo(x-9,y);g.lineTo(x-16,y+13);g.closePath();g.fill();g.stroke();
+  g.fillStyle="#7c5cff";g.beginPath();g.arc(x+2,y,4,0,7);g.fill();
+}
+function drawSpeedo(g,cx,cy,r,thr){
+  g.save();g.translate(cx,cy);
+  g.lineWidth=8;g.strokeStyle="#1a2942";g.beginPath();g.arc(0,0,r,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5);g.stroke();
+  g.strokeStyle="#ef4444";g.beginPath();g.arc(0,0,r,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5*0.30);g.stroke();
+  g.strokeStyle="#34d399";g.beginPath();g.arc(0,0,r,Math.PI*0.75+Math.PI*1.5*0.60,Math.PI*0.75+Math.PI*1.5);g.stroke();
+  const a=Math.PI*0.75+Math.PI*1.5*Math.max(0,Math.min(1,thr));
+  g.strokeStyle=thr<0.30?"#f87171":"#EDEDE9";g.lineWidth=3;g.beginPath();g.moveTo(0,0);g.lineTo(Math.cos(a)*(r-6),Math.sin(a)*(r-6));g.stroke();
+  g.fillStyle="#EDEDE9";g.beginPath();g.arc(0,0,4,0,7);g.fill();
+  g.fillStyle="#93a4bd";g.font="900 10px system-ui,Arial";g.textAlign="center";g.fillText("SPEED",0,r-6);
+  g.restore();
+}
+function roundRectVoy(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+function updateVoyHud(){
+  const v=curVerse();$("voyRef").textContent=v?v.reference:"Verse Voyager";
+  $("voyLevel").textContent=voy.phase==="idle"?"":"Level "+voy.level;
+  $("voyScore").textContent=fmt(voy.gameScore);
+  let lh="";for(let i=0;i<3;i++)lh+=`<span style="opacity:${i<voy.lives?1:.25}">&#128640;</span>`;$("voyLives").innerHTML=lh;
+  if(v){let h="";v.words.forEach((w,i)=>{const blank=(voy.hidden&&voy.hidden.indexOf(i)>=0)||i===voy.wordIdx;const cls=i===voy.wordIdx?"next":(blank?"blank":(i<voy.wordIdx?"done":""));h+=`<span class="${cls}">${blank?"____":esc(w)}</span> `;});$("voyVerse").innerHTML=h;}
+  else $("voyVerse").innerHTML="";
+}
+(function(){
+  const hold=(id,on,off)=>{const el=$(id);if(!el)return;el.addEventListener("pointerdown",e=>{e.preventDefault();on();});["pointerup","pointerleave","pointercancel"].forEach(ev=>el.addEventListener(ev,off));};
+  hold("voyUp",()=>voy.steer=-1,()=>{if(voy.steer===-1)voy.steer=0;});
+  hold("voyDown",()=>voy.steer=1,()=>{if(voy.steer===1)voy.steer=0;});
+  hold("voyLeft",()=>voy.steerX=-1,()=>{if(voy.steerX===-1)voy.steerX=0;});
+  hold("voyRight",()=>voy.steerX=1,()=>{if(voy.steerX===1)voy.steerX=0;});
+  $("voyLever").addEventListener("input",e=>{voy.throttle=(+e.target.value)/100;});
+  addEventListener("keydown",e=>{if(screen!=="voyager")return;const k=e.key;if(k==="ArrowUp"){e.preventDefault();voy.steer=-1;}else if(k==="ArrowDown"){e.preventDefault();voy.steer=1;}else if(k==="ArrowLeft"){e.preventDefault();voy.steerX=-1;}else if(k==="ArrowRight"){e.preventDefault();voy.steerX=1;}});
+  addEventListener("keyup",e=>{if(screen!=="voyager")return;const k=e.key;if(k==="ArrowUp"&&voy.steer===-1)voy.steer=0;if(k==="ArrowDown"&&voy.steer===1)voy.steer=0;if(k==="ArrowLeft"&&voy.steerX===-1)voy.steerX=0;if(k==="ArrowRight"&&voy.steerX===1)voy.steerX=0;});
+  addEventListener("resize",()=>{if(screen==="voyager"){voyResize();if(voy.phase!=="playing")drawVoy();}});
+})();
+
+/* ==================== CONFETTI / EFFECTS ==================== */
+const cv=$("confetti"),cx=cv.getContext("2d");let parts=[],confAnim=null;
+function sizeCanvas(){cv.width=innerWidth;cv.height=innerHeight;}addEventListener("resize",sizeCanvas);sizeCanvas();
+function burstConfetti(){const cols=["#ffc233","#34d399","#3b82f6","#ef4444","#a855f7","#f97316"];
+  for(let i=0;i<140;i++)parts.push({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:Math.random()*-16-4,s:6+Math.random()*8,c:cols[i%cols.length],r:Math.random()*6,vr:(Math.random()-.5)*.4,life:0});
+  if(!confAnim)loopConfetti();}
+function loopConfetti(){cx.clearRect(0,0,cv.width,cv.height);parts=parts.filter(p=>p.life<140);
+  parts.forEach(p=>{p.vy+=.5;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.life++;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);cx.restore();});
+  if(parts.length)confAnim=requestAnimationFrame(loopConfetti);else{cx.clearRect(0,0,cv.width,cv.height);confAnim=null;}}
+
+/* ==================== SETUP ==================== */
+function renderTeamCountPills(){const el=$("teamCountPills");el.innerHTML="";for(let n=1;n<=5;n++){const p=document.createElement("span");p.className="pill"+(state.teams.length===n?" on":"");p.textContent=n;p.onclick=()=>setTeamCount(n);el.appendChild(p);}}
+function setTeamCount(n){while(state.teams.length<n)state.teams.push({name:"Team "+(state.teams.length+1),color:TEAM_COLORS[state.teams.length%5],score:0});while(state.teams.length>n)state.teams.pop();save();renderTeamCountPills();renderTeamEditors();renderScoreboard();}
+function renderTeamEditors(){const el=$("teamEditors");el.innerHTML="";state.teams.forEach((t,i)=>{const row=document.createElement("div");row.className="teamedit";
+  row.innerHTML=`<input type="color" value="${t.color}"><input type="text" value="${esc(t.name)}" placeholder="Team name">`;
+  row.querySelector("input[type=color]").oninput=e=>{t.color=e.target.value;save();renderScoreboard();};
+  row.querySelector("input[type=text]").oninput=e=>{t.name=e.target.value;save();renderScoreboard();};el.appendChild(row);});}
+
+/* quiz parse */
+function normType(s){s=s.toLowerCase().replace(/[^a-z]/g,"");if(["mc","multiple","multiplechoice"].includes(s))return"mc";if(["tf","truefalse","tof"].includes(s))return"tf";if(["fb","fill","fillintheblank","blank","short"].includes(s))return"fb";return null;}
+function parseQuiz(raw,week){const out=[],errors=[];raw.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;
+  const p=t.split("|").map(s=>s.trim());const type=normType(p[0]||"");if(!type){errors.push(`Line ${i+1}: unknown type "${p[0]}"`);return;}
+  const text=p[1]||"";if(!text){errors.push(`Line ${i+1}: missing question`);return;}
+  if(type==="fb"){const answers=(p.slice(2).join(";")).split(";").map(s=>s.replace(/\*/g,"").trim()).filter(Boolean);if(!answers.length){errors.push(`Line ${i+1}: fill-in needs an answer`);return;}out.push({id:uid(),type,text,answers,week});}
+  else if(type==="tf"){const starred=p.slice(2).find(s=>s.includes("*"));let v=(starred||p[2]||"").replace(/\*/g,"").trim().toLowerCase();let correct=["true","t","yes"].includes(v)?[0]:["false","f","no"].includes(v)?[1]:null;if(!correct){errors.push(`Line ${i+1}: put True or False`);return;}out.push({id:uid(),type,text,choices:["True","False"],correct,week});}
+  else{let correct=[];const choices=p.slice(2).filter(s=>s.length).map((c,idx)=>{let cc=c;if(cc.includes("*")){correct.push(idx);cc=cc.replace(/\*/g,"").trim();}return cc;});if(choices.length<2){errors.push(`Line ${i+1}: needs 2+ choices`);return;}if(!correct.length){errors.push(`Line ${i+1}: mark correct with *`);return;}out.push({id:uid(),type,text,choices,correct,week});}});
+  return{out,errors};}
+$("qAddBatch").onclick=()=>{const week=$("qBatchWeek").value.trim()||"Unlabeled";const{out,errors}=parseQuiz($("qPaste").value,week);const r=$("qParse");r.innerHTML="";
+  if(out.length){state.questions.push(...out);save();r.innerHTML=`<span class="ok">&#10004; Added ${out.length} to "${esc(week)}".</span>`;$("qPaste").value="";renderQBank();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!out.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("qClearPaste").onclick=()=>{$("qPaste").value="";$("qParse").innerHTML="";};
+function renderQBank(){const list=$("qBank");list.innerHTML="";if(!state.questions.length){list.innerHTML=`<div class="empty">No questions yet.</div>`;return;}
+  const weeks={};state.questions.forEach(q=>{(weeks[q.week||"Unlabeled"]=weeks[q.week||"Unlabeled"]||[]).push(q);});
+  Object.keys(weeks).forEach(wk=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
+    head.innerHTML=`<span>${esc(wk)} <span style="color:var(--muted);font-weight:600;">(${weeks[wk].length})</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete week";del.onclick=()=>{if(confirm(`Delete all ${weeks[wk].length} in "${wk}"?`)){state.questions=state.questions.filter(q=>(q.week||"Unlabeled")!==wk);save();renderQBank();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    weeks[wk].forEach(q=>{const it=document.createElement("div");it.className="litem";const ans=q.type==="fb"?q.answers.join(" / "):q.correct.map(i=>q.choices[i]).join(", ");const tag=q.type==="mc"?"MC":q.type==="tf"?"T/F":"FILL";
+      it.innerHTML=`<div class="lt"><span class="badge">${tag}</span>${esc(q.text)}<div class="ans">&#10004; ${esc(ans)}</div></div>`;
+      const x=document.createElement("button");x.className="xbtn";x.textContent="Delete";x.onclick=()=>{state.questions=state.questions.filter(o=>o.id!==q.id);save();renderQBank();renderHub();};it.appendChild(x);box.appendChild(it);});
+    list.appendChild(box);});}
+
+/* who am i parse */
+function parseWho(raw,week){const out=[],errors=[];raw.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;
+  const p=t.split("|").map(s=>s.trim());const subject=p[0]||"";const clues=p.slice(1).filter(Boolean);
+  if(!subject){errors.push(`Line ${i+1}: missing answer`);return;}if(clues.length<2){errors.push(`Line ${i+1}: needs 2+ clues`);return;}out.push({id:uid(),subject,clues,week});});
+  return{out,errors};}
+$("wAddBatch").onclick=()=>{const week=$("wBatchWeek").value.trim()||"Unlabeled";const{out,errors}=parseWho($("wPaste").value,week);const r=$("wParse");r.innerHTML="";
+  if(out.length){state.whoami.push(...out);save();r.innerHTML=`<span class="ok">&#10004; Added ${out.length} set${out.length>1?"s":""} to "${esc(week)}".</span>`;$("wPaste").value="";renderWList();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!out.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("wClearPaste").onclick=()=>{$("wPaste").value="";$("wParse").innerHTML="";};
+function renderWList(){const list=$("wList");list.innerHTML="";if(!state.whoami.length){list.innerHTML=`<div class="empty">No clue sets yet.</div>`;return;}
+  const weeks={};state.whoami.forEach(q=>{(weeks[q.week||"Unlabeled"]=weeks[q.week||"Unlabeled"]||[]).push(q);});
+  Object.keys(weeks).forEach(wk=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
+    head.innerHTML=`<span>${esc(wk)} <span style="color:var(--muted);font-weight:600;">(${weeks[wk].length})</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete group";del.onclick=()=>{if(confirm(`Delete all ${weeks[wk].length} in "${wk}"?`)){state.whoami=state.whoami.filter(q=>(q.week||"Unlabeled")!==wk);save();renderWList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    weeks[wk].forEach(q=>{const it=document.createElement("div");it.className="litem";
+      it.innerHTML=`<div class="lt"><b>${esc(q.subject)}</b><div class="ans" style="color:var(--muted);">${q.clues.length} clues</div></div>`;
+      const x=document.createElement("button");x.className="xbtn";x.textContent="Delete";x.onclick=()=>{state.whoami=state.whoami.filter(o=>o.id!==q.id);save();renderWList();renderHub();};it.appendChild(x);box.appendChild(it);});
+    list.appendChild(box);});}
+
+/* jeopardy parse */
+function normRound(s){s=(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");if(["s","single","round1","r1","1","j","jeopardy"].indexOf(s)>=0)return"single";if(["d","double","round2","r2","2","dj","doublejeopardy"].indexOf(s)>=0)return"double";if(["f","final","round3","r3","3","fj","finaljeopardy"].indexOf(s)>=0)return"final";return null;}
+function parseJeo(raw){const R={single:{m:{},c:[]},double:{m:{},c:[]}};let final=null;const errors=[];
+  raw.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;
+    const p=t.split("|").map(s=>s.trim());let round=normRound(p[0]),fields;
+    if(round){fields=p.slice(1);}else{round="single";fields=p;}
+    if(round==="final"){const cat=fields[0]||"Final Jeopardy",q=fields[1]||"",a=fields.slice(2).join("|").trim();if(!q||!a){errors.push(`Line ${i+1}: Final needs  F | Category | question | answer`);return;}if(!final)final={category:cat,q,a};return;}
+    const name=fields[0],value=parseInt(fields[1],10),q=fields[2],a=fields.slice(3).join("|").trim();
+    if(!name||isNaN(value)||!q||!a){errors.push(`Line ${i+1}: need Category | value | question | answer`);return;}
+    const G=R[round];if(!G.m[name]){G.m[name]={name,clues:[]};G.c.push(G.m[name]);}G.m[name].clues.push({value,q,a});});
+  R.single.c.forEach(c=>c.clues.sort((a,b)=>a.value-b.value));R.double.c.forEach(c=>c.clues.sort((a,b)=>a.value-b.value));
+  return{single:R.single.c,double:R.double.c,final,errors};}
+$("jAddBoard").onclick=()=>{const title=$("jTitle").value.trim()||"Untitled board";const{single,double,final,errors}=parseJeo($("jPaste").value);const r=$("jParse");r.innerHTML="";
+  if(single.length||double.length||final){state.jeopardy.push({id:uid(),title,single,double,final});save();const sc=single.reduce((s,c)=>s+c.clues.length,0),dc=double.reduce((s,c)=>s+c.clues.length,0);
+    r.innerHTML=`<span class="ok">&#10004; Built "${esc(title)}" — Jeopardy ${sc} clues${double.length?", Double "+dc+" clues":""}${final?", Final \u2713":""}.</span>`;$("jPaste").value="";$("jTitle").value="";renderJList();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!single.length&&!double.length&&!final&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("jClearPaste").onclick=()=>{$("jPaste").value="";$("jParse").innerHTML="";};
+function renderJList(){const list=$("jList");list.innerHTML="";if(!state.jeopardy.length){list.innerHTML=`<div class="empty">No boards yet.</div>`;return;}
+  state.jeopardy.forEach(b=>{const box=document.createElement("div");box.className="listweek";const r=boardRounds(b);
+    const sc=r.single.reduce((s,c)=>s+c.clues.length,0),dc=r.double.reduce((s,c)=>s+c.clues.length,0);
+    const parts=[`Jeopardy: ${r.single.length} cats / ${sc} clues`];if(r.double.length)parts.push(`Double: ${r.double.length} cats / ${dc} clues`);if(r.final)parts.push("Final \u2713");
+    const head=document.createElement("h3");head.innerHTML=`<span>${esc(b.title)}</span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete board";del.onclick=()=>{if(confirm(`Delete board "${b.title}"?`)){state.jeopardy=state.jeopardy.filter(o=>o.id!==b.id);save();renderJList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">${parts.join(" &bull; ")}</div>`;box.appendChild(it);list.appendChild(box);});}
+
+/* concentration parse */
+function parseConc(raw){const pairs=[],errors=[];raw.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;
+  const p=t.split("|").map(s=>s.trim());
+  if(p.length>=2){if(!p[0]||!p[1]){errors.push(`Line ${i+1}: both sides needed for a pair`);return;}pairs.push([p[0],p[1]]);}
+  else{pairs.push([p[0],p[0]]);}});
+  return{pairs,errors};}
+$("cAdd").onclick=()=>{const title=$("cTitle").value.trim()||"Untitled set";const image=$("cImage").value.trim();const{pairs,errors}=parseConc($("cPaste").value);const r=$("cParse");r.innerHTML="";
+  if(pairs.length){state.concentration.push({id:uid(),title,image,pairs});save();r.innerHTML=`<span class="ok">&#10004; Created "${esc(title)}" with ${pairs.length} pair${pairs.length>1?"s":""}${pairs.length<12?" (needs 12 to fill the board — the rest become free spaces)":""}.</span>`;$("cPaste").value="";$("cTitle").value="";$("cImage").value="";renderCList();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!pairs.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("cClearPaste").onclick=()=>{$("cPaste").value="";$("cParse").innerHTML="";};
+function renderCList(){const list=$("cList");list.innerHTML="";if(!state.concentration.length){list.innerHTML=`<div class="empty">No match sets yet.</div>`;return;}
+  state.concentration.forEach(s=>{const box=document.createElement("div");box.className="listweek";
+    const head=document.createElement("h3");head.innerHTML=`<span>${esc(s.title)} <span style="color:var(--muted);font-weight:600;">(${s.pairs.length} pairs${s.image?", img: "+esc(s.image):""})</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete set";del.onclick=()=>{if(confirm(`Delete set "${s.title}"?`)){state.concentration=state.concentration.filter(o=>o.id!==s.id);save();renderCList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">${s.pairs.map(p=>esc(p[0]===p[1]?p[0]:p[0]+"="+p[1])).join(", ")}</div>`;box.appendChild(it);list.appendChild(box);});}
+
+/* beatclock parse */
+function parseBC(raw,week){const out=[];raw.split(/\r?\n/).forEach(line=>{const t=line.trim();if(!t||t.startsWith("#"))return;out.push({id:uid(),prompt:t,week});});return out;}
+$("bcAdd").onclick=()=>{const week=$("bcBatchWeek").value.trim()||"Unlabeled";const out=parseBC($("bcPaste").value,week);const r=$("bcParse");r.innerHTML="";
+  if(out.length){state.beatclock.push(...out);save();r.innerHTML=`<span class="ok">&#10004; Added ${out.length} categor${out.length>1?"ies":"y"} to "${esc(week)}".</span>`;$("bcPaste").value="";renderBCList();renderHub();}
+  else r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("bcClearPaste").onclick=()=>{$("bcPaste").value="";$("bcParse").innerHTML="";};
+function renderBCList(){const list=$("bcList");list.innerHTML="";if(!state.beatclock.length){list.innerHTML=`<div class="empty">No categories yet.</div>`;return;}
+  const weeks={};state.beatclock.forEach(q=>{(weeks[q.week||"Unlabeled"]=weeks[q.week||"Unlabeled"]||[]).push(q);});
+  Object.keys(weeks).forEach(wk=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
+    head.innerHTML=`<span>${esc(wk)} <span style="color:var(--muted);font-weight:600;">(${weeks[wk].length})</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete group";del.onclick=()=>{if(confirm(`Delete all ${weeks[wk].length} in "${wk}"?`)){state.beatclock=state.beatclock.filter(q=>(q.week||"Unlabeled")!==wk);save();renderBCList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    weeks[wk].forEach(q=>{const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt">${esc(q.prompt)}</div>`;
+      const x=document.createElement("button");x.className="xbtn";x.textContent="Delete";x.onclick=()=>{state.beatclock=state.beatclock.filter(o=>o.id!==q.id);save();renderBCList();renderHub();};it.appendChild(x);box.appendChild(it);});
+    list.appendChild(box);});}
+
+/* charades + wordwheel setup */
+$("chAdd").onclick=()=>{const title=$("chSetTitle").value.trim()||"Untitled set";const words=$("chPaste").value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s&&!s.startsWith("#"));const r=$("chParse");r.innerHTML="";
+  if(words.length){state.charades.push({id:uid(),title,words});save();r.innerHTML=`<span class="ok">&#10004; Created "${esc(title)}" with ${words.length} words.</span>`;$("chPaste").value="";$("chSetTitle").value="";renderChList();renderHub();}
+  else r.innerHTML=`<span class="err">Add at least one word.</span>`;};
+$("chClearPaste").onclick=()=>{$("chPaste").value="";$("chParse").innerHTML="";};
+function renderChList(){const list=$("chList");list.innerHTML="";if(!state.charades.length){list.innerHTML=`<div class="empty">No word sets yet.</div>`;return;}
+  state.charades.forEach(s=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
+    head.innerHTML=`<span>${esc(s.title)} <span style="color:var(--muted);font-weight:600;">(${s.words.length} words)</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete set";del.onclick=()=>{if(confirm(`Delete set "${s.title}"?`)){state.charades=state.charades.filter(o=>o.id!==s.id);save();renderChList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt" style="color:var(--muted);">${s.words.map(esc).join(", ")}</div>`;box.appendChild(it);list.appendChild(box);});}
+$("wwAdd").onclick=()=>{const out=[],errors=[];$("wwPaste").value.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;const p=t.split("|").map(s=>s.trim());if(p.length<2||!p[0]||!p[1]){errors.push(`Line ${i+1}: need Category | PHRASE`);return;}out.push({id:uid(),category:p[0],phrase:p.slice(1).join("|").trim()});});const r=$("wwParse");r.innerHTML="";
+  if(out.length){state.wordwheel.push(...out);save();r.innerHTML=`<span class="ok">&#10004; Added ${out.length} puzzle${out.length>1?"s":""}.</span>`;$("wwPaste").value="";renderWWList();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!out.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("wwClearPaste").onclick=()=>{$("wwPaste").value="";$("wwParse").innerHTML="";};
+function renderWWList(){const list=$("wwList");list.innerHTML="";if(!state.wordwheel.length){list.innerHTML=`<div class="empty">No puzzles yet.</div>`;return;}
+  const box=document.createElement("div");box.className="listweek";box.appendChild(Object.assign(document.createElement("h3"),{innerHTML:`<span>Puzzles <span style="color:var(--muted);font-weight:600;">(${state.wordwheel.length})</span></span>`}));
+  state.wordwheel.forEach(p=>{const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt"><span class="badge">${esc(p.category)}</span>${esc(p.phrase)}</div>`;
+    const x=document.createElement("button");x.className="xbtn";x.textContent="Delete";x.onclick=()=>{state.wordwheel=state.wordwheel.filter(o=>o.id!==p.id);save();renderWWList();renderHub();};it.appendChild(x);box.appendChild(it);});
+  list.appendChild(box);}
+
+/* voyager setup */
+$("voyAdd").onclick=()=>{const out=[],errors=[];$("voyPaste").value.split(/\r?\n/).forEach((line,i)=>{const t=line.trim();if(!t||t.startsWith("#"))return;const p=t.split("|").map(s=>s.trim());
+  if(p.length<2||!p[0]||!p[1]){errors.push(`Line ${i+1}: need Reference | verse words | decoys`);return;}
+  const words=p[1].split(/\s+/).filter(Boolean);const decoys=(p[2]||"").split(/[,]+/).map(s=>s.trim()).filter(Boolean);
+  if(words.length<1){errors.push(`Line ${i+1}: no verse words`);return;}
+  out.push({id:uid(),reference:p[0],words,decoys});});const r=$("voyParse");r.innerHTML="";
+  if(out.length){state.voyager.push(...out);save();r.innerHTML=`<span class="ok">&#10004; Added ${out.length} verse${out.length>1?"s":""}.</span>`;$("voyPaste").value="";renderVoyList();renderHub();}
+  if(errors.length)r.innerHTML+=`<div class="err">Skipped ${errors.length}:\n${esc(errors.join("\n"))}</div>`;
+  if(!out.length&&!errors.length)r.innerHTML=`<span class="err">Nothing to add.</span>`;};
+$("voyClearPaste").onclick=()=>{$("voyPaste").value="";$("voyParse").innerHTML="";};
+function renderVoyToggles(){
+  $("voyFogPill").innerHTML=state.settings.voyFog?"&#127787;&#65039; Fog on":"&#127788;&#65039; Fog off";
+  $("voyFogPill").classList.toggle("on",state.settings.voyFog);
+  $("voyAlienPill").innerHTML=state.settings.voyAliens?"&#128126; On":"&#128126; Off";
+  $("voyAlienPill").classList.toggle("on",state.settings.voyAliens);
+  $("voyTwoPill").innerHTML=state.settings.voyTwoDevice?"&#128241; On":"&#128241; Off";
+  $("voyTwoPill").classList.toggle("on",state.settings.voyTwoDevice);
+  $("voyTwoNote").style.display=state.settings.voyTwoDevice?"block":"none";
+}
+$("voyFogPill").onclick=()=>{state.settings.voyFog=!state.settings.voyFog;save();renderVoyToggles();};
+$("voyAlienPill").onclick=()=>{state.settings.voyAliens=!state.settings.voyAliens;save();renderVoyToggles();};
+$("voyTwoPill").onclick=()=>{state.settings.voyTwoDevice=!state.settings.voyTwoDevice;save();renderVoyToggles();};
+function renderVoyList(){renderVoyToggles();const list=$("voyList");list.innerHTML="";if(!state.voyager.length){list.innerHTML=`<div class="empty">No verses yet.</div>`;return;}
+  state.voyager.forEach((v,idx)=>{const box=document.createElement("div");box.className="listweek";const head=document.createElement("h3");
+    head.innerHTML=`<span><span class="badge">Lvl ${idx+1}</span>${esc(v.reference)} <span style="color:var(--muted);font-weight:600;">(${v.words.length} words)</span></span>`;
+    const del=document.createElement("button");del.className="xbtn";del.textContent="Delete";del.onclick=()=>{if(confirm(`Delete "${v.reference}"?`)){state.voyager=state.voyager.filter(o=>o.id!==v.id);save();renderVoyList();renderHub();}};
+    head.appendChild(del);box.appendChild(head);
+    const it=document.createElement("div");it.className="litem";it.innerHTML=`<div class="lt">${esc(v.words.join(" "))}<div class="ans" style="color:var(--muted);">decoys: ${esc((v.decoys||[]).join(", ")||"(auto)")}</div></div>`;box.appendChild(it);list.appendChild(box);});}
+
+/* settings */
+$("setTimer").onchange=e=>{let v=Math.max(3,Math.min(120,+e.target.value||10));state.settings.timerSeconds=v;e.target.value=v;save();resetTimerDisplay();};
+$("setOrder").onchange=e=>{state.settings.order=e.target.value;save();};
+$("soundPill").onclick=()=>{state.settings.sound=!state.settings.sound;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);save();if(state.settings.sound)sBlip();};
+
+/* backup */
+$("exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="game-hub-backup.json";a.click();URL.revokeObjectURL(a.href);};
+$("importBtn").onclick=()=>$("importFile").click();
+$("importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.teams&&!d.questions)throw 0;
+  if(confirm("Import replaces your current teams and games. Continue?")){state=Object.assign({settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false}},d);ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
+$("clearAllBtn").onclick=()=>{if(confirm("Reset teams and reload the built-in games? Your added content will be removed (export first if unsure).")){localStorage.removeItem(LS);
+  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[],charades:[],wordwheel:[],voyager:[]};
+  applyDefaults();save();renderSetup();renderScoreboard();renderHub();}};
+
+function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();renderChList();renderWWList();renderVoyList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
+
+/* keyboard (quiz) */
+addEventListener("keydown",e=>{if(screen!=="quiz")return;const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea"||tag==="select")return;
+  if(e.code==="Space"){e.preventDefault();if(quizPlay.phase==="idle"||quizPlay.phase==="expired")startTimer();else if(quizPlay.phase==="running")revealQuiz();else if(quizPlay.phase==="revealed")quizNav(1);return;}
+  if(e.code==="ArrowRight")quizNav(1);if(e.code==="ArrowLeft")quizNav(-1);if(e.key==="r"||e.key==="R")revealQuiz();});
+["touchend","pointerdown","click"].forEach(ev=>document.addEventListener(ev,()=>AC(),{passive:true}));
+
+/* ==================== DEFAULT CONTENT ==================== */
+const DEFAULT_QUESTIONS=[
+{id:"a1-01",type:"mc",week:"Acts 1",text:"Who does the writer address at the start of Acts?",choices:["Theophilus","Timothy","Titus","Thomas"],correct:[0]},
+{id:"a1-02",type:"mc",week:"Acts 1",text:"Acts 1:1 says the \"first book\" told all that Jesus began to do and to...",choices:["teach","build","destroy","sail"],correct:[0]},
+{id:"a1-03",type:"mc",week:"Acts 1",text:"For how many days did Jesus appear to the apostles after his suffering?",choices:["40 days","3 days","7 days","12 days"],correct:[0]},
+{id:"a1-04",type:"mc",week:"Acts 1",text:"Jesus spoke to the apostles about the kingdom of...",choices:["God","Rome","David","Egypt"],correct:[0]},
+{id:"a1-05",type:"tf",week:"Acts 1",text:"Jesus told the apostles to leave Jerusalem right away.",choices:["True","False"],correct:[1]},
+{id:"a1-06",type:"mc",week:"Acts 1",text:"What were the apostles told to wait for in Jerusalem?",choices:["The promise of the Father","A new king","A pile of gold","A ship"],correct:[0]},
+{id:"a1-07",type:"mc",week:"Acts 1",text:"\"John baptized with water, but you will be baptized with the ___.\"",choices:["Holy Spirit","fire only","oil","rain"],correct:[0]},
+{id:"a1-08",type:"tf",week:"Acts 1",text:"The apostles asked Jesus if He would restore the kingdom to Israel.",choices:["True","False"],correct:[0]},
+{id:"a1-09",type:"mc",week:"Acts 1",text:"Jesus said the times and seasons are fixed by whose authority?",choices:["The Father's","The angels'","Their own","Caesar's"],correct:[0]},
+{id:"a1-10",type:"mc",week:"Acts 1",text:"The apostles would receive power when what came upon them?",choices:["The Holy Spirit","An army","Great riches","A crown"],correct:[0]},
+{id:"a1-11",type:"fb",week:"Acts 1",text:"\"You will be my ___ in Jerusalem and in all Judea and Samaria.\"",answers:["witnesses","my witnesses"]},
+{id:"a1-12",type:"mc",week:"Acts 1",text:"The witnesses would go to Jerusalem, Judea, Samaria, and to the...",choices:["end of the earth","top of the mountain","Jordan River","temple gate"],correct:[0]},
+{id:"a1-13",type:"mc",week:"Acts 1",text:"How did Jesus leave the earth in Acts 1:9?",choices:["A cloud took Him up","He walked away","A chariot of fire","He left at night"],correct:[0]},
+{id:"a1-14",type:"tf",week:"Acts 1",text:"Two men in white robes appeared as the apostles gazed into heaven.",choices:["True","False"],correct:[0]},
+{id:"a1-15",type:"mc",week:"Acts 1",text:"What did the two men call the apostles?",choices:["Men of Galilee","Men of Judea","Sons of Thunder","Friends of Rome"],correct:[0]},
+{id:"a1-16",type:"mc",week:"Acts 1",text:"The two men said Jesus would come back in what way?",choices:["The same way He went into heaven","As a baby again","As a roaring lion","In total secret"],correct:[0]},
+{id:"a1-17",type:"mc",week:"Acts 1",text:"From which mount did the apostles return to Jerusalem?",choices:["Olivet (Mount of Olives)","Mount Sinai","Mount Zion","Mount Carmel"],correct:[0]},
+{id:"a1-18",type:"fb",week:"Acts 1",text:"The trip back to Jerusalem was a \"___ day's journey\" away.",answers:["Sabbath"]},
+{id:"a1-19",type:"mc",week:"Acts 1",text:"Where did the apostles gather and stay to pray?",choices:["The upper room","The temple courts","A fishing boat","A cave"],correct:[0]},
+{id:"a1-20",type:"mc",week:"Acts 1",text:"Who is named as praying with the apostles?",choices:["Mary, the mother of Jesus","Pontius Pilate","John the Baptist","King Herod"],correct:[0]},
+{id:"a1-21",type:"mc",week:"Acts 1",text:"About how many people were gathered together?",choices:["About 120","About 12","About 500","About 5,000"],correct:[0]},
+{id:"a1-22",type:"mc",week:"Acts 1",text:"Who stood up among the brothers to speak?",choices:["Peter","James","Paul","Andrew"],correct:[0]},
+{id:"a1-23",type:"mc",week:"Acts 1",text:"What was the field connected to Judas called?",choices:["Field of Blood (Akeldama)","Field of Peace","Field of Bones","Garden of Eden"],correct:[0]},
+{id:"a1-24",type:"tf",week:"Acts 1",text:"The apostles picked the new apostle by a show of hands.",choices:["True","False"],correct:[1]},
+{id:"a1-25",type:"mc",week:"Acts 1",text:"Who was chosen to replace Judas among the Twelve?",choices:["Matthias","Barsabbas (Justus)","Stephen","Barnabas"],correct:[0]},
+{id:"a2-01",type:"mc",week:"Acts 2",text:"On what day did the Holy Spirit come upon the believers?",choices:["Passover","Pentecost","The Sabbath","Christmas"],correct:[1]},
+{id:"a2-02",type:"mc",week:"Acts 2",text:"What did the sound from heaven sound like?",choices:["A mighty rushing wind","A trumpet blast","Rolling thunder","A quiet whisper"],correct:[0]},
+{id:"a2-03",type:"mc",week:"Acts 2",text:"What appeared and rested on each believer?",choices:["Bright clouds","Golden crowns","Tongues as of fire","White doves"],correct:[2]},
+{id:"a2-04",type:"mc",week:"Acts 2",text:"What were the believers suddenly able to do?",choices:["Become invisible","Heal every sickness","Speak in other languages","Walk on water"],correct:[2]},
+{id:"a2-05",type:"mc",week:"Acts 2",text:"Who stood up and preached to the crowd?",choices:["John","James","Paul","Peter"],correct:[3]},
+{id:"a2-06",type:"fb",week:"Acts 2",text:"About how many people were added to the church that day?",answers:["3000","3,000","three thousand","about three thousand"]},
+{id:"a2-07",type:"tf",week:"Acts 2",text:"The believers shared what they owned with one another.",choices:["True","False"],correct:[0]},
+{id:"a2-08",type:"tf",week:"Acts 2",text:"Peter agreed that the believers were drunk on wine.",choices:["True","False"],correct:[1]},
+{id:"a2-09",type:"mc",week:"Acts 2",text:"What time did Peter say it was, proving they weren't drunk?",choices:["Noon","The third hour (9 a.m.)","The sixth hour","Midnight"],correct:[1]},
+{id:"a2-10",type:"mc",week:"Acts 2",text:"Which prophet did Peter quote about God pouring out His Spirit?",choices:["Isaiah","Daniel","Joel","Jeremiah"],correct:[2]},
+{id:"a2-11",type:"fb",week:"Acts 2",text:"\"Everyone who calls upon the name of the ___ shall be saved.\"",answers:["Lord"]},
+{id:"a2-12",type:"mc",week:"Acts 2",text:"What two things did Peter tell the crowd to do?",choices:["Fast and pray","Repent and be baptized","Give away money","Travel to Rome"],correct:[1]},
+{id:"a2-13",type:"fb",week:"Acts 2",text:"Those who repented would receive the gift of the ___ ___.",answers:["Holy Spirit"]},
+{id:"a2-14",type:"mc",week:"Acts 2",text:"When the crowd heard Peter's message, they were \"cut to the ___.\"",choices:["bone","core","heart","quick"],correct:[2]},
+{id:"a2-15",type:"mc",week:"Acts 2",text:"Peter said God has made Jesus both Lord and ___.",choices:["Christ","King","Priest","Judge"],correct:[0]},
+{id:"a2-16",type:"fb",week:"Acts 2",text:"They devoted themselves to teaching, fellowship, breaking of bread, and the ___.",answers:["prayers","prayer","the prayers"]},
+{id:"a2-17",type:"tf",week:"Acts 2",text:"Day by day the Lord added to their number those being saved.",choices:["True","False"],correct:[0]},
+{id:"a2-18",type:"mc",week:"Acts 2",text:"Some mocked, saying the believers were filled with what?",choices:["Fear","New wine","Pride","Anger"],correct:[1]},
+{id:"a2-19",type:"mc",week:"Acts 2",text:"The crowd was amazed the speakers came from which region?",choices:["Rome","Egypt","Samaria","Galilee"],correct:[3]},
+{id:"a2-20",type:"fb",week:"Acts 2",text:"Jesus was delivered up by the definite plan and ___ of God.",answers:["foreknowledge"]},
+{id:"a2-21",type:"mc",week:"Acts 2",text:"Whose tomb did Peter say was still with them that day?",choices:["Moses'","David's","Abraham's","Elijah's"],correct:[1]},
+{id:"a2-22",type:"fb",week:"Acts 2",text:"Peter quoted, \"The Lord said to my Lord, sit at my ___ hand.\"",answers:["right"]},
+{id:"a2-23",type:"fb",week:"Acts 2",text:"Peter urged them, \"Save yourselves from this ___ generation.\"",answers:["crooked"]},
+{id:"a2-24",type:"fb",week:"Acts 2",text:"\"The promise is for you and for your ___ and for all who are far off.\"",answers:["children"]},
+{id:"a2-25",type:"mc",week:"Acts 2",text:"Where did the believers gather together day by day?",choices:["In the temple","In a boat","In the desert","In prison"],correct:[0]},
+{id:"gb-01",type:"mc",week:"Gospel Basics",text:"\"For God so loved the world, that he gave his only ___.\"",choices:["angel","Son","prophet","servant"],correct:[1]},
+{id:"gb-02",type:"fb",week:"Gospel Basics",text:"Jesus told Nicodemus, \"You must be born ___.\"",answers:["again","anew"]},
+{id:"gb-03",type:"mc",week:"Gospel Basics",text:"In what town was Jesus born?",choices:["Nazareth","Jerusalem","Bethlehem","Capernaum"],correct:[2]},
+{id:"gb-04",type:"mc",week:"Gospel Basics",text:"Jesus said, \"I am the way, and the truth, and the ___.\"",choices:["light","door","bread","life"],correct:[3]},
+{id:"gb-05",type:"tf",week:"Gospel Basics",text:"Jesus rose from the dead on the third day.",choices:["True","False"],correct:[0]},
+{id:"gb-06",type:"mc",week:"Gospel Basics",text:"Who baptized Jesus in the Jordan River?",choices:["Peter","John the Baptist","Elijah","Moses"],correct:[1]},
+{id:"gb-07",type:"mc",week:"Gospel Basics",text:"\"No one comes to the Father except through ___.\"",choices:["Moses","the temple","me (Jesus)","the law"],correct:[2]},
+{id:"gb-08",type:"mc",week:"Gospel Basics",text:"How many disciples did Jesus choose?",choices:["Seven","Twelve","Ten","Three"],correct:[1]},
+{id:"gb-09",type:"mc",week:"Gospel Basics",text:"John called Jesus \"the ___ of God, who takes away the sin of the world.\"",choices:["Lion","Son","Lamb","Bread"],correct:[2]},
+{id:"gb-10",type:"fb",week:"Gospel Basics",text:"The shortest verse in the Bible says, \"Jesus ___.\"",answers:["wept"]},
+{id:"gb-11",type:"mc",week:"Gospel Basics",text:"Jesus said the Son of Man came to seek and to save the ___.",choices:["strong","proud","rich","lost"],correct:[3]},
+{id:"gb-12",type:"mc",week:"Gospel Basics",text:"Who betrayed Jesus to the authorities?",choices:["Thomas","Judas","Andrew","Philip"],correct:[1]},
+{id:"gb-13",type:"mc",week:"Gospel Basics",text:"What was Jesus' first miracle?",choices:["Feeding the 5,000","Walking on water","Turning water into wine","Calming a storm"],correct:[2]},
+{id:"gb-14",type:"mc",week:"Gospel Basics",text:"Asked who Jesus was, Peter answered, \"You are the ___.\"",choices:["teacher","prophet","Christ","healer"],correct:[2]},
+{id:"gb-15",type:"fb",week:"Gospel Basics",text:"Jesus began preaching, \"Repent, for the kingdom of heaven is at ___.\"",answers:["hand"]},
+{id:"gb-16",type:"mc",week:"Gospel Basics",text:"In the Great Commission, Jesus said go and make ___ of all nations.",choices:["disciples","laws","temples","kings"],correct:[0]},
+{id:"gb-17",type:"mc",week:"Gospel Basics",text:"The greatest commandment is to love the Lord your God with all your ___.",choices:["strength only","heart","riches","words"],correct:[1]},
+{id:"gb-18",type:"mc",week:"Gospel Basics",text:"Jesus called himself \"the good ___,\" who lays down his life for the sheep.",choices:["teacher","king","servant","shepherd"],correct:[3]},
+{id:"gb-19",type:"fb",week:"Gospel Basics",text:"On the cross Jesus said, \"It is ___,\" and gave up his spirit.",answers:["finished"]},
+{id:"gb-20",type:"mc",week:"Gospel Basics",text:"Which disciple denied knowing Jesus three times?",choices:["John","Peter","James","Matthew"],correct:[1]},
+{id:"gb-21",type:"mc",week:"Gospel Basics",text:"\"The Son of Man came... to give his life as a ___ for many.\"",choices:["ransom","gift","lesson","sign"],correct:[0]},
+{id:"gb-22",type:"mc",week:"Gospel Basics",text:"In Mark, Jesus' first message was \"Repent and ___ in the gospel.\"",choices:["wait","rejoice","believe","be baptized"],correct:[2]},
+{id:"gb-23",type:"mc",week:"Gospel Basics",text:"Which disciple doubted until he saw Jesus' wounds?",choices:["Philip","Thomas","Judas","Peter"],correct:[1]},
+{id:"gb-24",type:"mc",week:"Gospel Basics",text:"On the cross Jesus prayed, \"Father, ___ them, for they know not what they do.\"",choices:["judge","save","forgive","remember"],correct:[2]},
+{id:"gb-25",type:"mc",week:"Gospel Basics",text:"After rising, Jesus walked with two disciples on the road to ___.",choices:["Jericho","Emmaus","Bethany","Damascus"],correct:[1]}
+];
+const DEFAULT_WHOAMI=[
+{id:"wa-01",week:"Bible Heroes",subject:"Moses",clues:["I was born to slaves but raised in a palace.","I ran away to the desert and became a shepherd.","God spoke to me from a bush that burned but was not consumed.","I stood before Pharaoh as God sent ten plagues.","I stretched out my hand and parted the Red Sea."]},
+{id:"wa-02",week:"Bible Heroes",subject:"Noah",clues:["God found me righteous in a corrupt generation.","I was given very unusual building instructions.","I built a huge boat out of gopher wood.","I brought the animals aboard two by two.","After my flood, God set a rainbow in the sky."]},
+{id:"wa-03",week:"Bible Heroes",subject:"David",clues:["I was the youngest of eight brothers.","I was a shepherd who played the harp.","I defeated a giant with a sling and a stone.","King Saul grew jealous and chased me.","I became the second king of Israel."]},
+{id:"wa-04",week:"Bible Heroes",subject:"Jonah",clues:["God gave me a job I really did not want.","I tried to sail away from what God told me to do.","A storm hit and I was thrown into the sea.","A great fish swallowed me for three days.","I finally preached to the city of Nineveh."]},
+{id:"wa-05",week:"Bible Heroes",subject:"Paul",clues:["I once persecuted Christians before a big change.","A blinding light stopped me on a road.","I met Jesus on the road to Damascus.","I became a missionary and started many churches.","I wrote many of the letters in the New Testament."]},
+{id:"wa-06",week:"Bible Heroes",subject:"Peter",clues:["I was a fisherman before I followed Jesus.","Jesus said I would become a fisher of men.","I walked on water toward Jesus, then began to sink.","On the night Jesus was arrested, I denied him three times.","I preached at Pentecost and three thousand were saved."]}
+];
+const DEFAULT_JEOPARDY=[
+{id:"jb-bible-basics-v3",title:"Bible Basics",
+single:[
+{name:"Old Testament",clues:[
+{value:100,q:"Who built an ark to survive the flood?",a:"Noah"},
+{value:200,q:"Who led the Israelites out of Egypt?",a:"Moses"},
+{value:300,q:"Who was thrown into the lions' den but wasn't harmed?",a:"Daniel"},
+{value:400,q:"What did God create on the very first day?",a:"Light"},
+{value:500,q:"Which strong man lost his strength when his hair was cut?",a:"Samson"}]},
+{name:"New Testament",clues:[
+{value:100,q:"In what town was Jesus born?",a:"Bethlehem"},
+{value:200,q:"Who baptized Jesus in the Jordan River?",a:"John the Baptist"},
+{value:300,q:"How many disciples did Jesus choose?",a:"Twelve"},
+{value:400,q:"Which disciple denied Jesus three times?",a:"Peter"},
+{value:500,q:"Who met Jesus on the Damascus road and wrote many letters?",a:"Paul"}]},
+{name:"Miracles of Jesus",clues:[
+{value:100,q:"Jesus turned water into what at a wedding?",a:"Wine"},
+{value:200,q:"Jesus fed 5,000 with five loaves and two of these.",a:"Fish"},
+{value:300,q:"Jesus calmed a storm on what body of water?",a:"The Sea of Galilee"},
+{value:400,q:"Jesus raised this man from the dead after four days.",a:"Lazarus"},
+{value:500,q:"Jesus healed a blind man who then washed in this pool.",a:"The pool of Siloam"}]},
+{name:"Animals & Nature",clues:[
+{value:100,q:"What kind of animal swallowed Jonah?",a:"A great fish"},
+{value:200,q:"What animal did Jesus ride into Jerusalem?",a:"A donkey"},
+{value:300,q:"What sign did God put in the sky after the flood?",a:"A rainbow"},
+{value:400,q:"In the garden of Eden, what creature tempted Eve?",a:"The serpent (snake)"},
+{value:500,q:"God provided this animal in a thicket so Abraham wouldn't sacrifice Isaac.",a:"A ram"}]},
+{name:"Bible Numbers",clues:[
+{value:100,q:"How many days and nights did it rain in Noah's flood?",a:"40"},
+{value:200,q:"How many people did Jesus feed with the loaves and fish?",a:"5,000"},
+{value:300,q:"On which day did God rest from creating?",a:"The seventh day"},
+{value:400,q:"How many books are in the whole Bible?",a:"66"},
+{value:500,q:"How many commandments did God give Moses on the mountain?",a:"Ten"}]}
+],
+double:[
+{name:"Kings of Israel",clues:[
+{value:200,q:"Who was the first king of Israel?",a:"Saul"},
+{value:400,q:"Which shepherd boy became king after defeating Goliath?",a:"David"},
+{value:600,q:"Who was the wisest king, the son of David?",a:"Solomon"},
+{value:800,q:"What did Solomon build for God in Jerusalem?",a:"The temple"},
+{value:1000,q:"Which queen visited Solomon to test his wisdom?",a:"The Queen of Sheba"}]},
+{name:"Parables of Jesus",clues:[
+{value:200,q:"A shepherd left 99 sheep to find how many lost ones?",a:"One"},
+{value:400,q:"A father joyfully welcomed home his lost (prodigal) what?",a:"Son"},
+{value:600,q:"A beaten man was helped by a 'Good' man from what region?",a:"Samaria (the Good Samaritan)"},
+{value:800,q:"In the parable of the sower, the best seed fell on this kind of soil.",a:"Good soil"},
+{value:1000,q:"The wise man built his house on rock instead of this.",a:"Sand"}]},
+{name:"Words of Jesus",clues:[
+{value:200,q:"'I am the ___ of the world,' said Jesus.",a:"Light"},
+{value:400,q:"'I am the good ___,' who lays down his life for the sheep.",a:"Shepherd"},
+{value:600,q:"'I am the ___ of life; whoever comes to me shall not hunger.'",a:"Bread"},
+{value:800,q:"Jesus said to love God and love your ___ as yourself.",a:"Neighbor"},
+{value:1000,q:"'I am the way, and the truth, and the ___.'",a:"Life"}]},
+{name:"Bible Places",clues:[
+{value:200,q:"In what garden did Jesus pray the night he was arrested?",a:"Gethsemane"},
+{value:400,q:"At what place, 'the place of a skull,' was Jesus crucified?",a:"Golgotha (Calvary)"},
+{value:600,q:"In what city did the Holy Spirit come at Pentecost?",a:"Jerusalem"},
+{value:800,q:"In what Galilean town did Jesus grow up?",a:"Nazareth"},
+{value:1000,q:"On what mountain did Moses receive the Ten Commandments?",a:"Mount Sinai"}]},
+{name:"People of Faith",clues:[
+{value:200,q:"Who was the mother of Jesus?",a:"Mary"},
+{value:400,q:"Which brother of Moses became the first high priest?",a:"Aaron"},
+{value:600,q:"Who interpreted Pharaoh's dreams and saved Egypt from famine?",a:"Joseph"},
+{value:800,q:"Which woman of Jericho hid the Israelite spies?",a:"Rahab"},
+{value:1000,q:"Which short tax collector climbed a sycamore tree to see Jesus?",a:"Zacchaeus"}]}
+],
+final:{category:"The Gospel",q:"According to John 3:16, God gave his only Son so that whoever believes in him should not perish but have this.",a:"Eternal life (everlasting life)"}
+}
+];
+const DEFAULT_CONCENTRATION=[
+{id:"cc-names-of-jesus",title:"Names of Jesus",image:"",pairs:[
+["Good Shepherd","Good Shepherd"],["Lamb of God","Lamb of God"],["Light of the World","Light of the World"],
+["Bread of Life","Bread of Life"],["King of Kings","King of Kings"],["Prince of Peace","Prince of Peace"],
+["Son of God","Son of God"],["Savior","Savior"],["Immanuel","Immanuel"],
+["The Word","The Word"],["Alpha and Omega","Alpha and Omega"],["The True Vine","The True Vine"]
+]},
+{id:"cc-ot-books",title:"Old Testament Books",image:"",pairs:[
+["Genesis","Genesis"],["Exodus","Exodus"],["Leviticus","Leviticus"],["Numbers","Numbers"],
+["Deuteronomy","Deuteronomy"],["Joshua","Joshua"],["Judges","Judges"],["Ruth","Ruth"],
+["Psalms","Psalms"],["Proverbs","Proverbs"],["Isaiah","Isaiah"],["Daniel","Daniel"]
+]},
+{id:"cc-nt-books",title:"New Testament Books",image:"",pairs:[
+["Matthew","Matthew"],["Mark","Mark"],["Luke","Luke"],["John","John"],
+["Acts","Acts"],["Romans","Romans"],["Galatians","Galatians"],["Ephesians","Ephesians"],
+["Philippians","Philippians"],["Hebrews","Hebrews"],["James","James"],["Revelation","Revelation"]
+]},
+{id:"cc-disciples",title:"The Twelve Disciples",image:"",pairs:[
+["Peter","Peter"],["Andrew","Andrew"],["James","James"],["John","John"],
+["Philip","Philip"],["Bartholomew","Bartholomew"],["Thomas","Thomas"],["Matthew","Matthew"],
+["Thaddaeus","Thaddaeus"],["Simon the Zealot","Simon the Zealot"],["Judas Iscariot","Judas Iscariot"],["James son of Alphaeus","James son of Alphaeus"]
+]},
+{id:"cc-places",title:"Bible Places",image:"",pairs:[
+["Bethlehem","Jesus was born here"],["Nazareth","Jesus grew up here"],["Jordan River","Where Jesus was baptized"],
+["Jericho","Its walls fell down"],["Red Sea","Moses parted these waters"],["Nineveh","Jonah was sent to preach here"],
+["Bethany","Hometown of Lazarus"],["Sea of Galilee","Jesus calmed its storm"],["Mount Sinai","Moses received the Ten Commandments"],
+["Egypt","Israel was enslaved here"],["Eden","The very first garden"],["Jerusalem","City of the temple"]
+]},
+{id:"cc-animals",title:"Animals of the Bible",image:"",pairs:[
+["Lamb","Lamb"],["Donkey","Donkey"],["Dove","Dove"],["Lion","Lion"],
+["Serpent","Serpent"],["Raven","Raven"],["Ram","Ram"],["Camel","Camel"],
+["Great Fish","Great Fish"],["Sheep","Sheep"],["Ox","Ox"],["Locust","Locust"]
+]}
+];
+const DEFAULT_BEATCLOCK=[
+{id:"bc-01",week:"Bible Lists",prompt:"Name the Twelve Disciples"},
+{id:"bc-02",week:"Bible Lists",prompt:"Name the four Gospels"},
+{id:"bc-03",week:"Bible Lists",prompt:"Name the Ten Commandments"},
+{id:"bc-04",week:"Bible Lists",prompt:"Name the Fruit of the Spirit"},
+{id:"bc-05",week:"Bible Lists",prompt:"Name the plagues of Egypt"},
+{id:"bc-06",week:"Bible Lists",prompt:"Name animals that were on Noah's ark"},
+{id:"bc-07",week:"Bible Lists",prompt:"Name miracles that Jesus did"},
+{id:"bc-08",week:"Bible Lists",prompt:"Name books of the Old Testament"},
+{id:"bc-09",week:"Bible Lists",prompt:"Name books of the New Testament"},
+{id:"bc-10",week:"Bible Lists",prompt:"Name the sons of Jacob (the twelve tribes)"},
+{id:"bc-11",week:"Bible Lists",prompt:"Name kings of Israel or Judah"},
+{id:"bc-12",week:"Bible Lists",prompt:"Name people in the Bible who prayed"},
+{id:"bc-13",week:"Bible Lists",prompt:"Name women in the Bible"},
+{id:"bc-14",week:"Bible Lists",prompt:"Name Old Testament prophets"},
+{id:"bc-15",week:"Bible Lists",prompt:"Name parables Jesus told"}
+];
+const DEFAULT_CHARADES=[
+{id:"ch-people",title:"Bible People",words:["Moses","Noah","David","Goliath","Jonah","Daniel","Mary","Peter","Paul","Adam and Eve","Samson","John the Baptist"]},
+{id:"ch-animals",title:"Bible Animals",words:["Lion","Donkey","Dove","Whale","Serpent","Sheep","Camel","Raven","Lamb","Fish","Ox","Locust"]},
+{id:"ch-stories",title:"Bible Stories & Actions",words:["Parting the Red Sea","Walking on water","Noah building the ark","David and Goliath","Jonah and the whale","Daniel in the lions' den","The Last Supper","Jesus washing feet","Feeding the five thousand","Zacchaeus in a tree","Rolling away the stone","Praying"]}
+];
+const DEFAULT_WORDWHEEL=[
+{id:"ww-01",category:"Bible Verse",phrase:"THE LORD IS MY SHEPHERD"},
+{id:"ww-02",category:"Bible Verse",phrase:"GOD IS LOVE"},
+{id:"ww-03",category:"Bible Person",phrase:"JOHN THE BAPTIST"},
+{id:"ww-04",category:"Bible Place",phrase:"THE GARDEN OF EDEN"},
+{id:"ww-05",category:"Bible Event",phrase:"PARTING THE RED SEA"},
+{id:"ww-06",category:"Bible Event",phrase:"WALKING ON WATER"},
+{id:"ww-07",category:"Bible Verse",phrase:"LOVE ONE ANOTHER"},
+{id:"ww-08",category:"Name for Jesus",phrase:"THE GOOD SHEPHERD"},
+{id:"ww-09",category:"Bible Book",phrase:"THE BOOK OF PSALMS"},
+{id:"ww-10",category:"Bible Event",phrase:"DANIEL IN THE LIONS DEN"}
+];
+const DEFAULT_VOYAGER=[
+{id:"vy-01",reference:"John 11:35",words:["Jesus","wept"],decoys:["cried","slept","prayed","laughed","sang","smiled"]},
+{id:"vy-02",reference:"1 John 4:8",words:["God","is","love"],decoys:["good","great","light","joy","kind","was"]},
+{id:"vy-03",reference:"Psalm 118:24",words:["This","is","the","day","the","Lord","has","made"],decoys:["night","God","king","will","was","gift","time","year"]},
+{id:"vy-04",reference:"Philippians 4:13",words:["I","can","do","all","things","through","Christ"],decoys:["some","want","God","faith","him","try","will","most"]},
+{id:"vy-05",reference:"Psalm 23:1",words:["The","Lord","is","my","shepherd","I","shall","not","want"],decoys:["God","king","friend","will","never","need","fear","guide","was"]},
+{id:"vy-06",reference:"John 3:16",words:["For","God","so","loved","the","world"],decoys:["gave","people","made","earth","much","that","Son","very"]},
+{id:"vy-07",reference:"Genesis 1:1",words:["In","the","beginning","God","created","the","heavens","and","the","earth"],decoys:["made","formed","water","light","stars","sea","sky","world","first","above"]}
+];
+
+/* ==================== INIT ==================== */
+load();
+renderScoreboard();
+showScreen("hub");
+</script>
+</body>
+</html>
