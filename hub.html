@@ -171,6 +171,7 @@
   .concfield{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;}
   .concfield input{border:none;background:transparent;color:var(--ink);font-size:15px;min-width:150px;padding:6px;}
   .concfield input:focus{outline:none;}
+  .concfield select{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:700;padding:6px 8px;min-width:150px;cursor:pointer;}
   #concGrid{transition:opacity .3s;}
   .concboard.peek #concGrid{opacity:0;pointer-events:none;}
   .concturn{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:2em;}
@@ -281,6 +282,11 @@
   .setup{flex:1;overflow:auto;padding:22px;}
   .setup h2{font-size:22px;margin:0 0 12px;display:flex;align-items:center;gap:10px;}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:20px;}
+  .syncnote{border-radius:14px;padding:12px 16px;margin:0 0 18px;font-weight:700;font-size:15px;line-height:1.45;border:2px solid var(--line);background:var(--bg2);}
+  .syncnote.warn{border-color:var(--gold);background:rgba(255,194,51,.1);color:#ffe7a6;}
+  .syncnote.ok{border-color:var(--green);background:rgba(52,211,153,.1);color:#c7f5e3;}
+  .syncnote b{color:var(--ink);}
+  .steps{margin:0 0 14px 20px;padding:0;line-height:1.6;color:var(--ink);font-weight:600;}
   .card p.hint{color:var(--muted);margin:0 0 12px;line-height:1.5;font-size:15px;}
   label.fld{display:block;font-weight:700;margin:12px 0 6px;font-size:14px;color:var(--muted);}
   input[type=text],input[type=number],select,textarea{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:12px 14px;font-size:16px;font-family:inherit;}
@@ -331,6 +337,7 @@
   <div class="hub" id="hub">
     <h1>Sunday School Game Hub</h1>
     <p class="sub">Pick a game. The scoreboard up top is shared &mdash; scores carry across every game.</p>
+    <div class="syncnote hidden" id="hubSync"></div>
     <div class="tiles" id="tiles"></div>
   </div>
 
@@ -409,7 +416,7 @@
     <div id="concPlay" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
       <div class="jeohd" style="padding:12px 16px 0;">
         <div><h2 id="concTitle">Concentration</h2><div class="roundlabel" id="concStatusTop"></div></div>
-        <div class="concfield"><span style="color:var(--muted);font-weight:700;">&#128247; image:</span><input type="text" id="concImgInput" placeholder="e.g. shepherd.jpg"><button class="sbtn" id="concSetImg">Load</button></div>
+        <div class="concfield"><span style="color:var(--muted);font-weight:700;white-space:nowrap;">&#128247; Picture:</span><select id="concImgSelect"><option>Finding pictures&hellip;</option></select><input type="text" id="concImgInput" class="hidden" placeholder="e.g. shepherd.jpg"><button class="sbtn hidden" id="concSetImg">Load</button></div>
       </div>
       <div class="concstage">
         <div class="concturn" id="concTurn"></div>
@@ -661,13 +668,28 @@
     </div>
 
     <div class="card">
-      <h2>&#128190; Backup &amp; Transfer</h2>
-      <p class="hint">Everything saves in this browser automatically. Export to back up or move to another device.</p>
+      <h2>&#127760; Save your games to the website</h2>
+      <div class="syncnote" id="setupSync">Checking the website&hellip;</div>
+      <p class="hint">Games you add or change here are saved on this computer first. To put them on the website so every computer gets them:</p>
+      <ol class="steps">
+        <li>Click <b>Download games.json</b>.</li>
+        <li>Upload that file to your GitHub repo, in the same folder as <b>hub.html</b>, replacing the old one.</li>
+        <li>Wait a few minutes, then refresh. Every computer now loads these games.</li>
+      </ol>
       <div class="row">
-        <button class="sbtn" id="exportBtn">Export to file</button>
+        <button class="sbtn" id="siteExportBtn">Download games.json</button>
+        <button class="sbtn ghost hidden" id="undoSyncBtn">Undo last website load</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>&#128190; Other tools</h2>
+      <p class="hint">A full backup includes your teams and scores. &ldquo;Start fresh&rdquo; clears this computer and reloads the games from the website (or the built-in games if there&rsquo;s no games.json yet).</p>
+      <div class="row">
+        <button class="sbtn ghost" id="exportBtn">Full backup to file</button>
         <button class="sbtn ghost" id="importBtn">Import from file</button>
         <input type="file" id="importFile" accept=".json" class="hidden">
-        <button class="sbtn danger" id="clearAllBtn">Reset to built-in games</button>
+        <button class="sbtn danger" id="clearAllBtn">Start fresh</button>
       </div>
     </div>
   </div>
@@ -718,7 +740,54 @@ let state={
 };
 let screen="hub";
 
-function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
+/* ---------- GAMES FILE (games.json on the website) ---------- */
+const CONTENT_KEYS=["questions","whoami","jeopardy","concentration","beatclock","charades","wordwheel","voyager"];
+const SITE_FILE="games.json", LS_BACKUP=LS+".beforeSiteLoad";
+const DEFAULT_SETTINGS={timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false};
+function gameSettings(){const {sound,...rest}=state.settings||{};return rest;}   // sound on/off stays per-computer
+function contentSnapshot(){const o={settings:gameSettings()};CONTENT_KEYS.forEach(k=>o[k]=state[k]);return JSON.stringify(o);}
+let lastSnap=null, siteStatus="checking", siteUpdated=0;
+function save(){
+  const snap=contentSnapshot();
+  if(lastSnap!==null&&snap!==lastSnap){state.editedAt=Date.now();if(siteStatus!=="checking"){siteStatus=siteUpdated?"local-newer":"none";setTimeout(renderSync,0);}}
+  lastSnap=snap;
+  try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}
+}
+function applyGamesFile(file){
+  try{localStorage.setItem(LS_BACKUP,JSON.stringify({savedAt:Date.now(),state}));}catch(e){}   // safety copy before replacing
+  CONTENT_KEYS.forEach(k=>{if(Array.isArray(file[k]))state[k]=file[k];});
+  state.settings=Object.assign({},DEFAULT_SETTINGS,file.settings||{},{sound:state.settings.sound});
+  if(file.defaultsVersion)state.defaultsVersion=file.defaultsVersion;
+  ensureArrays();
+  lastSnap=contentSnapshot();state.editedAt=0;
+  applyDefaults();save();   // if built-in games were added since the file was made, they count as a local change
+}
+function syncFromSite(){
+  fetch(SITE_FILE,{cache:"no-store"}).then(r=>r.ok?r.json():null).then(file=>{
+    if(!file||!Array.isArray(file.questions)){siteStatus="none";renderSync();return;}
+    siteUpdated=Date.parse(file.updated)||1;
+    if(!state.editedAt||siteUpdated>=state.editedAt){
+      if(JSON.stringify(Object.fromEntries(CONTENT_KEYS.map(k=>[k,file[k]||[]])))!==JSON.stringify(Object.fromEntries(CONTENT_KEYS.map(k=>[k,state[k]]))))applyGamesFile(file);
+      else{state.editedAt=0;save();}
+      siteStatus=state.editedAt?"local-newer":"synced";
+      if(screen==="hub")renderHub();if(screen==="setup")renderSetup();
+    }else siteStatus="local-newer";
+    renderSync();
+  }).catch(()=>{siteStatus="offline";renderSync();});
+}
+function fmtDate(t){try{return new Date(t).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});}catch(e){return"";}}
+function renderSync(){
+  const hub=$("hubSync"),set=$("setupSync");if(!hub||!set)return;
+  let cls="",hubMsg="",setMsg="";
+  if(siteStatus==="synced"){cls="ok";setMsg=`&#10004; This computer matches the website (games.json from ${fmtDate(siteUpdated)}).`;}
+  else if(siteStatus==="local-newer"){cls="warn";hubMsg=setMsg=`&#9888; This computer has game changes that aren&rsquo;t on the website yet. <b>Setup &rarr; Download games.json</b>, then upload it to GitHub.`;}
+  else if(siteStatus==="none"){cls="warn";hubMsg=setMsg=`&#9888; No games.json on the website yet, so your games only live in this browser. <b>Setup &rarr; Download games.json</b>, then upload it to GitHub.`;}
+  else if(siteStatus==="offline"){setMsg=`Couldn&rsquo;t reach the website, so you&rsquo;re using the games saved on this computer.`;}
+  else setMsg="Checking the website&hellip;";
+  hub.className="syncnote "+cls+(hubMsg?"":" hidden");hub.innerHTML=hubMsg;
+  set.className="syncnote "+cls;set.innerHTML=setMsg;
+  $("undoSyncBtn").classList.toggle("hidden",!localStorage.getItem(LS_BACKUP));
+}
 function ensureArrays(){state.questions=state.questions||[];state.whoami=state.whoami||[];state.jeopardy=state.jeopardy||[];state.concentration=state.concentration||[];state.beatclock=state.beatclock||[];state.charades=state.charades||[];state.wordwheel=state.wordwheel||[];state.voyager=state.voyager||[];state.teams=state.teams||[];}
 function load(){
   try{const d=JSON.parse(localStorage.getItem(LS));
@@ -1082,6 +1151,31 @@ $("jeoChoose").onclick=showJeoPicker;
 /* ==================== CONCENTRATION ==================== */
 let concPlay={setId:null,image:"",tiles:[],up:[],busy:false,solved:false,active:null,peek:false};
 const CONC_TILES=25;
+/* Pictures: images/one.png, two.png, three.png ... are found automatically */
+const NUM_WORDS=(()=>{const ones=["one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"],tens=["twenty","thirty","forty","fifty"],out=ones.slice();
+  tens.forEach(t=>{out.push(t);if(t!=="fifty")ones.slice(0,9).forEach(o=>out.push(t+"-"+o));});return out;})();   // one ... fifty
+const CONC_DEFAULT_IMG="one.png", CONC_OTHER="__other__";
+let concPics=null;   // null = still looking
+function findConcPics(){
+  if(concPics)return Promise.resolve(concPics);
+  return Promise.all(NUM_WORDS.map(w=>new Promise(res=>{const im=new Image();im.onload=()=>res(w+".png");im.onerror=()=>res(null);im.src="images/"+w+".png";})))
+    .then(list=>{concPics=list.filter(Boolean);return concPics;});
+}
+function fillConcSelect(current){
+  const sel=$("concImgSelect");sel.innerHTML="";
+  const names=(concPics||[]).slice();
+  if(current&&!names.includes(current))names.unshift(current);   // a set's own custom picture
+  if(!concPics)sel.appendChild(new Option("Finding pictures\u2026",""));
+  names.forEach(n=>sel.appendChild(new Option(n,n)));
+  sel.appendChild(new Option("Other file name\u2026",CONC_OTHER));
+  sel.value=names.includes(current)?current:(names[0]||CONC_OTHER);
+  const other=sel.value===CONC_OTHER;$("concImgInput").classList.toggle("hidden",!other);$("concSetImg").classList.toggle("hidden",!other);
+}
+$("concImgSelect").onchange=e=>{const v=e.target.value,other=v===CONC_OTHER;
+  $("concImgInput").classList.toggle("hidden",!other);$("concSetImg").classList.toggle("hidden",!other);
+  if(other){$("concImgInput").value="";$("concImgInput").focus();return;}
+  $("concImgInput").value=v;concPlay.image=v;setConcImage(v);};
+findConcPics().then(()=>{if(!$("concPlay").classList.contains("hidden"))fillConcSelect(concPlay.image);});
 function concImgUrl(v){v=(v||"").trim();if(!v)return"";if(/^https?:\/\//i.test(v)||v.indexOf("/")>=0)return v;return"images/"+v;}
 function curConcSet(){return state.concentration.find(s=>s.id===concPlay.setId)||null;}
 function enterConcentration(){if(!state.concentration.length||state.concentration.length>1)showConcPicker();else loadConcSet(state.concentration[0].id);}
@@ -1090,7 +1184,7 @@ function showConcPicker(){concPlay.setId=null;$("concPicker").classList.remove("
   if(!state.concentration.length){list.innerHTML=`<div class="empty">No match sets yet — create one in Setup.</div>`;return;}
   state.concentration.forEach(s=>{const b=document.createElement("button");b.className="jeopick";b.textContent=s.title;b.onclick=()=>loadConcSet(s.id);list.appendChild(b);});
 }
-function loadConcSet(id){concPlay.setId=id;const s=curConcSet();concPlay.image=s&&s.image?s.image:"";$("concImgInput").value=concPlay.image;
+function loadConcSet(id){concPlay.setId=id;const s=curConcSet();concPlay.image=s&&s.image?s.image:CONC_DEFAULT_IMG;$("concImgInput").value=concPlay.image;fillConcSelect(concPlay.image);
   $("concPicker").classList.add("hidden");$("concPlay").classList.remove("hidden");$("concControls").style.visibility="visible";
   newConcGame();}
 function buildConcFaces(){
@@ -1104,7 +1198,7 @@ function buildConcFaces(){
 }
 function setConcImage(value){
   const url=concImgUrl(value);const img=$("concImg"),ph=$("concImgPh");
-  if(!url){img.style.backgroundImage="none";ph.style.display="flex";ph.textContent="Type an image filename above (from your repo's images folder) and press Load.";return;}
+  if(!url){img.style.backgroundImage="none";ph.style.display="flex";ph.textContent="Pick a picture from the list above.";return;}
   ph.style.display="flex";ph.textContent="Loading "+value+"\u2026";img.style.backgroundImage="none";
   const test=new Image();
   test.onload=()=>{img.style.backgroundImage=`url("${url}")`;ph.style.display="none";};
@@ -1757,14 +1851,20 @@ $("soundPill").onclick=()=>{state.settings.sound=!state.settings.sound;$("soundP
 
 /* backup */
 $("exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="game-hub-backup.json";a.click();URL.revokeObjectURL(a.href);};
+$("siteExportBtn").onclick=()=>{
+  const o={updated:new Date().toISOString(),note:"Game Hub games. Upload this file next to hub.html in the GitHub repo.",defaultsVersion:state.defaultsVersion||DEFAULTS_VERSION,settings:gameSettings()};
+  CONTENT_KEYS.forEach(k=>o[k]=state[k]);
+  const blob=new Blob([JSON.stringify(o,null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=SITE_FILE;a.click();URL.revokeObjectURL(a.href);
+};
+$("undoSyncBtn").onclick=()=>{try{const b=JSON.parse(localStorage.getItem(LS_BACKUP));if(!b||!b.state)return;
+  if(!confirm(`Put back the games this computer had before the website version loaded (${fmtDate(b.savedAt)})?`))return;
+  state=b.state;ensureArrays();lastSnap=null;state.editedAt=Date.now();lastSnap=contentSnapshot();localStorage.removeItem(LS_BACKUP);save();siteStatus="local-newer";renderSetup();renderScoreboard();renderSync();alert("Restored. Download games.json and upload it if you want these on the website.");}catch(e){}};
 $("importBtn").onclick=()=>$("importFile").click();
 $("importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.teams&&!d.questions)throw 0;
-  if(confirm("Import replaces your current teams and games. Continue?")){state=Object.assign({settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false}},d);ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
-$("clearAllBtn").onclick=()=>{if(confirm("Reset teams and reload the built-in games? Your added content will be removed (export first if unsure).")){localStorage.removeItem(LS);
-  state={teams:[{name:"Red Team",color:TEAM_COLORS[0],score:0},{name:"Blue Team",color:TEAM_COLORS[1],score:0},{name:"Green Team",color:TEAM_COLORS[2],score:0}],settings:{timerSeconds:10,order:"shuffle",sound:true,voyFog:true,voyAliens:true,voyTwoDevice:false},questions:[],whoami:[],jeopardy:[],concentration:[],beatclock:[],charades:[],wordwheel:[],voyager:[]};
-  applyDefaults();save();renderSetup();renderScoreboard();renderHub();}};
+  if(confirm("Import replaces your current games (and teams, if the file has them). Continue?")){const keepTeams=state.teams,keepSettings=state.settings;state=Object.assign({},d,{teams:d.teams||keepTeams,settings:Object.assign({},DEFAULT_SETTINGS,keepSettings,d.settings||{})});delete state.updated;delete state.note;ensureArrays();save();renderSetup();renderScoreboard();alert("Imported!");}}catch(err){alert("That file doesn't look like a Game Hub backup.");}e.target.value="";};rd.readAsText(f);};
+$("clearAllBtn").onclick=()=>{if(confirm("Clear this computer and reload the games from the website? Teams and scores reset too. Changes you haven't uploaded will be lost (use Full backup first if unsure).")){localStorage.removeItem(LS);location.reload();}};
 
-function renderSetup(){renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();renderChList();renderWWList();renderVoyList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
+function renderSetup(){renderSync();renderTeamCountPills();renderTeamEditors();renderQBank();renderWList();renderJList();renderCList();renderBCList();renderChList();renderWWList();renderVoyList();$("setTimer").value=state.settings.timerSeconds;$("setOrder").value=state.settings.order;$("soundPill").innerHTML=state.settings.sound?"&#128266; On":"&#128263; Off";$("soundPill").classList.toggle("on",state.settings.sound);}
 
 /* keyboard (quiz) */
 addEventListener("keydown",e=>{if(screen!=="quiz")return;const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea"||tag==="select")return;
@@ -2011,8 +2111,10 @@ const DEFAULT_VOYAGER=[
 
 /* ==================== INIT ==================== */
 load();
+lastSnap=contentSnapshot();
 renderScoreboard();
 showScreen("hub");
+syncFromSite();
 </script>
 </body>
 </html>
