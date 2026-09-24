@@ -1157,10 +1157,11 @@ const NUM_WORDS=(()=>{const ones=["one","two","three","four","five","six","seven
   tens.forEach(t=>{out.push(t);if(t!=="fifty")ones.slice(0,9).forEach(o=>out.push(t+"-"+o));});return out;})();   // one ... fifty
 const CONC_DEFAULT_IMG="one.png", CONC_OTHER="__other__";
 let concPics=null;   // null = still looking
+let concStamp=Date.now();   // added to picture addresses so the browser never reuses an old "not found"
 function probeImg(name,stamp){return new Promise(res=>{const im=new Image();im.onload=()=>res(name);im.onerror=()=>res(null);im.src="images/"+name+"?v="+stamp;});}
 function findConcPics(force){
   if(concPics&&!force)return Promise.resolve(concPics);
-  const stamp=Date.now();   // skip any stale cached "not found" answers
+  const stamp=concStamp=Date.now();   // skip any stale cached "not found" answers
   return Promise.all(NUM_WORDS.map(w=>probeImg(w+".png",stamp))).then(async list=>{
     // For missing numbers near the ones you have, also try common near-misses: .jpg, .jpeg, .PNG, Capitalized
     let last=-1;list.forEach((n,i)=>{if(n)last=i;});
@@ -1186,7 +1187,7 @@ $("concImgSelect").onchange=e=>{const v=e.target.value,other=v===CONC_OTHER;
 findConcPics().then(()=>{if(!$("concPlay").classList.contains("hidden"))fillConcSelect(concPlay.image);});
 $("concRescan").onclick=()=>{const btn=$("concRescan");btn.disabled=true;btn.innerHTML="&hellip;";
   findConcPics(true).then(list=>{fillConcSelect(concPlay.image);btn.disabled=false;btn.innerHTML="&#8635;";btn.title=`Found ${list.length} picture${list.length===1?"":"s"}. Click to look again.`;});};
-function concImgUrl(v){v=(v||"").trim();if(!v)return"";if(/^https?:\/\//i.test(v)||v.indexOf("/")>=0)return v;return"images/"+v;}
+function concImgUrl(v){v=(v||"").trim();if(!v)return"";if(/^https?:\/\//i.test(v)||v.indexOf("/")>=0)return v;return"images/"+v+"?v="+concStamp;}
 function curConcSet(){return state.concentration.find(s=>s.id===concPlay.setId)||null;}
 function enterConcentration(){if(!state.concentration.length||state.concentration.length>1)showConcPicker();else loadConcSet(state.concentration[0].id);}
 function showConcPicker(){concPlay.setId=null;$("concPicker").classList.remove("hidden");$("concPlay").classList.add("hidden");$("concControls").style.visibility="hidden";
@@ -1212,7 +1213,7 @@ function setConcImage(value){
   ph.style.display="flex";ph.textContent="Loading "+value+"\u2026";img.style.backgroundImage="none";
   const test=new Image();
   test.onload=()=>{img.style.backgroundImage=`url("${url}")`;ph.style.display="none";};
-  test.onerror=()=>{img.style.backgroundImage="none";ph.style.display="flex";ph.innerHTML=`Couldn't find <b>${esc(url)}</b><br>Check the spelling and CAPITALIZATION — it must match your file exactly (e.g. <b>Noah.png</b>, not noah.png).`;};
+  test.onerror=()=>{img.style.backgroundImage="none";ph.style.display="flex";ph.innerHTML=`Couldn't load <b>${esc(url.split("?")[0])}</b><br>Check the spelling and CAPITALIZATION — it must match your file exactly (e.g. <b>Noah.png</b>, not noah.png).`;};
   test.src=url;
 }
 function newConcGame(){
