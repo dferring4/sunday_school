@@ -826,7 +826,7 @@ function showScreen(name){
   $("brandText").textContent=titles[name]||"Game Hub";
   if(name==="hub")renderHub();
   if(name!=="quiz"){stopTimer(true);$("quizStartOverlay").classList.remove("show");}
-  if(name==="quiz"){buildQuizOrder();renderQuiz();openTurnPicker();}
+  if(name==="quiz"){buildQuizOrder();openTurnPicker();renderQuiz();}
   if(name==="whoami"){buildWhoOrder();renderWho();}
   if(name==="jeopardy")enterJeopardy();
   if(name==="concentration")enterConcentration();
@@ -866,7 +866,7 @@ function renderTurn(){const i=turnTeam(),t=state.teams[i],box=$("turnBox");
   const r=quizPlay.results[quizPlay.index];box.querySelector("small").textContent=r&&r.scored?"Answered by":"Up now";box.querySelector("span").style.visibility=r&&r.scored?"hidden":"visible";}
 function openTurnPicker(){
   teamAwardBar($("quizStartTeams"),i=>{const n=state.teams.length;quizPlay.start=((i-scoredCount())%n+n)%n;
-    $("quizStartOverlay").classList.remove("show");AC();renderTurn();});
+    $("quizStartOverlay").classList.remove("show");AC();renderTurn();if(quizPlay.phase==="idle")startTimer();});
   $("quizStartOverlay").classList.add("show");
 }
 $("turnBox").onclick=()=>{const r=quizPlay.results[quizPlay.index];if(r&&r.scored)return;openTurnPicker();};
@@ -882,11 +882,12 @@ function renderQuiz(){
   const r=quizPlay.results[quizPlay.index];
   if(r&&r.scored){quizPlay.phase="answered";paintResult(false);}   // coming back to a question already played: show result, no re-scoring
   quizButtons();renderTurn();
+  if(!(r&&r.scored)&&!$("quizStartOverlay").classList.contains("show"))startTimer();   // timer starts on its own
 }
 function quizButtons(){const q=curQ(),has=!!q,ph=quizPlay.phase,fb=has&&q.type==="fb";
   $("quiz").classList.toggle("locked",ph==="answered"||ph==="revealed");
-  $("startBtn").disabled=!has||ph!=="idle";
-  $("startBtn").textContent="Start Timer";
+  $("startBtn").disabled=!has||(ph!=="idle"&&ph!=="running");
+  $("startBtn").textContent=ph==="running"?"Restart Timer":"Start Timer";
   $("revealBtn").classList.toggle("hidden",fb&&ph==="revealed");
   $("revealBtn").disabled=!has||ph==="answered"||ph==="revealed";
   $("revealBtn").textContent=fb?"Reveal Answer":"Show Answer (no points)";
@@ -894,7 +895,7 @@ function quizButtons(){const q=curQ(),has=!!q,ph=quizPlay.phase,fb=has&&q.type==
   $("judgeWrong").classList.toggle("hidden",!(fb&&ph==="revealed"));
   $("prevBtn").disabled=quizPlay.index<=0;$("nextBtn").disabled=quizPlay.index>=quizPlay.order.length-1;
 }
-function startTimer(){const q=curQ();if(!q||quizPlay.phase!=="idle")return;AC();stopTimer(true);quizPlay.phase="running";quizPlay.timeLeft=state.settings.timerSeconds;
+function startTimer(){const q=curQ();if(!q||(quizPlay.phase!=="idle"&&quizPlay.phase!=="running"))return;AC();stopTimer(true);quizPlay.phase="running";quizPlay.timeLeft=state.settings.timerSeconds;
   const w=$("timerwrap");w.classList.add("running");w.classList.remove("expired","low");$("timebanner").textContent="";drawTimer();quizButtons();
   quizPlay.handle=setInterval(()=>{quizPlay.timeLeft--;if(quizPlay.timeLeft<=0){quizPlay.timeLeft=0;drawTimer();expire();return;}drawTimer();quizPlay.timeLeft<=3?sTickLow():sTick();},1000);sTick();}
 function drawTimer(){const tot=state.settings.timerSeconds;$("timernum").textContent=quizPlay.timeLeft;const frac=Math.max(0,quizPlay.timeLeft/tot);$("ring").style.strokeDashoffset=(RING_LEN*(1-frac)).toFixed(1);$("timerwrap").classList.toggle("low",quizPlay.timeLeft<=3);}
