@@ -1,13 +1,15 @@
 {
- "updated": "2026-09-24T02:05:18.267Z",
+ "updated": "2026-09-29T21:16:59.820Z",
  "note": "Game Hub games. Upload this file next to hub.html in the GitHub repo.",
- "defaultsVersion": 8,
+ "defaultsVersion": 9,
  "settings": {
   "timerSeconds": 10,
   "order": "shuffle",
   "voyFog": true,
   "voyAliens": true,
-  "voyTwoDevice": false
+  "voyTwoDevice": false,
+  "hpMin": 45,
+  "hpMax": 120
  },
  "questions": [
   {
@@ -907,6 +909,139 @@
    ],
    "correct": [
     1
+   ]
+  },
+  {
+   "id": "a1-11",
+   "type": "fb",
+   "week": "Acts 1",
+   "text": "\"You will be my ___ in Jerusalem and in all Judea and Samaria.\"",
+   "answers": [
+    "witnesses",
+    "my witnesses"
+   ]
+  },
+  {
+   "id": "a1-18",
+   "type": "fb",
+   "week": "Acts 1",
+   "text": "The trip back to Jerusalem was a \"___ day's journey\" away.",
+   "answers": [
+    "Sabbath"
+   ]
+  },
+  {
+   "id": "a2-06",
+   "type": "fb",
+   "week": "Acts 2",
+   "text": "About how many people were added to the church that day?",
+   "answers": [
+    "3000",
+    "3,000",
+    "three thousand",
+    "about three thousand"
+   ]
+  },
+  {
+   "id": "a2-11",
+   "type": "fb",
+   "week": "Acts 2",
+   "text": "\"Everyone who calls upon the name of the ___ shall be saved.\"",
+   "answers": [
+    "Lord"
+   ]
+  },
+  {
+   "id": "a2-13",
+   "type": "fb",
+   "week": "Acts 2",
+   "text": "Those who repented would receive the gift of the ___ ___.",
+   "answers": [
+    "Holy Spirit"
+   ]
+  },
+  {
+   "id": "a2-16",
+   "type": "fb",
+   "week": "Acts 2",
+   "text": "They devoted themselves to teaching, fellowship, breaking of bread, and the ___.",
+   "answers": [
+    "prayers",
+    "prayer",
+    "the prayers"
+   ]
+  },
+  {
+   "id": "a2-20",
+   "type": "fb",
+   "week": "Acts 2",
+   "text": "Jesus was delivered up by the definite plan and ___ of God.",
+   "answers": [
+    "foreknowledge"
+   ]
+  },
+  {
+   "id": "a2-22",
+   "type": "fb",
+   "week": "Acts 2",
+   "text": "Peter quoted, \"The Lord said to my Lord, sit at my ___ hand.\"",
+   "answers": [
+    "right"
+   ]
+  },
+  {
+   "id": "a2-23",
+   "type": "fb",
+   "week": "Acts 2",
+   "text": "Peter urged them, \"Save yourselves from this ___ generation.\"",
+   "answers": [
+    "crooked"
+   ]
+  },
+  {
+   "id": "a2-24",
+   "type": "fb",
+   "week": "Acts 2",
+   "text": "\"The promise is for you and for your ___ and for all who are far off.\"",
+   "answers": [
+    "children"
+   ]
+  },
+  {
+   "id": "gb-02",
+   "type": "fb",
+   "week": "Gospel Basics",
+   "text": "Jesus told Nicodemus, \"You must be born ___.\"",
+   "answers": [
+    "again",
+    "anew"
+   ]
+  },
+  {
+   "id": "gb-10",
+   "type": "fb",
+   "week": "Gospel Basics",
+   "text": "The shortest verse in the Bible says, \"Jesus ___.\"",
+   "answers": [
+    "wept"
+   ]
+  },
+  {
+   "id": "gb-15",
+   "type": "fb",
+   "week": "Gospel Basics",
+   "text": "Jesus began preaching, \"Repent, for the kingdom of heaven is at ___.\"",
+   "answers": [
+    "hand"
+   ]
+  },
+  {
+   "id": "gb-19",
+   "type": "fb",
+   "week": "Gospel Basics",
+   "text": "On the cross Jesus said, \"It is ___,\" and gave up his spirit.",
+   "answers": [
+    "finished"
    ]
   }
  ],
@@ -1972,6 +2107,392 @@
     "first",
     "above"
    ]
+  }
+ ],
+ "memverses": [
+  {
+   "id": "mv-acts-7-51",
+   "reference": "Acts 7:51",
+   "text": "You stiff-necked people, uncircumcised in heart and ears, you always resist the Holy Spirit. As your fathers did, so do you."
+  },
+  {
+   "id": "mv-acts-1-8",
+   "reference": "Acts 1:8",
+   "text": "But you will receive power when the Holy Spirit has come upon you, and you will be my witnesses in Jerusalem and in all Judea and Samaria, and to the end of the earth."
+  }
+ ],
+ "catechism": [
+  {
+   "id": "cc-01",
+   "n": 1,
+   "q": "Who is God?",
+   "a": "God is the only living and true God. [He’s the all-glorious, almighty, all-knowing, sovereign Creator and Lord of the whole universe. God is perfect and holy, infinite, eternal, and unchanging.]"
+  },
+  {
+   "id": "cc-02",
+   "n": 2,
+   "q": "Who made God?",
+   "a": "Nobody made God."
+  },
+  {
+   "id": "cc-03",
+   "n": 3,
+   "q": "Has God ever had a beginning?",
+   "a": "No, God has always been."
+  },
+  {
+   "id": "cc-04",
+   "n": 4,
+   "q": "Will God ever die?",
+   "a": "No, God lives forever!"
+  },
+  {
+   "id": "cc-05",
+   "n": 5,
+   "q": "Are there more gods than one?",
+   "a": "No, there is only one true God."
+  },
+  {
+   "id": "cc-06",
+   "n": 6,
+   "q": "In how many persons does this one God exist?",
+   "a": "God exists in three persons."
+  },
+  {
+   "id": "cc-07",
+   "n": 7,
+   "q": "Who are the three persons of God?",
+   "a": "The three persons of God are the Father, the Son, and the Holy Spirit."
+  },
+  {
+   "id": "cc-08",
+   "n": 8,
+   "q": "Where is God?",
+   "a": "God is everywhere."
+  },
+  {
+   "id": "cc-09",
+   "n": 9,
+   "q": "Can you see God?",
+   "a": "[No, God is a spirit, and He doesn’t have a body like man.] Though I cannot see God, I know He always sees me."
+  },
+  {
+   "id": "cc-10",
+   "n": 10,
+   "q": "Does God know all things?",
+   "a": "Yes, God knows all things. [Nothing can be hidden from God.]"
+  },
+  {
+   "id": "cc-11",
+   "n": 11,
+   "q": "Can God do all things?",
+   "a": "Yes, God can do all His holy will."
+  },
+  {
+   "id": "cc-12",
+   "n": 12,
+   "q": "Who made you?",
+   "a": "God made me."
+  },
+  {
+   "id": "cc-13",
+   "n": 13,
+   "q": "Why did God make you?",
+   "a": "I was made to glorify God and enjoy Him forever."
+  },
+  {
+   "id": "cc-14",
+   "n": 14,
+   "q": "What else did God make?",
+   "a": "God made all things."
+  },
+  {
+   "id": "cc-15",
+   "n": 15,
+   "q": "Why did God make all things?",
+   "a": "For His own glory."
+  },
+  {
+   "id": "cc-16",
+   "n": 16,
+   "q": "How can you glorify God?",
+   "a": "I can glorify God by loving Him and doing what He commands."
+  },
+  {
+   "id": "cc-17",
+   "n": 17,
+   "q": "Why should you glorify God?",
+   "a": "I should glorify God because He made me and takes care of me."
+  },
+  {
+   "id": "cc-18",
+   "n": 18,
+   "q": "Who were our first parents?",
+   "a": "Adam and Eve were our first parents."
+  },
+  {
+   "id": "cc-19",
+   "n": 19,
+   "q": "What were Adam and Eve like when God made them?",
+   "a": "God made them holy and happy."
+  },
+  {
+   "id": "cc-20",
+   "n": 20,
+   "q": "Did Adam obey God?",
+   "a": "No, Adam chose to disobey God."
+  },
+  {
+   "id": "cc-21",
+   "n": 21,
+   "q": "How did God punish Adam’s disobedience?",
+   "a": "Adam’s punishment was death and separation from God."
+  },
+  {
+   "id": "cc-22",
+   "n": 22,
+   "q": "What is sin?",
+   "a": "Sin is disobedience [against God’s perfect law by failing to do what God commands or doing what God forbids.]"
+  },
+  {
+   "id": "cc-23",
+   "n": 23,
+   "q": "What happened to Adam and Eve when they sinned?",
+   "a": "Instead of being holy and happy, they became sinful and miserable."
+  },
+  {
+   "id": "cc-24",
+   "n": 24,
+   "q": "What did Adam’s sin do to you?",
+   "a": "It made me guilty and sinful."
+  },
+  {
+   "id": "cc-25",
+   "n": 25,
+   "q": "What does every sin deserve?",
+   "a": "The wrath and curse of God."
+  },
+  {
+   "id": "cc-26",
+   "n": 26,
+   "q": "How sinful are you by nature?",
+   "a": "I am corrupt in every part of my being."
+  },
+  {
+   "id": "cc-27",
+   "n": 27,
+   "q": "Can you go to Heaven with a sinful nature?",
+   "a": "No, my heart must be changed before I can go to Heaven."
+  },
+  {
+   "id": "cc-28",
+   "n": 28,
+   "q": "What is this change of heart called?",
+   "a": "Regeneration, being “born again.”"
+  },
+  {
+   "id": "cc-29",
+   "n": 29,
+   "q": "Who can change a sinner’s heart?",
+   "a": "Only God can change a sinner’s heart."
+  },
+  {
+   "id": "cc-30",
+   "n": 30,
+   "q": "Who is the Redeemer of God’s elect?",
+   "a": "The only Savior of men is the Lord Jesus Christ, [who being the eternal Son of God, became man and so is both God and man in two natures and one person.]"
+  },
+  {
+   "id": "cc-31",
+   "n": 31,
+   "q": "How is your heart changed?",
+   "a": "My heart is changed by the Holy Spirit because of the grace of God."
+  },
+  {
+   "id": "cc-32",
+   "n": 32,
+   "q": "What is Grace?",
+   "a": "Grace is God’s kindness to us when we deserve punishment."
+  },
+  {
+   "id": "cc-33",
+   "n": 33,
+   "q": "What work did Christ do to save you?",
+   "a": "Christ perfectly kept the law of God and suffered the punishment due for my sins."
+  },
+  {
+   "id": "cc-34",
+   "n": 34,
+   "q": "Can anyone be saved by his own works?",
+   "a": "No one can be saved by his own works."
+  },
+  {
+   "id": "cc-35",
+   "n": 35,
+   "q": "What do we gain from the work of Christ?",
+   "a": "God regenerates, justifies, and sanctifies those who believe in Christ."
+  },
+  {
+   "id": "cc-36",
+   "n": 36,
+   "q": "What is justification?",
+   "a": "Justification is God forgiving all my sins and declaring me to be righteous."
+  },
+  {
+   "id": "cc-37",
+   "n": 37,
+   "q": "What is sanctification?",
+   "a": "Sanctification is God making me holy in heart and behavior."
+  },
+  {
+   "id": "cc-38",
+   "n": 38,
+   "q": "What are the two parts of sanctification?",
+   "a": "Dying to sin and living to righteousness."
+  },
+  {
+   "id": "cc-39",
+   "n": 39,
+   "q": "Who will be saved?",
+   "a": "Whoever repents and believes on the Lord Jesus Christ."
+  },
+  {
+   "id": "cc-40",
+   "n": 40,
+   "q": "What does it mean to repent?",
+   "a": "To repent is to be sorry for sin, and to hate and forsake it [because it displeases God.]"
+  },
+  {
+   "id": "cc-41",
+   "n": 41,
+   "q": "What is faith in Christ?",
+   "a": "Faith in Christ is trusting in Him alone for salvation."
+  },
+  {
+   "id": "cc-42",
+   "n": 42,
+   "q": "How were people saved before the coming of Christ?",
+   "a": "People were saved by believing in a Savior to come."
+  },
+  {
+   "id": "cc-43",
+   "n": 43,
+   "q": "Did Jesus ever sin?",
+   "a": "No, Jesus lived a sinless life."
+  },
+  {
+   "id": "cc-44",
+   "n": 44,
+   "q": "What kind of death did Christ die?",
+   "a": "A painful and shameful death on the cross."
+  },
+  {
+   "id": "cc-45",
+   "n": 45,
+   "q": "What are the offices Christ fulfilled as the promised Messiah?",
+   "a": "Prophet, Priest, and King."
+  },
+  {
+   "id": "cc-46",
+   "n": 46,
+   "q": "How is Christ your prophet?",
+   "a": "Christ teaches me the will of God."
+  },
+  {
+   "id": "cc-47",
+   "n": 47,
+   "q": "How is Christ your priest?",
+   "a": "Christ died for me; He prays for me, [He washed away my every sin.]"
+  },
+  {
+   "id": "cc-48",
+   "n": 48,
+   "q": "How is Christ your king?",
+   "a": "Christ rules over me; He defends me; [He will establish His Kingdom on earth.]"
+  },
+  {
+   "id": "cc-49",
+   "n": 49,
+   "q": "Did Christ remain in the tomb?",
+   "a": "No, Christ is risen on the third day, [just as He did say.]"
+  },
+  {
+   "id": "cc-50",
+   "n": 50,
+   "q": "Where is Christ now?",
+   "a": "Christ is in heaven, [and He’s praying for me;] He sits at the right hand of God."
+  },
+  {
+   "id": "cc-51",
+   "n": 51,
+   "q": "Will Christ come again?",
+   "a": "Yes, He is coming soon."
+  },
+  {
+   "id": "cc-52",
+   "n": 52,
+   "q": "When will Christ return?",
+   "a": "No one knows when Christ will return."
+  },
+  {
+   "id": "cc-53",
+   "n": 53,
+   "q": "What happens to a man when he dies?",
+   "a": "The body returns to the dust, and the spirit will go to either heaven or hell."
+  },
+  {
+   "id": "cc-54",
+   "n": 54,
+   "q": "What will happen when Christ returns?",
+   "a": "Our bodies will be raised from the dust, and united again with our spirits."
+  },
+  {
+   "id": "cc-55",
+   "n": 55,
+   "q": "What will happen to the wicked on Judgment day?",
+   "a": "The wicked will go down on judgment day and will be cast into the lake of fire."
+  },
+  {
+   "id": "cc-56",
+   "n": 56,
+   "q": "What will happen to every Christian on the last day?",
+   "a": "Every Christian will live with Jesus in the new heavens and the new earth."
+  },
+  {
+   "id": "cc-57",
+   "n": 57,
+   "q": "Where do we learn to love and obey God?",
+   "a": "In the Bible, we learn to love and obey God."
+  },
+  {
+   "id": "cc-58",
+   "n": 58,
+   "q": "Who wrote the Bible?",
+   "a": "Holy men of God, who were taught and chosen by God, wrote the Bible."
+  },
+  {
+   "id": "cc-59",
+   "n": 59,
+   "q": "What is the greatest command?",
+   "a": "Love the Lord your God with all your heart, soul, and mind; [and the second is like it, love your neighbor as yourself.]"
+  },
+  {
+   "id": "cc-60",
+   "n": 60,
+   "q": "Of what use are the ten commandments?",
+   "a": "They teach us our duty [to God and our duty to man,] and show us our need for a Savior."
+  },
+  {
+   "id": "cc-61",
+   "n": 61,
+   "q": "What is prayer?",
+   "a": "Prayer is praising God [for who He is,] thanking God [for what He’s done,] and asking Him for things [He has promised.]"
+  },
+  {
+   "id": "cc-62",
+   "n": 62,
+   "q": "What guide has Christ given to teach us how to pray?",
+   "a": "Christ has given us the Lord’s Prayer to teach us how to pray."
   }
  ]
 }
