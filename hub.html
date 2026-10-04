@@ -1568,10 +1568,20 @@ function renderDDwager(cat,clue){
     `<div class="q" style="font-size:clamp(18px,2.2vw,30px);">Decide your wager <b>before</b> the clue!</div>`+
     `<div class="wager num" id="jeoWagerNum">0</div><div style="color:var(--muted);font-weight:700;margin-bottom:12px;">Max wager: ${fmt(maxW)}</div>`+
     `<div class="fwrow" id="jeoWagerBtns"></div><div class="foot" style="margin-top:16px;"><button class="btn green big" id="jeoWagerGo" style="max-width:none;">Reveal the Clue \u25b6</button></div>`;
-  const setW=v=>{jeoPlay.ddWager=Math.max(0,Math.min(maxW,v));$("jeoWagerNum").textContent=fmt(jeoPlay.ddWager);};
-  const box=$("jeoWagerBtns"),mk=(l,f,c)=>{const b=document.createElement("button");b.className="minibtn"+(c?" "+c:"");b.textContent=l;b.onclick=f;return b;};
-  [["\u2212500",()=>setW(jeoPlay.ddWager-500)],["\u2212100",()=>setW(jeoPlay.ddWager-100)],["+100",()=>setW(jeoPlay.ddWager+100)],["+500",()=>setW(jeoPlay.ddWager+500)],["+1000",()=>setW(jeoPlay.ddWager+1000)]].forEach(a=>box.appendChild(mk(a[0],a[1])));
-  box.appendChild(mk("MAX",()=>setW(maxW),"max"));box.appendChild(mk("Clear",()=>setW(0)));setW(0);
+  /* digit columns: ones, tens, hundreds, thousands... up to the size of the max wager */
+  const LBL={1:"1",10:"10",100:"100",1000:"1k",10000:"10k",100000:"100k",1000000:"1M"};
+  const places=[];for(let v=1;v<=maxW;v*=10)places.unshift(v);
+  const box=$("jeoWagerBtns"),grid=document.createElement("div");grid.className="wplaces";
+  const draw=()=>{const digits=String(jeoPlay.ddWager).padStart(places.length,"0");grid.querySelectorAll(".pdig").forEach((d,k)=>d.textContent=digits[k]);$("jeoWagerNum").textContent=fmt(jeoPlay.ddWager);};
+  const setW=v=>{jeoPlay.ddWager=Math.max(0,Math.min(maxW,v));draw();};
+  places.forEach(v=>{const d=document.createElement("div");d.className="place wplace";
+    d.innerHTML=`<button class="stepbtn">+</button><div class="pdig num">0</div><div class="plabel">${LBL[v]||v}</div><button class="stepbtn">&minus;</button>`;
+    const [up,down]=d.querySelectorAll("button");
+    up.onclick=()=>{if(jeoPlay.ddWager+v<=maxW){setW(jeoPlay.ddWager+v);sBlip();}};
+    down.onclick=()=>{if(jeoPlay.ddWager-v>=0){setW(jeoPlay.ddWager-v);sBlip();}};
+    grid.appendChild(d);});
+  const mk=(l,f,c)=>{const b=document.createElement("button");b.className="minibtn"+(c?" "+c:"");b.textContent=l;b.onclick=f;return b;};
+  box.appendChild(grid);box.appendChild(mk("0",()=>setW(0)));box.appendChild(mk("MAX",()=>setW(maxW),"max"));setW(0);
   $("jeoWagerGo").onclick=()=>renderDDclue(cat,clue);
 }
 function renderDDclue(cat,clue){
