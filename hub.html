@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Game Hub">
+<meta name="theme-color" content="#0b1220">
 <title>Sunday School Game Hub</title>
 <style>
   :root{
@@ -113,8 +117,8 @@
   .hpintro p{color:var(--ink);font-weight:700;font-size:clamp(16px,1.6vw,22px);max-width:820px;margin:0;line-height:1.35;}
   .hprules{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:10px 16px;font-weight:800;color:var(--muted);}
   .hpintro .pills{justify-content:center;max-width:900px;}
-  #hotpotato .choice{cursor:pointer;} #hotpotato .choice:hover{border-color:var(--gold);}
-  #hotpotato.locked .choice{cursor:default;} #hotpotato.locked .choice:hover{border-color:var(--line);}
+  #hotpotato .choice{cursor:pointer;}
+  #hotpotato.locked .choice{cursor:default;}
   .hpholder{font-weight:900;font-size:clamp(18px,1.9vw,26px);}
   .hpresult{border:3px solid var(--red-hot);background:rgba(239,68,68,.12);border-radius:18px;padding:12px 18px;margin-bottom:12px;text-align:center;}
   .hpresult b{display:block;font-size:clamp(26px,3.2vw,46px);font-weight:900;color:#fecaca;line-height:1.1;}
@@ -157,9 +161,10 @@
   .btn.toggle.on{background:rgba(255,194,51,.14);color:var(--gold);border:2px solid var(--gold);}
   #vmControls,#cmControls{gap:8px;flex-wrap:nowrap;overflow-x:auto;}
   #vmControls .btn,#cmControls .btn{padding:12px 14px;min-width:0;white-space:nowrap;font-size:clamp(14px,1.35vw,19px);}
+
   /* quiz turns */
   #quiz .choice{cursor:pointer;}
-  #quiz .choice:hover{border-color:var(--gold);}
+  @media (hover:hover) and (pointer:fine){#quiz .choice:hover{border-color:var(--gold);}}
   #quiz.locked .choice{cursor:default;}
   #quiz.locked .choice:hover{border-color:var(--line);}
   .choice.wrong{border-color:var(--red-hot);background:rgba(239,68,68,.18);box-shadow:0 0 0 4px rgba(239,68,68,.25),0 0 40px rgba(239,68,68,.35);opacity:1;}
@@ -389,7 +394,86 @@
   @keyframes flashfx{0%{opacity:0;}20%{opacity:.5;}100%{opacity:0;}}
   .shake{animation:shake .5s ease;}
   @keyframes shake{0%,100%{transform:translate(0,0);}15%{transform:translate(-12px,4px);}30%{transform:translate(12px,-4px);}45%{transform:translate(-10px,-4px);}60%{transform:translate(10px,4px);}75%{transform:translate(-6px,2px);}}
-  @media(max-width:820px){.stage{flex-direction:column;}.choices{grid-template-columns:1fr;}.tcol{min-width:0;}}
+  @media(max-width:820px) and (min-height:501px), (max-width:820px) and (orientation:portrait){.stage{flex-direction:column;}.choices{grid-template-columns:1fr;}.tcol{min-width:0;}}
+  /* ===== PHONE IN LANDSCAPE (short screens): everything compact so each game fits without scrolling ===== */
+  @media (orientation:landscape) and (max-height:500px){
+    .topbar{padding:4px 8px;gap:6px;}
+    #brandText{display:none;}
+    .scorebar{gap:5px;}
+    .teamchip{min-width:70px;padding:2px 6px;border-radius:9px;border-width:1.5px;}
+    .teamchip .tname{font-size:10px;}
+    .teamchip .tscore{font-size:16px;}
+    .teamchip .edithint{display:none;}
+    .navbtn{padding:6px 9px;font-size:12px;border-radius:9px;}
+    .controls{padding:5px 8px;gap:6px;flex-wrap:nowrap;overflow-x:auto;justify-content:safe center;}
+    .controls .btn{padding:7px 12px;font-size:13px;min-width:0;border-radius:10px;white-space:nowrap;flex:none;}
+    .awardbtn{padding:6px 12px;font-size:14px;border-radius:10px;}
+    .awardbar{gap:6px;}
+    .overlay{padding:8px;overflow:auto;}
+    .pickcard{padding:12px 16px;border-radius:14px;}
+    .pickcard h3{font-size:20px;} .pickcard p{font-size:12px;margin-bottom:8px;} .pickcard .rules{margin-top:8px;}
+    #quizWeekBox .pills{margin-bottom:10px!important;} .pill{padding:4px 10px;font-size:12px;}
+    /* Quiz Showdown */
+    .stage{flex-direction:row;gap:8px;padding:8px;}
+    .tcol{min-width:0;flex:0 0 150px;padding:6px;border-radius:14px;}
+    .turnbox{padding:3px 6px;margin-bottom:3px;border-width:2px;} .turnbox b{font-size:15px;} .turnbox small{font-size:9px;letter-spacing:1px;} .turnbox span{display:none;}
+    .timerlabel{display:none;}
+    .timerwrap{width:min(32vh,110px);height:min(32vh,110px);margin:2px 0;}
+    .timernum{font-size:min(16vh,56px);}
+    .timebanner{font-size:14px;letter-spacing:1px;}
+    .qmeta{font-size:11px;margin-bottom:2px;}
+    .qtext{font-size:clamp(15px,5.6vh,26px);margin:2px 0 8px;}
+    .choices{grid-template-columns:1fr 1fr;gap:6px;}
+    .choice{padding:6px 10px;font-size:clamp(13px,4.2vh,20px);border-radius:10px;gap:8px;border-width:2px;}
+    .fbprompt,.fbanswer{font-size:18px;padding:10px;}
+    /* Who Am I */
+    .whowrap{padding:8px 10px;}
+    .clues{gap:6px;} .clue{padding:6px 10px;font-size:clamp(14px,4.4vh,22px);gap:8px;}
+    /* Jeopardy */
+    .jeowrap{padding:6px 8px;} .jeohd{margin-bottom:4px;} .jeohd h2{font-size:18px;}
+    .jeogrid{gap:4px;} .jeocell{font-size:clamp(14px,5.4vh,24px);border-radius:7px;border-width:1.5px;}
+    /* Concentration */
+    .concstage{padding:4px 8px;gap:4px;} .concturnlabel{font-size:16px;}
+    /* Beat the Clock & Reverse Charades */
+    .racehd{padding:4px 10px 0;gap:6px;} .racehd h2{font-size:18px;} .roundlabel{font-size:11px;}
+    .bcstage{padding:4px 8px;gap:2px;}
+    .bcmid{gap:16px;margin:0;}
+    .bctimer{font-size:min(20vh,80px);}
+    .racehd{flex-wrap:nowrap;} .racehd>div:first-child{min-width:0;} .racehd .roundlabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    #chTeamPick .bcteamlabel,#bcTeamPick .bcteamlabel{display:none;}
+    .bctally{padding:2px 14px;border-radius:12px;} .bctallylabel{font-size:10px;} .bctallynum{font-size:min(15vh,56px);}
+    .bcteamlabel{margin-bottom:2px;font-size:13px;} .bcbanner{font-size:15px;}
+    .chword{font-size:clamp(20px,9vh,40px);margin:0;}
+    /* Word Puzzle Wheel */
+    .wwmid{padding:2px 8px;gap:12px;flex-wrap:nowrap;}
+    .wheelbox{width:min(48vh,200px);height:min(48vh,200px);}
+    .wwcat{font-size:12px;margin:2px 0 0;} .bcbanner:empty{min-height:0;}
+    .wwright .bcteamlabel{font-size:12px;} #wwTeams{margin-bottom:4px!important;}
+    .wheelptr{border-left-width:11px;border-right-width:11px;border-top-width:18px;top:-6px;}
+    .wheelval{font-size:14px;padding:4px 8px;min-width:60px;}
+    .wwright{min-width:0;}
+    .wwletters{gap:3px;} .wwletter{padding:3px 0;font-size:13px;border-radius:6px;}
+    .wwboard{padding:4px 8px;gap:10px;} .wwword{gap:3px;}
+    .wwboard:not(.fit) .wwtile{width:clamp(16px,3.2vw,30px);height:clamp(22px,4.2vw,40px);font-size:clamp(13px,2.4vw,24px);border-radius:5px;}
+    /* Verse Voyager */
+    .voyoverlay{padding:8px;} .voycard h2{font-size:22px;margin-bottom:4px;} .voycard p{font-size:12px;margin-bottom:8px;line-height:1.35;} .voycard .big{font-size:26px;}
+    /* Hot Potato */
+    .hpstage{padding:6px 8px 4px;gap:6px;}
+    .hpzones{flex-basis:27vh;gap:6px;} .hpzone{border-radius:12px;padding:3px;border-width:2px;}
+    .hpzname{font-size:13px;} .hpzscore{font-size:11px;}
+    .hpintro{gap:4px;} .hpintro h2{font-size:22px;} .hpintro p{font-size:12px;} .hprules{font-size:11px;padding:4px 10px;} .hpmini{display:none;}
+    .hpresult{padding:4px 10px;margin-bottom:4px;border-radius:12px;} .hpresult b{font-size:18px;} .hpresult span{font-size:12px;}
+    .hpholder{font-size:13px;}
+    /* Verse & Catechism Eraser */
+    .erplay{padding:6px 10px;gap:5px;}
+    .erref{font-size:18px;} .ercount{font-size:11px;}
+    .ercard{padding:8px 12px;gap:6px;border-radius:14px;}
+    .erlabel{font-size:15px;border-radius:8px;}
+    .eraward{font-size:11px;gap:6px;}
+    #vmControls .btn,#cmControls .btn{padding:6px 10px;font-size:12px;}
+    /* Setup & hub home */
+    .hubwrap,.setup{padding:10px;}
+  }
 </style>
 </head>
 <body>
