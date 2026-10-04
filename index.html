@@ -33,7 +33,7 @@ h1{
 }
 header p{font-size:clamp(16px,1.6vw,28px);margin-top:1vh}
 
-.choices{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:3vw}
+.choices{flex:1;min-height:0;display:grid;grid-template-columns:min(720px,100%);justify-content:center;gap:3vw}
 .door{
   position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
   border:6px solid var(--ink);box-shadow:10px 10px 0 var(--ink);text-decoration:none;color:inherit;
@@ -89,17 +89,13 @@ header p{font-size:clamp(16px,1.6vw,28px);margin-top:1vh}
     <div class="icon" aria-hidden="true">⚡</div>
     <div class="caption">
       <h2>Game Hub</h2>
-      <p>Eight games, including Quiz Showdown, Jeopardy, Word Puzzle Wheel, and Verse Voyager. Scores carry across every game.</p>
+      <p>Eleven games, including Quiz Showdown, Jeopardy, Hot Potato, and Verse Voyager. Scores carry across every game.</p>
     </div>
   </a>
 
-  <!-- ===== THIS WEEK'S LESSON: update these 5 things each week =====
-       1. href        = the lesson's folder
-       2. img src     = a picture from that lesson
-       3. badge text  = lesson number
-       4. h2          = lesson title
-       5. p           = Scripture reference
-  ================================================================= -->
+  <!-- LESSON BUTTON: hidden for now. To show it again, delete the <template> and </template> lines around it.
+       Each week update: the link (href), the picture (img src), the lesson number, the title, and the Scripture reference. -->
+  <template>
   <a class="door lesson" href="lessons/stephen/">
     <img src="lessons/stephen/img/slide-01.webp" alt="" style="object-position:42% 35%">
     <span class="badge">This week · Lesson 29</span>
@@ -108,6 +104,7 @@ header p{font-size:clamp(16px,1.6vw,28px);margin-top:1vh}
       <p>The story of Stephen · Acts 6:1–7:60</p>
     </div>
   </a>
+  </template>
 
 </main>
 
