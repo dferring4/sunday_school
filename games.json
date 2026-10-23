@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-29T21:16:59.820Z",
+ "updated": "2026-10-23T23:00:50.000Z",
  "note": "Game Hub games. Upload this file next to hub.html in the GitHub repo.",
  "defaultsVersion": 9,
  "settings": {
@@ -1043,6 +1043,783 @@
    "answers": [
     "finished"
    ]
+  },
+  {
+   "id": "rv25-1",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "The book of Acts tells what Jesus kept doing through His apostles by the power of the...",
+   "choices": [
+    "Holy Spirit",
+    "Roman army",
+    "temple priests",
+    "Pharisees"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv25-2",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "After He rose, for how many days did Jesus appear to the apostles?",
+   "choices": [
+    "40 days",
+    "3 days",
+    "7 days",
+    "100 days"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv25-3",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Where did Jesus tell the apostles to wait for the Holy Spirit?",
+   "choices": [
+    "Jerusalem",
+    "Galilee",
+    "Bethlehem",
+    "Rome"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv25-4",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "They would be witnesses in Jerusalem, Judea, Samaria, and to...",
+   "choices": [
+    "the end of the earth",
+    "the top of the mountain",
+    "the Jordan River",
+    "the temple gate"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv25-5",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What hid Jesus from the apostles' sight as He went up?",
+   "choices": [
+    "A cloud",
+    "A storm",
+    "Smoke",
+    "Fire"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv25-6",
+   "type": "tf",
+   "week": "Acts 1–9 Review",
+   "text": "Jesus told the apostles the exact day He would restore the kingdom.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "rv25-7",
+   "type": "fb",
+   "week": "Acts 1–9 Review",
+   "text": "\"You will receive ___ when the Holy Spirit has come upon you.\" (Acts 1:8)",
+   "answers": [
+    "power"
+   ]
+  },
+  {
+   "id": "rv26-1",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "On what feast day did the Holy Spirit come?",
+   "choices": [
+    "Pentecost",
+    "Passover",
+    "The Sabbath",
+    "The Day of Atonement"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv26-2",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What sound filled the whole house?",
+   "choices": [
+    "A mighty rushing wind",
+    "Thunder",
+    "Trumpets",
+    "Singing"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv26-3",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What rested on each of the believers?",
+   "choices": [
+    "Tongues as of fire",
+    "Doves",
+    "Golden crowns",
+    "Stars"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv26-4",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Which Old Testament prophet did Peter quote about God pouring out His Spirit?",
+   "choices": [
+    "Joel",
+    "Jonah",
+    "Daniel",
+    "Elijah"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv26-5",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "About how many people were added to the church that day?",
+   "choices": [
+    "About 3,000",
+    "About 12",
+    "About 120",
+    "About 50"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv26-6",
+   "type": "tf",
+   "week": "Acts 1–9 Review",
+   "text": "Some people in the crowd thought the disciples were drunk.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv26-7",
+   "type": "fb",
+   "week": "Acts 1–9 Review",
+   "text": "Peter said, \"___ and be baptized every one of you.\" (Acts 2:38)",
+   "answers": [
+    "Repent"
+   ]
+  },
+  {
+   "id": "rv27-1",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Which two apostles were going to the temple to pray?",
+   "choices": [
+    "Peter and John",
+    "James and John",
+    "Peter and Andrew",
+    "Thomas and Matthew"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv27-2",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What was the name of the temple gate where the lame man sat?",
+   "choices": [
+    "Beautiful",
+    "Golden",
+    "Sheep",
+    "Fish"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv27-3",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What was the lame man hoping to get from Peter and John?",
+   "choices": [
+    "Money",
+    "Food",
+    "A ride",
+    "A job"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv27-4",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "In whose name did Peter heal the man?",
+   "choices": [
+    "Jesus Christ of Nazareth",
+    "Moses",
+    "Abraham",
+    "Peter's own name"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv27-5",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Peter called Jesus the ___ of life.",
+   "choices": [
+    "Author",
+    "Keeper",
+    "Builder",
+    "Teacher"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv27-6",
+   "type": "tf",
+   "week": "Acts 1–9 Review",
+   "text": "The healed man went into the temple walking, leaping, and praising God.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv27-7",
+   "type": "fb",
+   "week": "Acts 1–9 Review",
+   "text": "Peter said, \"I have no ___ and gold, but what I do have I give to you.\"",
+   "answers": [
+    "silver"
+   ]
+  },
+  {
+   "id": "rv28-1",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Joseph's nickname, Barnabas, means \"son of...\"",
+   "choices": [
+    "encouragement",
+    "thunder",
+    "prayer",
+    "the rock"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv28-2",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What did Barnabas sell to help believers in need?",
+   "choices": [
+    "A field",
+    "A boat",
+    "A donkey",
+    "His sword"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv28-3",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What did Ananias and Sapphira lie about?",
+   "choices": [
+    "Giving all the money from their land",
+    "Where they lived",
+    "Their names",
+    "Being sick"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv28-4",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Peter said Ananias had not lied to people, but to...",
+   "choices": [
+    "God (the Holy Spirit)",
+    "Peter",
+    "Barnabas",
+    "the Romans"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv28-5",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Why were the early believers so united?",
+   "choices": [
+    "They were filled with the Spirit and worshiping Jesus",
+    "They all lived in one house",
+    "They were all rich",
+    "The Romans made them"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv28-6",
+   "type": "tf",
+   "week": "Acts 1–9 Review",
+   "text": "Ananias and Sapphira were required to give away all the money from their land.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "rv28-7",
+   "type": "fb",
+   "week": "Acts 1–9 Review",
+   "text": "Someone who pretends to be something they are not is called a ___.",
+   "answers": [
+    "hypocrite"
+   ]
+  },
+  {
+   "id": "rv29-1",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "How many men did the apostles choose to help serve?",
+   "choices": [
+    "Seven",
+    "Twelve",
+    "Three",
+    "Seventy"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv29-2",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "The helpers had to be full of the Spirit and of...",
+   "choices": [
+    "wisdom",
+    "money",
+    "strength",
+    "fear"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv29-3",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Stephen was falsely accused of speaking against the temple and the law of...",
+   "choices": [
+    "Moses",
+    "Caesar",
+    "David",
+    "Herod"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv29-4",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What did Stephen see when he looked into heaven?",
+   "choices": [
+    "Jesus standing at the right hand of God",
+    "An angel with a sword",
+    "A ladder to heaven",
+    "Elijah's chariot"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv29-5",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Witnesses laid their coats at the feet of a young man named...",
+   "choices": [
+    "Saul",
+    "Philip",
+    "Barnabas",
+    "John"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv29-6",
+   "type": "tf",
+   "week": "Acts 1–9 Review",
+   "text": "As he died, Stephen asked God to punish the people stoning him.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "rv29-7",
+   "type": "fb",
+   "week": "Acts 1–9 Review",
+   "text": "To the council, Stephen's face looked like the face of an ___.",
+   "answers": [
+    "angel"
+   ]
+  },
+  {
+   "id": "rv30-1",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Who was the fiercest persecutor of the Jerusalem church?",
+   "choices": [
+    "Saul",
+    "Pilate",
+    "Herod",
+    "Simon"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv30-2",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Where did Philip go to preach the gospel?",
+   "choices": [
+    "Samaria",
+    "Rome",
+    "Egypt",
+    "Babylon"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv30-3",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "How did Jews and Samaritans usually get along?",
+   "choices": [
+    "They were enemies",
+    "They were best friends",
+    "They were one family",
+    "They had never met"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv30-4",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What did Simon offer Peter to buy the power to give the Holy Spirit?",
+   "choices": [
+    "Money",
+    "Sheep",
+    "A sword",
+    "His house"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv30-5",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Which two apostles were sent to pray for the Samaritan believers?",
+   "choices": [
+    "Peter and John",
+    "James and John",
+    "Peter and Andrew",
+    "Thomas and Matthew"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv30-6",
+   "type": "tf",
+   "week": "Acts 1–9 Review",
+   "text": "When believers scattered from Jerusalem, they stopped telling people about Jesus.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "rv30-7",
+   "type": "fb",
+   "week": "Acts 1–9 Review",
+   "text": "Before he believed, Simon amazed Samaria by practicing ___.",
+   "answers": [
+    "magic",
+    "sorcery"
+   ]
+  },
+  {
+   "id": "rv31-1",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "How was the Ethiopian official traveling?",
+   "choices": [
+    "In a chariot",
+    "On a camel",
+    "On a ship",
+    "On a donkey"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv31-2",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Which prophet's book was the Ethiopian reading?",
+   "choices": [
+    "Isaiah",
+    "Jeremiah",
+    "Daniel",
+    "Jonah"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv31-3",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Who told Philip to go over and join the chariot?",
+   "choices": [
+    "The Holy Spirit",
+    "Peter",
+    "The Ethiopian",
+    "A Roman soldier"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv31-4",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What was the Ethiopian's important job?",
+   "choices": [
+    "Treasurer for the queen",
+    "Army general",
+    "Ship captain",
+    "Temple priest"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv31-5",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What did the Ethiopian want to do when they came to some water?",
+   "choices": [
+    "Be baptized",
+    "Go fishing",
+    "Wash the chariot",
+    "Water the horses"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv31-6",
+   "type": "tf",
+   "week": "Acts 1–9 Review",
+   "text": "After he was baptized, the Ethiopian went on his way rejoicing.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv31-7",
+   "type": "fb",
+   "week": "Acts 1–9 Review",
+   "text": "Isaiah wrote, \"Like a ___ he was led to the slaughter.\"",
+   "answers": [
+    "sheep"
+   ]
+  },
+  {
+   "id": "rv32-1",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Why was Saul going to Damascus?",
+   "choices": [
+    "To arrest Christians",
+    "To visit family",
+    "To sell tents",
+    "To worship at the temple"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv32-2",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "What flashed around Saul on the road?",
+   "choices": [
+    "A light from heaven",
+    "Lightning",
+    "A fire",
+    "A sandstorm"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv32-3",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "How many days was Saul blind?",
+   "choices": [
+    "Three",
+    "Seven",
+    "Forty",
+    "One"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv32-4",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Who did Jesus send to pray for Saul and baptize him?",
+   "choices": [
+    "Ananias",
+    "Peter",
+    "Barnabas",
+    "Stephen"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv32-5",
+   "type": "mc",
+   "week": "Acts 1–9 Review",
+   "text": "Who brought Saul to the apostles and told them his faith was real?",
+   "choices": [
+    "Barnabas",
+    "Ananias",
+    "Philip",
+    "Peter"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv32-6",
+   "type": "tf",
+   "week": "Acts 1–9 Review",
+   "text": "Saul escaped Damascus by being let down through the wall in a basket.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "rv32-7",
+   "type": "fb",
+   "week": "Acts 1–9 Review",
+   "text": "Jesus asked, \"Saul, Saul, why are you ___ me?\"",
+   "answers": [
+    "persecuting"
+   ]
   }
  ],
  "whoami": [
@@ -1431,6 +2208,319 @@
     "category": "The Gospel",
     "q": "According to John 3:16, God gave his only Son so that whoever believes in him should not perish but have this.",
     "a": "Eternal life (everlasting life)"
+   }
+  },
+  {
+   "id": "jb-acts-1-9-review",
+   "title": "Acts 1–9 Review",
+   "single": [
+    {
+     "name": "Up, Up & Away (Acts 1)",
+     "clues": [
+      {
+       "value": 100,
+       "q": "Jesus appeared to the apostles for this many days before going back to heaven.",
+       "a": "40"
+      },
+      {
+       "value": 200,
+       "q": "Jesus told the apostles to wait in this city for the Holy Spirit.",
+       "a": "Jerusalem"
+      },
+      {
+       "value": 300,
+       "q": "This hid Jesus from the apostles' sight as He was taken up.",
+       "a": "A cloud"
+      },
+      {
+       "value": 400,
+       "q": "Jesus said His witnesses would go to Jerusalem, Judea, Samaria, and here.",
+       "a": "The end of the earth"
+      },
+      {
+       "value": 500,
+       "q": "Two men in white robes said Jesus would come back in this way.",
+       "a": "The same way He went into heaven"
+      }
+     ]
+    },
+    {
+     "name": "Pentecost (Acts 2)",
+     "clues": [
+      {
+       "value": 100,
+       "q": "The Holy Spirit came on this feast day.",
+       "a": "Pentecost"
+      },
+      {
+       "value": 200,
+       "q": "This sound filled the whole house.",
+       "a": "A mighty rushing wind"
+      },
+      {
+       "value": 300,
+       "q": "Peter quoted this prophet, who said God would pour out His Spirit.",
+       "a": "Joel"
+      },
+      {
+       "value": 400,
+       "q": "Peter told the crowd to do these two things (Acts 2:38).",
+       "a": "Repent and be baptized"
+      },
+      {
+       "value": 500,
+       "q": "About this many people were added to the church that day.",
+       "a": "3,000"
+      }
+     ]
+    },
+    {
+     "name": "Rise & Walk (Acts 3)",
+     "clues": [
+      {
+       "value": 100,
+       "q": "These two apostles were going to the temple to pray.",
+       "a": "Peter and John"
+      },
+      {
+       "value": 200,
+       "q": "The name of the temple gate where the lame man sat.",
+       "a": "Beautiful"
+      },
+      {
+       "value": 300,
+       "q": "Peter said he didn't have these two things, but gave something better.",
+       "a": "Silver and gold"
+      },
+      {
+       "value": 400,
+       "q": "Peter healed the man in this name.",
+       "a": "Jesus Christ of Nazareth"
+      },
+      {
+       "value": 500,
+       "q": "Peter called Jesus the \"___ of life.\"",
+       "a": "Author"
+      }
+     ]
+    },
+    {
+     "name": "Truth or Lies (Acts 4–5)",
+     "clues": [
+      {
+       "value": 100,
+       "q": "His nickname means \"son of encouragement.\"",
+       "a": "Barnabas"
+      },
+      {
+       "value": 200,
+       "q": "Barnabas sold this and gave the money to the apostles.",
+       "a": "A field"
+      },
+      {
+       "value": 300,
+       "q": "This husband and wife lied about their gift.",
+       "a": "Ananias and Sapphira"
+      },
+      {
+       "value": 400,
+       "q": "Peter said Ananias lied not to people but to Him.",
+       "a": "The Holy Spirit (God)"
+      },
+      {
+       "value": 500,
+       "q": "The word for someone who pretends to be something they're not.",
+       "a": "A hypocrite"
+      }
+     ]
+    },
+    {
+     "name": "Stephen (Acts 6–7)",
+     "clues": [
+      {
+       "value": 100,
+       "q": "The apostles chose this many men to help serve.",
+       "a": "Seven"
+      },
+      {
+       "value": 200,
+       "q": "To the council, Stephen's face looked like this.",
+       "a": "The face of an angel"
+      },
+      {
+       "value": 300,
+       "q": "Stephen saw Jesus standing in this place.",
+       "a": "At the right hand of God"
+      },
+      {
+       "value": 400,
+       "q": "The angry crowd killed Stephen this way.",
+       "a": "By stoning him"
+      },
+      {
+       "value": 500,
+       "q": "Witnesses laid their coats at the feet of this young man.",
+       "a": "Saul"
+      }
+     ]
+    }
+   ],
+   "double": [
+    {
+     "name": "Scattered! (Acts 8)",
+     "clues": [
+      {
+       "value": 200,
+       "q": "After Stephen died, everyone scattered from Jerusalem except these leaders.",
+       "a": "The apostles"
+      },
+      {
+       "value": 400,
+       "q": "Philip preached in this region, home of people the Jews didn't get along with.",
+       "a": "Samaria"
+      },
+      {
+       "value": 600,
+       "q": "Simon amazed Samaria by practicing this.",
+       "a": "Magic (sorcery)"
+      },
+      {
+       "value": 800,
+       "q": "Simon offered this to buy the power to give the Holy Spirit.",
+       "a": "Money"
+      },
+      {
+       "value": 1000,
+       "q": "These two apostles came to Samaria to pray for the new believers.",
+       "a": "Peter and John"
+      }
+     ]
+    },
+    {
+     "name": "Road Trip (Acts 8)",
+     "clues": [
+      {
+       "value": 200,
+       "q": "The Ethiopian official was riding in this.",
+       "a": "A chariot"
+      },
+      {
+       "value": 400,
+       "q": "He was reading from this prophet's book.",
+       "a": "Isaiah"
+      },
+      {
+       "value": 600,
+       "q": "Isaiah wrote that He was led like this animal to the slaughter.",
+       "a": "A sheep"
+      },
+      {
+       "value": 800,
+       "q": "The Ethiopian took care of the treasure for this person.",
+       "a": "Candace, queen of the Ethiopians"
+      },
+      {
+       "value": 1000,
+       "q": "After the baptism, the Spirit carried Philip away, and he turned up in this town.",
+       "a": "Azotus"
+      }
+     ]
+    },
+    {
+     "name": "Damascus Road (Acts 9)",
+     "clues": [
+      {
+       "value": 200,
+       "q": "Saul was headed to this city to arrest Christians.",
+       "a": "Damascus"
+      },
+      {
+       "value": 400,
+       "q": "\"Saul, Saul, why are you ___ me?\"",
+       "a": "Persecuting"
+      },
+      {
+       "value": 600,
+       "q": "Saul could not see for this many days.",
+       "a": "Three"
+      },
+      {
+       "value": 800,
+       "q": "Something like these fell from Saul's eyes when Ananias prayed.",
+       "a": "Scales"
+      },
+      {
+       "value": 1000,
+       "q": "Saul escaped Damascus by being let down through the wall in this.",
+       "a": "A basket"
+      }
+     ]
+    },
+    {
+     "name": "Who Am I?",
+     "clues": [
+      {
+       "value": 200,
+       "q": "I was stoned for preaching about Jesus, and I prayed for the people who did it.",
+       "a": "Stephen"
+      },
+      {
+       "value": 400,
+       "q": "I was a disciple in Damascus, sent to a house on Straight Street to pray for Saul.",
+       "a": "Ananias"
+      },
+      {
+       "value": 600,
+       "q": "I explained Isaiah to an Ethiopian official and baptized him.",
+       "a": "Philip"
+      },
+      {
+       "value": 800,
+       "q": "I stood up for Saul when the apostles were afraid of him.",
+       "a": "Barnabas"
+      },
+      {
+       "value": 1000,
+       "q": "I sat at the Beautiful Gate every day until Peter healed me.",
+       "a": "The lame man"
+      }
+     ]
+    },
+    {
+     "name": "Name That Place",
+     "clues": [
+      {
+       "value": 200,
+       "q": "The Holy Spirit came at Pentecost in this city.",
+       "a": "Jerusalem"
+      },
+      {
+       "value": 400,
+       "q": "Philip met the Ethiopian on the desert road going down to this city.",
+       "a": "Gaza"
+      },
+      {
+       "value": 600,
+       "q": "In Damascus, Saul stayed on the street with this name.",
+       "a": "Straight"
+      },
+      {
+       "value": 800,
+       "q": "Ethiopia is a country on this continent.",
+       "a": "Africa"
+      },
+      {
+       "value": 1000,
+       "q": "The Ethiopian had traveled all the way to Jerusalem to do this.",
+       "a": "Worship"
+      }
+     ]
+    }
+   ],
+   "final": {
+    "category": "From Enemy to Apostle",
+    "q": "He watched Stephen die and hunted Christians, but Jesus stopped him on the Damascus road. Give BOTH names he is known by.",
+    "a": "Saul, also called Paul"
    }
   }
  ],
