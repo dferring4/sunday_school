@@ -341,7 +341,7 @@
 
   /* ===== CUP SPINNER ===== */
   .spstage{flex:1;min-height:0;display:flex;gap:22px;padding:18px;align-items:stretch;}
-  .spside{flex:0 0 clamp(230px,24vw,340px);display:flex;flex-direction:column;gap:14px;}
+  .spside{flex:0 0 clamp(230px,20vw,300px);display:flex;flex-direction:column;gap:14px;}
   .spcard{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:14px 16px;text-align:center;}
   .splabel{color:var(--muted);font-weight:800;letter-spacing:2px;font-size:13px;text-transform:uppercase;margin-bottom:8px;}
   #spTeams{flex-direction:column;align-items:stretch;}
@@ -351,11 +351,25 @@
   .spcupbtn.up{background:var(--green);color:#04241a;} .spcupbtn.down{background:var(--red);color:#2a0606;}
   .spcupbtn:active{transform:translateY(2px);}
   .sphint{color:var(--gold);font-weight:800;font-size:clamp(14px,1.4vw,19px);min-height:1.3em;line-height:1.3;}
-  .spfloor{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:clamp(18px,4vw,60px);}
+  .spside{overflow:auto;}
+  .rngnum{font-weight:900;font-size:clamp(44px,5.5vw,80px);line-height:1;color:var(--ink);margin:2px 0 4px;}
+  .rngnum.roll{color:var(--muted);}
+  .rngmeta{color:var(--muted);font-weight:700;font-size:13px;min-height:1.2em;margin-bottom:8px;}
+  .rngrow{display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:6px;}
+  .rnglbl{width:42px;text-align:right;color:var(--muted);font-weight:800;font-size:13px;text-transform:uppercase;}
+  .rngdigits{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
+  .rngcol{display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .rngcol button{width:clamp(28px,2.4vw,36px);height:24px;border-radius:7px;background:var(--line);color:var(--ink);font-weight:900;font-size:12px;line-height:1;}
+  .rngcol button:hover{background:var(--gold);color:var(--gold-ink);}
+  .rngcol button:active{transform:translateY(1px);}
+  .rngcol .d{font-weight:900;font-size:20px;line-height:1.1;}
+  #rngGo{width:100%;margin-top:6px;}
+  .spfloor{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:clamp(14px,3vw,48px);}
+  .spright{justify-content:center;}
   .spwheel{display:flex;flex-direction:column;align-items:center;gap:16px;}
   .spwheel canvas{display:block;border-radius:50%;border:8px solid var(--wc);box-shadow:0 0 40px color-mix(in srgb,var(--wc) 55%,transparent),0 10px 30px rgba(0,0,0,.6);}
-  #spRiskCv{width:min(36vw,58vh);height:min(36vw,58vh);}
-  #spSafeCv{width:min(26vw,42vh);height:min(26vw,42vh);}
+  #spRiskCv{width:min(29vw,58vh);height:min(29vw,58vh);}
+  #spSafeCv{width:min(20vw,42vh);height:min(20vw,42vh);}
   .spbtn{border-radius:50px;padding:14px 34px;font-weight:900;font-size:clamp(17px,2vw,26px);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;box-shadow:0 6px 0 rgba(0,0,0,.35);transition:transform .1s, filter .15s;}
   .spbtn:hover:not(:disabled){filter:brightness(1.12);}
   .spbtn:active:not(:disabled){transform:translateY(3px);}
@@ -492,6 +506,8 @@
     .sphint{font-size:12px;} .spwheel{gap:6px;} .spwheel canvas{border-width:4px;}
     #spRiskCv{width:min(30vw,62vh);height:min(30vw,62vh);} #spSafeCv{width:min(22vw,46vh);height:min(22vw,46vh);}
     .spbtn{padding:6px 14px;font-size:13px;}
+    .spright{flex-basis:170px;} .rngnum{font-size:min(12vh,40px);} .rngmeta{font-size:10px;margin-bottom:2px;} .rngcol button{width:24px;height:16px;font-size:9px;} .rngcol .d{font-size:14px;} .rnglbl{width:32px;font-size:10px;} .rngrow{margin-bottom:2px;} #rngGo{padding:6px;font-size:13px;margin-top:2px;}
+    #spRiskCv{width:min(26vw,62vh);height:min(26vw,62vh);} #spSafeCv{width:min(18vw,46vh);height:min(18vw,46vh);}
     /* Word Puzzle Wheel */
     .wwmid{padding:2px 8px;gap:12px;flex-wrap:nowrap;}
     .wheelbox{width:min(48vh,200px);height:min(48vh,200px);}
@@ -672,6 +688,16 @@
       <div class="spfloor">
         <div class="spwheel" style="--wc:#ff0055;"><canvas id="spRiskCv"></canvas><button class="spbtn risk" id="spRiskBtn">&#9889; Risk It! &#9889;</button></div>
         <div class="spwheel" style="--wc:#00ff88;"><canvas id="spSafeCv"></canvas><button class="spbtn safe" id="spSafeBtn">&#128737;&#65039; Play Safe</button></div>
+      </div>
+      <div class="spside spright">
+        <div class="spcard">
+          <div class="splabel">&#127922; Random number</div>
+          <div class="rngnum num" id="rngNum">&mdash;</div>
+          <div class="rngmeta" id="rngMeta"></div>
+          <div class="rngrow"><span class="rnglbl">From</span><div class="rngdigits" id="rngMin"></div></div>
+          <div class="rngrow"><span class="rnglbl">To</span><div class="rngdigits" id="rngMax"></div></div>
+          <button class="btn gold" id="rngGo">New number</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1969,8 +1995,39 @@ const SP=(()=>{
   $("spCupMinus").onclick=()=>{if(P.busy)return;P.cups=Math.max(0,P.cups-1);sBlip();render();};
   const redraw=()=>{if(screen==="spinner"){risk.draw();safe.draw();}};
   addEventListener("resize",redraw);
-  return{enter(){if(P.team!==null&&P.team>=state.teams.length)P.team=null;render();requestAnimationFrame(redraw);},
+  return{enter(){if(P.team!==null&&P.team>=state.teams.length)P.team=null;render();RNG.render();requestAnimationFrame(redraw);},
          leave(){$("spOverlay").classList.remove("show");P.pending=null;}};
+})();
+
+/* ---------- Random number picker (on the Cup Spinner screen) ----------
+   Arrows set the From/To range (0 to 99,999). No number repeats until the range changes or every number is used. */
+const RNG=(()=>{
+  const R={min:1,max:20,used:new Set(),last:null,rolling:false};
+  const PL=[10000,1000,100,10,1],LB=["10k","1k","100","10","1"];
+  const lo=()=>Math.min(R.min,R.max),hi=()=>Math.max(R.min,R.max),size=()=>hi()-lo()+1;
+  function digits(box,key){box.innerHTML="";const str=String(R[key]).padStart(5,"0");
+    PL.forEach((v,i)=>{const c=document.createElement("div");c.className="rngcol";
+      c.innerHTML=`<button title="+${LB[i]}" aria-label="${key==="min"?"From":"To"} up ${LB[i]}">&#9650;</button><div class="d num">${str[i]}</div><button title="\u2212${LB[i]}" aria-label="${key==="min"?"From":"To"} down ${LB[i]}">&#9660;</button>`;
+      const [up,dn]=c.querySelectorAll("button");up.onclick=()=>change(key,v);dn.onclick=()=>change(key,-v);box.appendChild(c);});}
+  function change(key,d){if(R.rolling)return;const n=Math.max(0,Math.min(99999,R[key]+d));if(n===R[key])return;
+    R[key]=n;R.used.clear();R.last=null;sBlip();render(true);}
+  function render(changed){
+    digits($("rngMin"),"min");digits($("rngMax"),"max");
+    if(!R.rolling)$("rngNum").textContent=R.last===null?"\u2014":fmt(R.last);
+    const left=size()-R.used.size;
+    $("rngMeta").textContent=changed?`New range: ${fmt(lo())} to ${fmt(hi())}`:R.used.size?`${fmt(R.used.size)} of ${fmt(size())} drawn \u00b7 ${fmt(left)} left`:`Range ${fmt(lo())} to ${fmt(hi())}`;
+    $("rngGo").textContent=left<=0?"All used \u2014 start over":"New number";
+    $("rngGo").disabled=R.rolling;}
+  function pick(){const a=lo(),n=size();
+    if(R.used.size<n*.6){let x;do{x=a+Math.floor(Math.random()*n);}while(R.used.has(x));return x;}
+    const left=[];for(let x=a;x<a+n;x++)if(!R.used.has(x))left.push(x);return left[Math.floor(Math.random()*left.length)];}
+  function go(){if(R.rolling)return;AC();
+    if(R.used.size>=size()){R.used.clear();R.last=null;sBlip();render();return;}
+    const x=pick();R.used.add(x);R.rolling=true;render();const el=$("rngNum");el.classList.add("roll");let k=0;
+    const spin=setInterval(()=>{el.textContent=fmt(lo()+Math.floor(Math.random()*size()));tone(900+k*40,.03,"square",.08);
+      if(++k>=12){clearInterval(spin);R.rolling=false;R.last=x;el.classList.remove("roll");sCorrect();render();}},55);}
+  $("rngGo").onclick=go;
+  return{render};
 })();
 
 /* ==================== RACE TRACK ==================== */
