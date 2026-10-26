@@ -33,7 +33,7 @@ h1{
 }
 header p{font-size:clamp(16px,1.6vw,28px);margin-top:1vh}
 
-.choices{flex:1;min-height:0;display:grid;grid-template-columns:min(720px,100%);justify-content:center;gap:3vw}
+.choices{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,640px));justify-content:center;gap:3vw}
 .door{
   position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
   border:6px solid var(--ink);box-shadow:10px 10px 0 var(--ink);text-decoration:none;color:inherit;
@@ -52,6 +52,15 @@ header p{font-size:clamp(16px,1.6vw,28px);margin-top:1vh}
 }
 .hub .caption{background:var(--navy);border-top:6px solid var(--ink)}
 .hub .caption h2{color:var(--gold)}
+.hub .who{position:absolute;top:14px;left:14px;background:var(--gold);color:var(--navy);border:4px solid var(--ink);
+  font-family:var(--display);font-size:clamp(16px,1.7vw,28px);letter-spacing:.05em;padding:4px 12px 0;transform:rotate(-3deg);box-shadow:4px 4px 0 var(--ink);}
+/* Solo door: same family, purple sky */
+.solo{background:
+  repeating-conic-gradient(from 0deg at 50% 40%, rgba(169,150,255,.16) 0 6deg, transparent 6deg 18deg),
+  radial-gradient(ellipse at 50% 35%, #3b2d7a, #160f33 70%);color:#f1f5f9}
+.solo .who{background:#a996ff;}
+.solo .caption{background:#160f33;border-top:6px solid var(--ink)}
+.solo .caption h2{color:#c9bbff}
 
 /* Lesson door: comic-book look, matches the lesson slides */
 .lesson{background:#000}
@@ -88,9 +97,19 @@ header p{font-size:clamp(16px,1.6vw,28px);margin-top:1vh}
   <a class="door hub" href="hub.html">
     <div class="icon" aria-hidden="true">⚡</div>
     <div class="caption">
-      <h2>Game Hub</h2>
-      <p>Twelve games, including Quiz Showdown, Jeopardy, Hot Potato, Verse Voyager, and the Cup Spinner. Scores carry across every game.</p>
+      <h2>Team Game Hub</h2>
+      <p>For class: two or more teams play Quiz Showdown, Jeopardy, Hot Potato, the Cup Spinner, and more. Scores carry across every game.</p>
     </div>
+    <span class="who">2+ teams</span>
+  </a>
+
+  <a class="door hub solo" href="solo.html">
+    <div class="icon" aria-hidden="true">&#11088;</div>
+    <div class="caption">
+      <h2>Solo Challenge</h2>
+      <p>For one player at home: beat your high scores, earn trophies, and learn your memory verses and catechism.</p>
+    </div>
+    <span class="who">1 player</span>
   </a>
 
   <!-- LESSON BUTTON: hidden for now. To show it again, delete the <template> and </template> lines around it.

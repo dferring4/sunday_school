@@ -1243,7 +1243,7 @@ const GAMES=[
   {id:"hotpotato",ic:"&#129364;",tt:"Hot Potato",tc:"#fb923c",td:"Answer fast and pass it on! A secret fuse is burning, and whoever's holding the potato at the BOOM loses 5,000.",count:()=>state.questions.filter(q=>q.type!=="fb").length+" questions"},
   {id:"versemem",ic:"&#128220;",tt:"Verse Eraser",tc:"#60a5fa",td:"Say the verse together while words disappear, until you can say it with none showing.",count:()=>state.memverses.length+" verse"+(state.memverses.length===1?"":"s")},
   {id:"catmem",ic:"&#9997;&#65039;",tt:"Catechism Eraser",tc:"#a3e635",td:"Memorize the question AND the answer. Words vanish a few at a time.",count:()=>state.catechism.length+" questions"},
-  {id:"voyager",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly the ship into the right words to build a verse — outrun the fog!",count:()=>state.voyager.length+" verse"+(state.voyager.length===1?"":"s")},
+  /* Verse Voyager now lives in the Solo Challenge (solo.html). Its code stays here but has no tile. */
   {id:"spinner",ic:"&#127905;",tt:"Cup Spinner",tc:"#ff3d7f",td:"Knock down cups, then spin! Play it safe for a sure bonus, or risk it for big points (and maybe Lose All).",count:()=>"2 wheels · points × cups"},
 ];
 function renderHub(){
