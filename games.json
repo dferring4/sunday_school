@@ -6230,7 +6230,7 @@
      "The Philippian jailer"
     ]
    ],
-   "difficulty": "hard"
+   "difficulty": "extreme"
   },
   {
    "id": "cc-heroes",
@@ -6285,7 +6285,8 @@
      "Solomon",
      "Asked God for wisdom"
     ]
-   ]
+   ],
+   "difficulty": "hard"
   },
   {
    "id": "cc-parables",
@@ -6340,7 +6341,8 @@
      "The Rich Fool",
      "Built bigger barns"
     ]
-   ]
+   ],
+   "difficulty": "hard"
   },
   {
    "id": "cc-miracles",
@@ -6395,7 +6397,8 @@
      "Coin in a fish’s mouth",
      "Paid the temple tax"
     ]
-   ]
+   ],
+   "difficulty": "hard"
   },
   {
    "id": "cc-jesus-names-meaning",
@@ -6450,7 +6453,8 @@
      "The Way",
      "Only way to the Father"
     ]
-   ]
+   ],
+   "difficulty": "hard"
   },
   {
    "id": "cc-books-inside",
@@ -6561,7 +6565,7 @@
      "Abednego"
     ]
    ],
-   "difficulty": "hard"
+   "difficulty": "extreme"
   }
  ],
  "beatclock": [
