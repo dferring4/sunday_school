@@ -539,6 +539,7 @@
     .hubwrap,.setup{padding:10px;}
     .wplace{width:40px;padding:2px;} .wplace .stepbtn{padding:3px 0;font-size:14px;} .wplace .pdig{font-size:16px;} .fwrow .wtag{font-size:18px;min-width:70px;} .fwrow{gap:6px;}
   }
+  .hardtag{display:inline-block;background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:900;margin-left:8px;vertical-align:2px;}
 </style>
 </head>
 <body>
@@ -1789,7 +1790,7 @@ function enterConcentration(){if(!state.concentration.length||state.concentratio
 function showConcPicker(){concPlay.setId=null;$("concPicker").classList.remove("hidden");$("concPlay").classList.add("hidden");$("concControls").style.visibility="hidden";
   const list=$("concPickList");list.innerHTML="";
   if(!state.concentration.length){list.innerHTML=`<div class="empty">No match sets yet — create one in Setup.</div>`;return;}
-  state.concentration.forEach(s=>{const b=document.createElement("button");b.className="jeopick";b.textContent=s.title;b.onclick=()=>loadConcSet(s.id);list.appendChild(b);});
+  state.concentration.forEach(s=>{const b=document.createElement("button");b.className="jeopick";b.innerHTML=esc(s.title)+`${s.difficulty==="hard"?` <span class="hardtag">&#128293; Hard</span>`:""}`;b.onclick=()=>loadConcSet(s.id);list.appendChild(b);});
 }
 function loadConcSet(id){concPlay.setId=id;const s=curConcSet();concPlay.image=s&&s.image?s.image:CONC_DEFAULT_IMG;$("concImgInput").value=concPlay.image;fillConcSelect(concPlay.image);
   $("concPicker").classList.add("hidden");$("concPlay").classList.remove("hidden");$("concControls").style.visibility="visible";

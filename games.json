@@ -6229,7 +6229,8 @@
      "What must I do to be saved?",
      "The Philippian jailer"
     ]
-   ]
+   ],
+   "difficulty": "hard"
   },
   {
    "id": "cc-heroes",
@@ -6559,7 +6560,8 @@
      "Azariah",
      "Abednego"
     ]
-   ]
+   ],
+   "difficulty": "hard"
   }
  ],
  "beatclock": [
