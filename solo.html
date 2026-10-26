@@ -72,6 +72,7 @@
   .pills{display:flex;gap:8px;flex-wrap:wrap;}
   .pill{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-weight:800;font-size:14px;}
   .hardtag{display:inline-block;background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:900;margin-left:4px;vertical-align:1px;}
+  .hardtag.xt{background:linear-gradient(90deg,#4c1d95,#be185d);color:#fff;border-color:#f0abfc;}
   .pill.on{background:var(--gold);color:var(--gold-ink);border-color:var(--gold);}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;}
   .label{color:var(--muted);font-weight:800;letter-spacing:1.5px;font-size:12px;text-transform:uppercase;margin:0 0 8px;}
@@ -495,10 +496,10 @@
   <div class="screen hidden" id="scrConc"><div class="wrap">
     <div id="concPick">
       <div class="ghead"><h2>&#129513; Concentration</h2><div class="chip gold" id="concBestChip"></div></div>
-      <p class="rules">Flip two cards at a time to find the matching pairs. Every match uncovers part of a <b>hidden picture</b>. Fewer flips and a faster time mean more points.</p>
+      <p class="rules">Flip two cards at a time to find the matching pairs. Every match uncovers part of a <b>hidden picture</b>. Fewer flips and a faster time mean more points. <b>&#128293; Hard</b> sets score 1.25&times; points and <b>&#9889; Extreme</b> sets score 1.5&times;, and each has its own trophies!</p>
       <div class="label">Pick a set</div>
       <div class="pills" id="concSets" style="margin-bottom:16px;"></div>
-      <div class="label">How hard?</div>
+      <div class="label">Board size</div>
       <div class="pills" id="concLevels" style="margin-bottom:20px;"></div>
       <button class="btn gold" id="concGo">Start &#9654;</button>
     </div>
@@ -730,7 +731,13 @@ const TROPHIES=[
   {id:"allgames",ic:"&#127775;",tt:"All-Rounder",td:"Play every game at least once."},
   {id:"perfect",ic:"&#128175;",tt:"Perfect 10",td:"Get all 10 right in Quiz Showdown."},
   {id:"detective",ic:"&#128269;",tt:"Super Sleuth",td:"In Who Am I?, guess someone on the very first clue."},
-  {id:"memory",ic:"&#129504;",tt:"Steel Trap",td:"Finish Hard Concentration in 30 flips or fewer."},
+  {id:"memory",ic:"&#129504;",tt:"Steel Trap",td:"Finish a Big (12-pair) Concentration board in 30 flips or fewer."},
+  {id:"hardhit",ic:"&#128293;",tt:"Feeling the Heat",td:"Finish any \uD83D\uDD25 Hard match set in Concentration."},
+  {id:"hardbig",ic:"&#127798;&#65039;",tt:"Turn Up the Heat",td:"Finish a Hard match set on the Big (12-pair) board."},
+  {id:"hardall",ic:"&#127941;",tt:"Hard-Set Master",td:"Finish every Hard match set."},
+  {id:"xtreme",ic:"&#9889;",tt:"Extreme!",td:"Finish any \u26A1 Extreme match set in Concentration."},
+  {id:"xtremebig",ic:"&#127755;",tt:"Extreme Champion",td:"Finish every Extreme match set on the Big (12-pair) board."},
+  {id:"legend",ic:"&#128081;",tt:"Concentration Legend",td:"Finish an Extreme set on the Big board in 30 flips or fewer."},
   {id:"puzzler",ic:"&#129513;",tt:"Puzzle Pro",td:"Solve 10 word puzzles."},
   {id:"pilot",ic:"&#128640;",tt:"Star Pilot",td:"Complete a whole verse in Verse Voyager."},
   {id:"builder",ic:"&#128296;",tt:"Word by Word",td:"Finish building your first memory verse."},
@@ -959,7 +966,8 @@ const Who=(()=>{
 
 /* ==================== CONCENTRATION ==================== */
 const Conc=(()=>{
-  const LEVELS=[{l:"Easy",n:6},{l:"Medium",n:8},{l:"Hard",n:12}];
+  const LEVELS=[{l:"Small board",n:6},{l:"Medium board",n:8},{l:"Big board",n:12}];
+  const DIFF={hard:{m:1.25,l:"Hard set bonus"},extreme:{m:1.5,l:"Extreme set bonus"}};
   const K={set:null,lvl:1,cards:[],up:[],moves:0,matched:0,t0:0,h:null,busy:false,pairs:0};
   /* hidden pictures: images/one.png, two.png ... (same pictures the Game Hub uses) */
   const NUMS=["one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
@@ -969,7 +977,7 @@ const Conc=(()=>{
   findPics();
   function enter(){stop();$("concPick").classList.remove("hidden");$("concPlay").classList.add("hidden");$("concBestChip").innerHTML=bestChip("conc");
     if(!K.set||!C.concentration.some(s=>s.id===K.set))K.set=C.concentration[0]&&C.concentration[0].id;
-    const sets=$("concSets");sets.innerHTML="";C.concentration.forEach(s=>{const b=document.createElement("button");b.className="pill"+(K.set===s.id?" on":"");b.innerHTML=esc(s.title)+`${s.difficulty==="hard"?` <span class="hardtag">&#128293; Hard</span>`:""}`;b.onclick=()=>{K.set=s.id;enter();};sets.appendChild(b);});
+    const sets=$("concSets");sets.innerHTML="";C.concentration.forEach(s=>{const b=document.createElement("button");b.className="pill"+(K.set===s.id?" on":"");b.innerHTML=esc(s.title)+`${s.difficulty==="hard"?` <span class="hardtag">&#128293; Hard</span>`:s.difficulty==="extreme"?` <span class="hardtag xt">&#9889; Extreme</span>`:""}`;b.onclick=()=>{K.set=s.id;enter();};sets.appendChild(b);});
     const lv=$("concLevels");lv.innerHTML="";LEVELS.forEach((x,i)=>{const b=document.createElement("button");b.className="pill"+(K.lvl===i?" on":"");b.textContent=`${x.l} (${x.n} pairs)`;b.onclick=()=>{K.lvl=i;enter();};lv.appendChild(b);});}
   function start(){const s=C.concentration.find(x=>x.id===K.set);if(!s)return;
     const pairs=pickN(s.pairs,Math.min(LEVELS[K.lvl].n,s.pairs.length));K.pairs=pairs.length;
@@ -993,9 +1001,15 @@ const Conc=(()=>{
   function paintTime(){const s=secs();$("cTime").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
   function paint(){$("cPairs").textContent=`${K.matched} / ${K.pairs}`;$("cMoves").textContent=K.moves;paintTime();}
   function end(){stop();const s=secs(),n=K.pairs;
-    const base=n*500,flipBonus=Math.max(0,n*2-K.moves)*300,timeBonus=Math.max(0,n*8-s)*20;const score=base+flipBonus+timeBonus;
-    const tr=[];if(LEVELS[K.lvl].n===12&&K.moves<=30)tr.push("memory");
-    finishGame("conc",score,{title:"Picture uncovered!",detail:`${K.moves} flips in ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}<br><span style="color:var(--muted);font-size:14px;">${fmt(base)} for the pairs + ${fmt(flipBonus)} for few flips + ${fmt(timeBonus)} for speed</span>`,trophies:tr,again:()=>{openGame("conc");start();}});}
+    const base=n*500,flipBonus=Math.max(0,n*2-K.moves)*300,timeBonus=Math.max(0,n*8-s)*20;
+    const set=C.concentration.find(x=>x.id===K.set)||{},df=DIFF[set.difficulty],sub=base+flipBonus+timeBonus,score=Math.round(sub*(df?df.m:1));
+    const big=LEVELS[K.lvl].n===12,tr=[];if(big&&K.moves<=30)tr.push("memory");
+    /* remember the biggest board finished for each set, for the Hard/Extreme trophies */
+    const p=me();p.concDone=p.concDone||{};p.concDone[K.set]=Math.max(p.concDone[K.set]||0,n);saveStore();
+    const sets=d=>C.concentration.filter(x=>x.difficulty===d),done=(x,need)=>(p.concDone[x.id]||0)>=need;
+    if(set.difficulty==="hard"){tr.push("hardhit");if(big)tr.push("hardbig");if(sets("hard").every(x=>done(x,1)))tr.push("hardall");}
+    if(set.difficulty==="extreme"){tr.push("xtreme");if(sets("extreme").every(x=>done(x,12)))tr.push("xtremebig");if(big&&K.moves<=30)tr.push("legend");}
+    finishGame("conc",score,{title:"Picture uncovered!",detail:`${K.moves} flips in ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}<br><span style="color:var(--muted);font-size:14px;">${df?"(":""}${fmt(base)} for the pairs + ${fmt(flipBonus)} for few flips + ${fmt(timeBonus)} for speed${df?`) &times; ${df.m} ${df.l}`:""}</span>`,trophies:tr,again:()=>{openGame("conc");start();}});}
   function stop(){if(K.h){clearInterval(K.h);K.h=null;}}
   $("concGo").onclick=start;$("concQuit").onclick=()=>{stop();enter();};
   addEventListener("resize",()=>{if(screen==="conc"&&!$("concPlay").classList.contains("hidden"))layout();});
