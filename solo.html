@@ -352,6 +352,39 @@
   .scover .voycard p{color:var(--muted);}
   .combo{font-weight:900;color:#fb923c;}
 
+
+  /* Learn the Gospel */
+  .gstep{display:flex;gap:12px;align-items:flex-start;margin:18px 0 10px;}
+  .gstep .n{flex:none;width:34px;height:34px;border-radius:50%;background:#f97316;color:#1c0a02;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .gstep b{display:block;font-size:20px;font-weight:900;}
+  .gstep span.t{color:var(--muted);font-weight:700;font-size:15px;line-height:1.4;}
+  .gheads{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  @media(max-width:820px){.gheads{grid-template-columns:repeat(2,1fr);}}
+  .ghbtn{position:relative;text-align:left;background:linear-gradient(160deg,#4a2410,#1e293b);border:2px solid #f97316;border-radius:18px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:4px;transition:transform .12s, box-shadow .12s;}
+  .ghbtn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(0,0,0,.45);}
+  .ghbtn .gn{color:#fdba74;font-weight:900;font-size:13px;letter-spacing:1px;}
+  .ghbtn .gt{font-weight:900;font-size:clamp(18px,2.2vw,24px);line-height:1.1;}
+  .ghbtn .gs{color:var(--muted);font-weight:700;font-size:13px;}
+  .ghbtn .gdone{position:absolute;top:10px;right:10px;background:var(--green);color:#04241a;border-radius:999px;font-size:11px;font-weight:900;padding:3px 8px;}
+  .lnhead{margin:6px 0 0;} .lnnum{color:#fdba74;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;font-size:13px;}
+  .lncard,.pacard{background:var(--panel);border:1px solid var(--line);border-left:6px solid #f97316;border-radius:18px;padding:16px 18px;margin-bottom:14px;}
+  .lnpt{display:flex;gap:12px;align-items:flex-start;font-weight:900;font-size:clamp(19px,2.6vw,28px);line-height:1.25;margin-bottom:10px;}
+  .lnbadge{flex:none;background:#f97316;color:#1c0a02;border-radius:10px;padding:2px 9px;font-size:.75em;margin-top:2px;}
+  .lnverse{display:flex;gap:10px;align-items:flex-start;background:#fffdf5;color:#1e293b;border-radius:14px;padding:10px 12px;margin-top:8px;}
+  .lnverse b{font-weight:900;color:#6a4be6;}
+  .lnvt{font-family:Georgia,serif;font-size:clamp(16px,2vw,21px);line-height:1.45;}
+  .lnsay{flex:none;width:40px;height:40px;border-radius:12px;background:#ede9fe;font-size:20px;}
+  .hidew{filter:blur(7px);cursor:pointer;transition:filter .2s;user-select:none;} .hidew.peek{filter:none;}
+  #lnFoot{margin:6px 0 20px;}
+  .palesson b{font-size:20px;} .pastars{font-size:22px;display:flex;gap:4px;align-items:center;}
+  .pakind{display:inline-block;background:var(--bg2);border:1px solid var(--line);color:#fdba74;border-radius:999px;padding:4px 12px;font-weight:900;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+  .pakind.new{background:#f97316;color:#1c0a02;border-color:#f97316;}
+  .pahead{color:var(--muted);font-weight:900;font-size:15px;margin-bottom:4px;}
+  .papt{font-weight:900;font-size:clamp(24px,3.4vw,38px);line-height:1.2;margin-bottom:8px;}
+  .choices.one{grid-template-columns:1fr;}
+  .paorder{margin:0 0 12px;padding-left:28px;} .paorder li{background:rgba(52,211,153,.14);border:1px solid var(--green);border-radius:10px;padding:8px 12px;margin:6px 0;font-weight:800;}
+  .pabar{height:10px;border-radius:9px;background:var(--bg2);overflow:hidden;margin:0 0 14px;} .pabar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f97316,#fde047);transition:width .3s;}
+
   /* printable progress sheet */
   #printSheet{display:none;}
   @media print{
@@ -399,8 +432,13 @@
     <p class="sub">Pick a game. Try to beat your own high score, earn trophies, and learn your memory verses and catechism.</p>
     <div class="statstrip" id="statStrip"></div>
     <div class="sechead"><h2>&#10013;&#65039; Share the Gospel</h2><span class="tag">NEW</span></div>
-    <div class="gospelband"><div class="gl"><b>Learn how to share the Gospel!</b> Know the 4 headings, the points under each one, and the verse that proves each point.<div class="heads"><span>1. God</span><span>2. Man</span><span>3. Jesus</span><span>4. Sinners Must Repent and Believe</span></div></div>
+    <div class="gospelband"><div class="gl"><b>Learn how to share the Gospel!</b> The Gospel has <b>4 parts</b>. Each part has a few points, and each point has a Bible verse that proves it. Start with Step 1, even if you've never heard it before!</div>
       <button class="stat gstat" id="gStat"></button></div>
+    <div class="gstep"><span class="n">1</span><div><b>Learn it</b><span class="t">Tap each part below to see its points and verses. You can listen to them, too.</span></div></div>
+    <div class="gheads" id="gHeads"></div>
+    <div class="gstep"><span class="n">2</span><div><b>Practice it</b><span class="t">Gospel Path teaches you one point at a time and then checks that you've got it. Earn up to 3 stars on each lesson.</span></div></div>
+    <div class="tiles g" id="gPathTile"></div>
+    <div class="gstep"><span class="n">3</span><div><b>Play it</b><span class="t">Once you know it, test yourself with these games and beat your high scores!</span></div></div>
     <div class="tiles g" id="gTiles"></div>
     <div class="sechead"><h2>&#127918; More Games</h2></div>
     <div class="tiles" id="tiles"></div>
@@ -535,6 +573,27 @@
     <div id="progBody"></div>
   </div></div>
 
+
+  <!-- ===== LEARN THE GOSPEL ===== -->
+  <div class="screen hidden" id="scrLearn"><div class="wrap">
+    <div class="pills" id="lnNav" style="margin-bottom:8px;"></div>
+    <div id="lnBody"></div>
+    <div class="row" id="lnFoot"></div>
+  </div></div>
+
+  <!-- ===== GOSPEL PATH ===== -->
+  <div class="screen hidden" id="scrPath"><div class="wrap">
+    <div id="paPick">
+      <div class="ghead"><h2>&#129517; Gospel Path</h2><div class="chip gold" id="paBestChip"></div></div>
+      <p class="rules">No need to know anything yet! Each lesson <b>teaches</b> you a new point and its verse, then asks a few quick questions to help it stick. Missed one? It comes back later so you can get it right. Do the lessons in order, then finish with <b>The Whole Gospel</b>.</p>
+      <div class="vlist" id="paList"></div>
+    </div>
+    <div id="paPlay" class="hidden">
+      <div class="ghead"><div class="chip" id="paTitle"></div><div class="chip gold num" id="paScore">0</div></div>
+      <div class="pabar"><i id="paBar"></i></div>
+      <div class="pacard" id="paCard"></div>
+    </div>
+  </div></div>
   <!-- ===== BRIDGE BUILDER ===== -->
   <div class="screen hidden" id="scrBridge"><div class="wrap">
     <div id="brPick">
@@ -648,6 +707,7 @@ const GAMES=[
   {id:"verse",ic:"&#128220;",tt:"Verse Builder",tc:"#60a5fa",td:"Learn a memory verse by filling in the missing words, a few more each level."},
   {id:"cat",ic:"&#9997;&#65039;",tt:"Catechism Builder",tc:"#a3e635",td:"Learn a catechism question and answer, one level at a time."},
   {id:"voyager",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly your ship through the right words to build a verse. Outrun the fog!"},
+  {id:"path",sec:"gpath",ic:"&#129517;",tt:"Gospel Path",tc:"#fde047",td:"Start here! Learn the Gospel one point at a time, with quick checks along the way."},
   {id:"bridge",sec:"gospel",ic:"&#127753;",tt:"Bridge Builder",tc:"#f97316",td:"Build the Gospel bridge: pillars, planks, and bolts. Then walk across!"},
   {id:"share",sec:"gospel",ic:"&#128172;",tt:"Share It!",tc:"#38bdf8",td:"Your friend Jordan asks about the Gospel. Explain it in order, with the verses."},
   {id:"scroll",sec:"gospel",ic:"&#129530;",tt:"Scroll Catcher",tc:"#fb923c",td:"Tap the right falling scroll before it lands. Headings, points, and verses!"},
@@ -672,6 +732,8 @@ const TROPHIES=[
   {id:"ready",ic:"&#127894;&#65039;",tt:"Ready to Share",td:"Share the whole Gospel in Pro mode with no wrong picks.",g:1},
   {id:"scrollkeeper",ic:"&#129530;",tt:"Scroll Keeper",td:"Catch 25 scrolls in one game of Scroll Catcher.",g:1},
   {id:"onfire",ic:"&#128293;",tt:"On Fire!",td:"Catch 10 scrolls in a row in Scroll Catcher.",g:1},
+  {id:"trail",ic:"&#129517;",tt:"Trail Blazer",td:"Finish all 5 Gospel Path lessons.",g:1},
+  {id:"starstudent",ic:"&#127775;",tt:"Star Student",td:"Earn 3 stars on every Gospel Path lesson.",g:1},
   {id:"wholegospel",ic:"&#10013;&#65039;",tt:"The Whole Gospel",td:"Check off every Gospel point as \u201cI know it!\u201d",g:1},
 ];
 function award(id){const p=me();if(!p||p.trophies[id])return null;p.trophies[id]=Date.now();saveStore();const t=TROPHIES.find(x=>x.id===id);if(t)toast(t.ic,`Trophy earned: <b>${t.tt}</b>`);return t;}
@@ -703,12 +765,13 @@ function finishGame(gid,score,opts){
 
 /* ==================== ROUTER ==================== */
 let screen="players";
-const SCREENS={players:"scrPlayers",home:"scrHome",quiz:"scrQuiz",whoami:"scrWhoami",conc:"scrConc",wheel:"scrWheel",verse:"scrBuild",cat:"scrBuild",voyager:"scrVoyager",progress:"scrProgress",bridge:"scrBridge",share:"scrShare",scroll:"scrScroll"};
+const SCREENS={players:"scrPlayers",home:"scrHome",quiz:"scrQuiz",whoami:"scrWhoami",conc:"scrConc",wheel:"scrWheel",verse:"scrBuild",cat:"scrBuild",voyager:"scrVoyager",progress:"scrProgress",bridge:"scrBridge",learn:"scrLearn",path:"scrPath",share:"scrShare",scroll:"scrScroll"};
 function show(name){
   if(screen==="voyager"&&name!=="voyager")stopVoyager();
   if(screen==="quiz"&&name!=="quiz")Quiz.stop();
   if(screen==="conc"&&name!=="conc")Conc.stop();
   if(screen==="bridge"&&name!=="bridge")Bridge.stop();
+  if((screen==="learn"||screen==="path")&&name!==screen)hushSpeech();
   if(screen==="share"&&name!=="share")Share.stop();
   if(screen==="scroll"&&name!=="scroll")Scroll.stop();
   screen=name;const target=SCREENS[name];
@@ -716,7 +779,7 @@ function show(name){
   $("homeBtn").classList.toggle("hidden",name==="home"||name==="players");
   const p=me();$("playerBtn").classList.toggle("hidden",!p||name==="players");if(p){$("playerName").textContent=p.name;$("playerAv").innerHTML=avOf(p);}
   $("switchHint").classList.toggle("hidden",!p||name!=="home");
-  const g=gameById(name);$("brandText").innerHTML=g?g.tt:name==="progress"?"My Progress":`Solo <span class="full">Challenge</span>`;
+  const g=gameById(name);$("brandText").innerHTML=g?g.tt:name==="learn"?"Learn the Gospel":name==="progress"?"My Progress":`Solo <span class="full">Challenge</span>`;
   $(target).scrollTop=0;
   if(name==="players")renderPlayers();
   if(name==="home")renderHome();
@@ -725,7 +788,7 @@ function show(name){
 function openGame(id){
   if(!contentReady){show("home");return;}
   show(id);
-  ({quiz:Quiz,whoami:Who,conc:Conc,wheel:Wheel,verse:Build,cat:Build,voyager:{enter:enterVoyager},bridge:Bridge,share:Share,scroll:Scroll})[id].enter(id);
+  ({quiz:Quiz,whoami:Who,conc:Conc,wheel:Wheel,verse:Build,cat:Build,voyager:{enter:enterVoyager},bridge:Bridge,share:Share,scroll:Scroll,path:Path})[id].enter(id);
 }
 $("homeBtn").onclick=()=>show("home");
 $("playerBtn").onclick=()=>show("players");
@@ -775,10 +838,13 @@ function renderHome(){
   $("statStrip").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>show("progress"));
   const gk=gKnown();$("gStat").innerHTML=`<span>&#10013;&#65039; Gospel points I know</span><b>${gk} / ${GPTS.length}</b><div class="bar"><i style="width:${pct(gk,GPTS.length)}%;background:linear-gradient(90deg,#f97316,#fde047)"></i></div>`;
   $("gStat").onclick=()=>{progTab="g";show("progress");};
-  const t=$("tiles");t.innerHTML="";const gt=$("gTiles");gt.innerHTML="";
+  const lr=p.gLearn||{};$("gHeads").innerHTML=GOSPEL.map((g,i)=>{const nV=g.pts.reduce((a,x)=>a+x.v.length,0);return`<button class="ghbtn" data-i="${i}">${lr[i]?'<span class="gdone">&#10004; Seen</span>':""}<span class="gn">PART ${i+1}</span><span class="gt">${esc(g.h)}</span><span class="gs">${g.pts.length} points &middot; ${nV} verse${nV===1?"":"s"}</span></button>`;}).join("");
+  $("gHeads").querySelectorAll(".ghbtn").forEach(b=>b.onclick=()=>{AC();Learn.open(+b.dataset.i);});
+  const t=$("tiles");t.innerHTML="";const gt=$("gTiles");gt.innerHTML="";const gp=$("gPathTile");gp.innerHTML="";
   GAMES.forEach(g=>{const d=document.createElement("button");d.className="tile";d.style.setProperty("--tc",g.tc);const b=p.best[g.id]||0;
     d.innerHTML=`<div class="barl"></div><div class="ic">${g.ic}</div><div class="tt">${g.tt}</div><div class="td">${g.td}</div><div class="best">${b?"&#127942; High score: "+fmt(b):"Not played yet"}</div>`;
-    d.onclick=()=>{AC();openGame(g.id);};(g.sec==="gospel"?gt:t).appendChild(d);});
+    if(g.id==="path"){const st=p.path||{};const done=[0,1,2,3,4].filter(i=>st[i]).length;d.querySelector(".best").innerHTML=`${done} of 5 lessons done &middot; ${[0,1,2,3,4].reduce((a,i)=>a+(st[i]||0),0)} / 15 &#11088;`;}
+    d.onclick=()=>{AC();openGame(g.id);};(g.sec==="gospel"?gt:g.sec==="gpath"?gp:t).appendChild(d);});
   const pr=document.createElement("button");pr.className="tile prog";
   pr.innerHTML=`<div class="barl"></div><div class="ic">&#128203;</div><div class="tt">My Progress</div><div class="td">Check off the verses and catechism you know by heart, see your trophies, and print your sheet to show your teacher.</div><div class="best">${vK+cK} checked off</div>`;
   pr.onclick=()=>show("progress");t.appendChild(pr);
@@ -1204,6 +1270,106 @@ function gQ(type,n){
     return{kind:"What comes next?",prompt:`After “${P(p)}”`,opts:fill(nx,GPTS.filter(x=>x!==p),x=>x.id).map(o=>({html:P(o.x),ok:o.ok}))};}
   return gQ("p2h",n);
 }
+
+
+/* ==================== LEARN THE GOSPEL (study pages) ==================== */
+const GINTRO=["The Gospel starts with who God is.","Next, the Gospel tells the truth about us.","Then comes the good news: what Jesus did for sinners.","Last, what God calls every sinner to do."];
+function speak(text){if(!("speechSynthesis" in window))return false;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/LORD/g,"Lord"));u.rate=.85;speechSynthesis.speak(u);return true;}
+function hushSpeech(){if("speechSynthesis" in window)speechSynthesis.cancel();}
+const Learn=(()=>{
+  let hi=0,hide=false;
+  function open(h){hi=h;hide=false;show("learn");render();const p=me();p.gLearn=p.gLearn||{};if(!p.gLearn[hi]){p.gLearn[hi]=1;saveStore();}}
+  function render(){const g=GOSPEL[hi];
+    $("lnNav").innerHTML=GOSPEL.map((x,i)=>`<button class="pill${i===hi?" on":""}" data-i="${i}">${i+1}. ${esc(x.h)}</button>`).join("");
+    $("lnNav").querySelectorAll("button").forEach(b=>b.onclick=()=>{hushSpeech();open(+b.dataset.i);});
+    const nV=g.pts.reduce((a,p)=>a+p.v.length,0);
+    let h=`<div class="lnhead"><div class="lnnum">Part ${hi+1} of 4</div><h1 class="big" style="margin:0">${esc(g.h)}</h1><p class="sub" style="margin:6px 0 0">${esc(GINTRO[hi])} It has <b>${g.pts.length} points</b> and <b>${nV} verse${nV===1?"":"s"}</b>.</p></div>
+      <div class="row" style="margin:12px 0 16px"><button class="btn purple" id="lnListen">&#128266; Listen to this part</button><button class="btn" id="lnHide">${hide?"&#128065;&#65039; Show the words":"&#128584; Hide the words (test myself)"}</button></div>`;
+    g.pts.forEach(pt=>{h+=`<div class="lncard"><div class="lnpt"><span class="lnbadge">#${pt.n}</span><span class="${hide?"hidew":""}">${esc(pt.t)}</span></div>`;
+      pt.v.forEach(id=>{h+=`<div class="lnverse"><button class="lnsay" data-id="${id}" aria-label="Listen to ${esc(GV[id][0])}">&#128266;</button><div><b>${esc(GV[id][0])}</b><div class="lnvt ${hide?"hidew":""}">“${esc(GV[id][1])}”</div></div></div>`;});h+=`</div>`;});
+    if(hide)h+=`<p class="sub" style="text-align:center">Say each point and verse out loud, then tap the blurry words to check yourself.</p>`;
+    $("lnBody").innerHTML=h;
+    $("lnBody").querySelectorAll(".hidew").forEach(e=>e.onclick=()=>e.classList.toggle("peek"));
+    $("lnBody").querySelectorAll(".lnsay").forEach(b=>b.onclick=()=>speak(GV[b.dataset.id][0]+". "+GV[b.dataset.id][1]));
+    $("lnListen").onclick=()=>speak(`${g.h}. `+g.pts.map(pt=>`Point ${pt.n}. ${pt.t} `+pt.v.map(id=>`${GV[id][0]}. ${GV[id][1]}`).join(" ")).join(" "));
+    $("lnHide").onclick=()=>{hide=!hide;render();};
+    const f=$("lnFoot");f.innerHTML="";
+    if(hi>0){const b=document.createElement("button");b.className="btn";b.innerHTML=`&#9664; ${esc(GOSPEL[hi-1].h)}`;b.onclick=()=>{hushSpeech();open(hi-1);};f.appendChild(b);}
+    const pr=document.createElement("button");pr.className="btn green";pr.innerHTML=`&#129517; Practice ${esc(g.h)} in Gospel Path`;pr.onclick=()=>{hushSpeech();openGame("path");Path.start(hi);};f.appendChild(pr);
+    if(hi<3){const b=document.createElement("button");b.className="btn gold";b.innerHTML=`Next: ${esc(GOSPEL[hi+1].h)} &#9654;`;b.onclick=()=>{hushSpeech();open(hi+1);};f.appendChild(b);}
+    $("scrLearn").scrollTop=0;}
+  return{open};
+})();
+
+/* ==================== GOSPEL PATH (teaches from zero, then checks) ==================== */
+const Path=(()=>{
+  const LESSONS=[...GOSPEL.map((g,i)=>({t:`${i+1}. ${g.h}`,d:`Learn the ${g.pts.length} points under ${g.h} and their verses.`})),{t:"5. The Whole Gospel",d:"Put it all together: all 4 headings, every point, in order."}];
+  const P={lesson:0,q:[],i:0,score:0,miss:0,total:0,busy:false};
+  function stars(){const p=me();p.path=p.path||{};return p.path;}
+  function enter(){hushSpeech();$("paPick").classList.remove("hidden");$("paPlay").classList.add("hidden");$("paBestChip").innerHTML=bestChip("path");
+    const st=stars(),box=$("paList");box.innerHTML="";
+    LESSONS.forEach((L,i)=>{const s=st[i]||0;const b=document.createElement("button");b.className="vitem palesson";
+      b.innerHTML=`<b>${esc(L.t)}</b><span>${esc(L.d)}</span><div class="pastars">${[1,2,3].map(k=>`<span style="opacity:${k<=s?1:.22}">&#11088;</span>`).join("")}${s?"":` <span class="bdg">${i===nextLesson()?"Start here":"Not done yet"}</span>`}</div>`;
+      b.onclick=()=>start(i);box.appendChild(b);});}
+  function nextLesson(){const st=stars();for(let i=0;i<LESSONS.length;i++)if(!st[i])return i;return -1;}
+  /* ---- build the lesson ---- */
+  const other=(pt,n)=>pickN(GPTS.filter(x=>x.hi!==pt.hi),n);
+  function mcPoint(pt){return{type:"mc",kind:"Quick check",prompt:`Point <b>#${pt.n}</b> under <b>${esc(GOSPEL[pt.hi].h)}</b> is…`,
+    opts:shuffle([{h:esc(pt.t),ok:1},...other(pt,2).map(x=>({h:esc(x.t)}))]),why:`Point #${pt.n} under ${GOSPEL[pt.hi].h}: “${pt.t}”`};}
+  function mcVerse(pt,vid){const others=pickN(GVS.filter(v=>v.pid!==pt.id),2);const vv=GVS.find(v=>v.id===vid);
+    return{type:"mc",kind:"Which verse proves it?",prompt:`“${esc(pt.t)}”`,opts:shuffle([vv,...others].map(v=>({h:`<span class="ref">${esc(v.ref)}</span><span class="txt">“${esc(trunc(v.text,14))}”</span>`,ok:v===vv?1:0}))),why:`${vv.ref} goes with “${pt.t}”`};}
+  function mcRef(vid){const v=GVS.find(x=>x.id===vid),pt=gPt(v.pid);
+    return{type:"mc",kind:"Remember?",prompt:`<b>${esc(v.ref)}</b> proves which point?`,opts:shuffle([{h:esc(pt.t),ok:1},...pickN(GPTS.filter(x=>x!==pt),2).map(x=>({h:esc(x.t)}))]),why:`${v.ref} proves “${pt.t}”`};}
+  function mcHead(pt){return{type:"mc",kind:"Which heading?",prompt:`“${esc(pt.t)}” goes under…`,opts:shuffle(GOSPEL.map((g,i)=>({h:esc(g.h),ok:i===pt.hi?1:0}))),why:`It goes under ${GOSPEL[pt.hi].h}.`};}
+  function build(L){const q=[];
+    if(L<4){const g=GOSPEL[L];
+      if(L>0)q.push({type:"order",kind:"Warm-up",prompt:"Put the headings you've learned so far in order:",items:GOSPEL.slice(0,L+1).map(x=>x.h)});
+      g.pts.forEach((pt,k)=>{q.push({type:"teach",pt});q.push(mcPoint(pt));pt.v.forEach(id=>q.push(mcVerse(pt,id)));
+        if(k>0){const prev=g.pts[Math.floor(Math.random()*k)];q.push(Math.random()<.5?mcPoint(prev):mcRef(pickN(prev.v,1)[0]));}});
+      q.push({type:"order",kind:"Put it in order",prompt:`Tap the points under <b>${esc(g.h)}</b> in order, #1 first:`,items:g.pts.map(x=>x.t)});
+      shuffle(g.pts).slice(0,2).forEach(pt=>q.push(mcRef(pickN(pt.v,1)[0])));}
+    else{q.push({type:"order",kind:"The big picture",prompt:"Tap the 4 headings of the Gospel in order:",items:GOSPEL.map(x=>x.h)});
+      GOSPEL.forEach(g=>q.push({type:"order",kind:"Put it in order",prompt:`Tap the points under <b>${esc(g.h)}</b> in order:`,items:g.pts.map(x=>x.t)}));
+      pickN(GPTS,4).forEach(pt=>q.push(mcHead(pt)));pickN(GVS,4).forEach(v=>q.push(mcRef(v.id)));}
+    return q;}
+  function start(L){hushSpeech();P.lesson=L;P.q=build(L);P.i=0;P.score=0;P.miss=0;P.total=P.q.length;
+    if(screen!=="path")show("path");$("paPick").classList.add("hidden");$("paPlay").classList.remove("hidden");$("paTitle").textContent=LESSONS[L].t;step();}
+  function bar(){$("paBar").style.width=Math.round(P.i/P.q.length*100)+"%";$("paScore").textContent=fmt(P.score);}
+  function cont(label,fn){const b=document.createElement("button");b.className="btn gold";b.innerHTML=label;b.onclick=fn;return b;}
+  function step(){bar();if(P.i>=P.q.length){finish();return;}const c=$("paCard"),it=P.q[P.i];c.innerHTML="";c.classList.remove("shake");
+    if(it.type==="teach"){const pt=it.pt,g=GOSPEL[pt.hi];
+      c.innerHTML=`<div class="pakind new">&#10024; New point</div><div class="pahead">${esc(g.h)} &middot; Point #${pt.n}</div><div class="papt">${esc(pt.t)}</div>
+        ${pt.v.map(id=>`<div class="lnverse"><button class="lnsay" data-id="${id}" aria-label="Listen">&#128266;</button><div><b>${esc(GV[id][0])}</b><div class="lnvt">“${esc(GV[id][1])}”</div></div></div>`).join("")}
+        <p class="sub" style="margin:12px 0 0">Read it out loud${pt.v.length>1?" (it has two verses!)":""}. Tap &#128266; to hear it.</p>`;
+      c.querySelectorAll(".lnsay").forEach(b=>b.onclick=()=>speak(GV[b.dataset.id][0]+". "+GV[b.dataset.id][1]));
+      const r=document.createElement("div");r.className="row";r.style.marginTop="14px";r.appendChild(cont("I’ve got it! &#9654;",()=>{P.score+=20;P.i++;sBlip();step();}));c.appendChild(r);return;}
+    if(it.type==="mc"){let tries=0;
+      c.innerHTML=`<div class="pakind">${esc(it.kind)}${it.retry?" &middot; try again":""}</div><div class="brprompt">${it.prompt}</div><div class="choices one" id="paOpts"></div><div class="feedback" id="paFb"></div><div class="row" id="paNext" style="margin-top:12px"></div>`;
+      it.opts.forEach(o=>{const b=document.createElement("button");b.className="choice small";b.innerHTML=o.h;b.onclick=()=>{
+        if(b.disabled)return;
+        if(o.ok){const pts=tries?40:(it.retry?60:100);P.score+=pts;sRight();floatText("+"+pts,"var(--green)");b.classList.add("right");
+          $("paOpts").querySelectorAll("button").forEach(x=>x.disabled=true);$("paFb").className="feedback good";$("paFb").innerHTML=tries?"&#10004; There it is!":"&#10004; Yes!";
+          setTimeout(()=>{P.i++;step();},tries?900:650);}
+        else{tries++;P.miss++;sWrong();b.disabled=true;b.classList.add("wrong");$("paFb").className="feedback bad";$("paFb").innerHTML=`Not quite. <small>${esc(it.why)}</small>`;
+          if(tries===1&&!it.retry)P.q.push(Object.assign({},it,{retry:true,opts:shuffle(it.opts)}));}};$("paOpts").appendChild(b);});return;}
+    if(it.type==="order"){const items=it.items;let next=0,slip=0;
+      c.innerHTML=`<div class="pakind">${esc(it.kind)}</div><div class="brprompt">${it.prompt}</div><ol class="paorder" id="paDone"></ol><div class="choices one" id="paOpts"></div><div class="feedback" id="paFb"></div>`;
+      shuffle(items.map((t,i)=>({t,i}))).forEach(o=>{const b=document.createElement("button");b.className="choice small";b.innerHTML=esc(o.t);b.onclick=()=>{
+        if(o.i===next){next++;sBlip();b.remove();const li=document.createElement("li");li.textContent=o.t;$("paDone").appendChild(li);
+          if(next===items.length){const pts=slip?60:150;P.score+=pts;sRight();floatText("+"+pts,"var(--green)");$("paFb").className="feedback good";$("paFb").innerHTML="&#10004; Perfect order!";setTimeout(()=>{P.i++;step();},900);}}
+        else{slip++;P.miss++;sWrong();shakeEl(b);$("paFb").className="feedback bad";$("paFb").innerHTML=`Not that one yet. <small>Hint: #${next+1} is “${esc(trunc(items[next],5))}”</small>`;}};$("paOpts").appendChild(b);});return;}}
+  function finish(){const L=P.lesson,s=P.miss===0?3:P.miss<=3?2:1;const st=stars();const prev=st[L]||0;if(s>prev){st[L]=s;saveStore();}
+    P.score+=s*300;
+    if(L<4)GOSPEL[L].pts.forEach(pt=>{if(!((me().gospel||{})[pt.id]||{}).p)setGospel(pt.id,"p",1);});else markAllGospelPracticed();
+    const tr=[];if(LESSONS.every((_,i)=>st[i]))tr.push("trail");if(LESSONS.every((_,i)=>st[i]===3))tr.push("starstudent");
+    const nx=L<4?L+1:-1;
+    finishGame("path",P.score,{title:`${LESSONS[L].t.replace(/^\d\. /,"")}: lesson complete!`,
+      detail:`<div style="font-size:40px;letter-spacing:4px">${[1,2,3].map(k=>`<span style="opacity:${k<=s?1:.2}">&#11088;</span>`).join("")}</div>${P.miss?`${P.miss} slip${P.miss===1?"":"s"}. ${s<3?"Get them all right the first time for 3 stars!":""}`:"No slips! 3 stars!"}`,
+      extra:nx>=0?`<div class="row" style="justify-content:center;margin-top:6px"><button class="btn green" id="paNextL">Next lesson: ${esc(LESSONS[nx].t)} &#9654;</button></div>`:`<div class="detail" style="color:var(--gold)">You know the whole Gospel path! Now test yourself in <b>Bridge Builder</b>, <b>Share It!</b>, and <b>Scroll Catcher</b>.</div>`,
+      onReady:()=>{const b=$("paNextL");if(b)b.onclick=()=>{$("endOv").classList.remove("show");start(nx);};},
+      trophies:tr,again:()=>{openGame("path");}});}
+  return{enter,start};
+})();
 
 /* ==================== BRIDGE BUILDER ==================== */
 const Bridge=(()=>{
