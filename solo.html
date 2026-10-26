@@ -216,7 +216,7 @@
   .vitem b{font-size:18px;font-weight:900;}
   .vitem span{color:var(--muted);font-weight:600;font-size:14px;line-height:1.35;}
   .badges{display:flex;gap:6px;flex-wrap:wrap;}
-  .bdg{font-size:12px;font-weight:900;padding:3px 9px;border-radius:999px;background:var(--bg2);color:var(--muted);border:1px solid var(--line);}
+  .bdg{white-space:nowrap;display:inline-block;font-size:12px;font-weight:900;padding:3px 9px;border-radius:999px;background:var(--bg2);color:var(--muted);border:1px solid var(--line);}
   .bdg.p{color:var(--gold);border-color:var(--gold);}
   .bdg.k{color:#04241a;background:var(--green);border-color:var(--green);}
 
@@ -247,6 +247,7 @@
   /* progress */
   .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
   .prow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:10px;}
+  .prow.known{border-color:var(--green);background:linear-gradient(90deg,rgba(52,211,153,.12),var(--panel) 60%);}
   .prow .pt b{font-size:17px;font-weight:900;}
   .prow .pt div{color:var(--muted);font-weight:600;font-size:14px;line-height:1.4;margin-top:3px;}
   .prow .pa{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
@@ -1809,9 +1810,9 @@ function renderProgress(){
   if(progTab==="v"||progTab==="c"){const kind=progTab,list=kind==="v"?C.memverses:C.catechism,m=kind==="v"?p.verses:p.cat;
     if(!list.length){body.innerHTML=`<div class="empty">Nothing here yet.</div>`;return;}
     (kind==="v"?verseGroups(list):[["",list]]).forEach(([gt,arr])=>{if(gt){const h=document.createElement("div");h.className="label";h.style.cssText="margin:14px 0 8px;font-size:14px;color:var(--gold);";h.textContent=gt;body.appendChild(h);}
-    arr.forEach(it=>{const st=m[it.id]||{};const row=document.createElement("div");row.className="prow";
+    arr.forEach(it=>{const st=m[it.id]||{};const row=document.createElement("div");row.className="prow"+(st.k?" known":"");
       const title=kind==="v"?esc(it.reference):`${it.n}. ${esc(it.q)}`,text=kind==="v"?esc(it.text):esc(catAnswer(it.a,store.catShort));
-      row.innerHTML=`<div class="pt"><b>${title}</b> ${st.p||st.k?`<span class="bdg p">&#9733; Practiced</span>`:""}<div>${text}</div></div>
+      row.innerHTML=`<div class="pt"><b>${title}</b> ${st.k?`<span class="bdg k">&#10004; Known</span>`:st.p?`<span class="bdg p">&#9733; Practiced</span>`:""}<div>${text}</div></div>
         <div class="pa"><button class="smallbtn" data-act="practice">&#9654; Practice</button><button class="knowbtn${st.k?" on":""}" data-act="know"><span class="box">${st.k?"&#10004;":""}</span>I know it!</button></div>`;
       row.querySelector('[data-act="practice"]').onclick=()=>{const mode=kind==="v"?"verse":"cat";show(mode);Build.enter(mode);Build.open(it.id,mode);};
       row.querySelector('[data-act="know"]').onclick=()=>{const on=!(m[it.id]&&m[it.id].k);setItem(kind,it.id,"k",on);if(on){sRight();}else sBlip();renderProgress();};
@@ -1819,8 +1820,8 @@ function renderProgress(){
   else if(progTab==="g"){const gs=p.gospel||{};
     const intro=document.createElement("p");intro.className="sub";intro.innerHTML="Check off each point when you can say the <b>point and its verse</b> by heart. Play <b>Bridge Builder</b>, <b>Share It!</b>, or <b>Scroll Catcher</b> to practice.";body.appendChild(intro);
     GOSPEL.forEach((g,hi)=>{const h=document.createElement("div");h.className="label";h.style.cssText="margin:14px 0 8px;font-size:15px;color:#fdba74;";h.textContent=`${hi+1}. ${g.h}`;body.appendChild(h);
-      g.pts.forEach(pt=>{const st=gs[pt.id]||{};const row=document.createElement("div");row.className="prow";
-        row.innerHTML=`<div class="pt"><b>#${pt.n} \u2013 ${esc(pt.t)}</b> ${st.p||st.k?`<span class="bdg p">&#9733; Practiced</span>`:""}${pt.v.map(id=>`<div><b style="color:var(--ink);font-size:14px;">${esc(GV[id][0])}</b> \u2013 ${esc(GV[id][1])}</div>`).join("")}</div>
+      g.pts.forEach(pt=>{const st=gs[pt.id]||{};const row=document.createElement("div");row.className="prow"+(st.k?" known":"");
+        row.innerHTML=`<div class="pt"><b>#${pt.n} \u2013 ${esc(pt.t)}</b> ${st.k?`<span class="bdg k">&#10004; Known</span>`:st.p?`<span class="bdg p">&#9733; Practiced</span>`:""}${pt.v.map(id=>`<div><b style="color:var(--ink);font-size:14px;">${esc(GV[id][0])}</b> \u2013 ${esc(GV[id][1])}</div>`).join("")}</div>
           <div class="pa"><button class="knowbtn${st.k?" on":""}"><span class="box">${st.k?"&#10004;":""}</span>I know it!</button></div>`;
         row.querySelector(".knowbtn").onclick=()=>{const on=!(gs[pt.id]&&gs[pt.id].k);setGospel(pt.id,"k",on);if(on)sRight();else sBlip();renderProgress();};
         body.appendChild(row);});});}
