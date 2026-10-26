@@ -35,6 +35,21 @@
   .navbtn{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 13px;font-weight:800;font-size:14px;white-space:nowrap;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:6px;}
   .navbtn:hover{border-color:var(--gold);color:var(--gold);}
   .playerchip{background:linear-gradient(180deg,#22385a,#1a2b47);border:2px solid var(--gold);color:var(--gold);}
+  .playerchip .pav{font-size:20px;line-height:1;}
+  .switchhint{display:flex;align-items:center;gap:8px;color:var(--gold);font-weight:800;font-size:14px;white-space:nowrap;}
+  .switchhint .arr{font-size:22px;animation:nudge 1.2s ease-in-out infinite;}
+  @keyframes nudge{50%{transform:translateX(5px);}}
+  .switchtip{display:none;justify-content:flex-end;align-items:center;gap:6px;color:var(--gold);font-weight:800;font-size:14px;margin:-6px 0 8px;text-align:right;}
+  .switchtip .arr{font-size:20px;animation:nudgeup 1.2s ease-in-out infinite;}
+  @keyframes nudgeup{50%{transform:translateY(-4px);}}
+  @media (max-width:900px){.switchhint{display:none!important;} .switchtip{display:flex;}}
+  .avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px;margin:4px 0 14px;}
+  .avbtn{background:var(--bg2);border:2px solid var(--line);border-radius:14px;font-size:32px;line-height:1;padding:9px 0;}
+  .avbtn:hover{border-color:var(--muted);}
+  .avbtn.on{border-color:var(--gold);background:rgba(255,194,51,.16);transform:scale(1.06);}
+  .newpreview{font-size:46px;line-height:1;}
+  .pbtn .edit{position:absolute;top:6px;left:8px;font-size:13px;color:var(--muted);background:none;padding:4px 6px;font-weight:800;}
+  .pbtn .edit:hover{color:var(--gold);}
   @media (max-width:560px){.navbtn .lbl{display:none;} .brand .full{display:none;} .chip{padding:5px 9px;font-size:14px;} .chip small{font-size:10px;margin-right:4px;} .ghead{gap:6px;margin-bottom:10px;} .scorebox{gap:6px;}}
 
   .screen{flex:1;min-height:0;overflow:auto;padding:18px;padding-bottom:max(18px,env(safe-area-inset-bottom));}
@@ -289,7 +304,8 @@
 <div class="app" id="app">
   <div class="topbar">
     <div class="brand"><span class="star">&#11088;</span><span id="brandText">Solo <span class="full">Challenge</span></span></div>
-    <button class="navbtn playerchip hidden" id="playerBtn" title="Switch player">&#128100; <span id="playerName"></span></button>
+    <span class="switchhint hidden" id="switchHint">Press this button to change players or add a new player <span class="arr">&#10132;</span></span>
+    <button class="navbtn playerchip hidden" id="playerBtn" title="Change players or add a new player"><span class="pav" id="playerAv">&#128100;</span> <span id="playerName"></span></button>
     <button class="navbtn hidden" id="homeBtn">&#127968; <span class="lbl">Games</span></button>
     <button class="navbtn" id="soundBtn" title="Sound on/off">&#128266;</button>
     <a class="navbtn" href="./" title="Back to the start page">&#11013; <span class="lbl">Start</span></a>
@@ -301,13 +317,17 @@
     <p class="sub">Pick your name, or add it. Your high scores, trophies, and verse progress are saved on this device under your name.</p>
     <div class="players" id="playerList"></div>
     <div class="card">
-      <div class="label">New player</div>
-      <div class="addrow"><input id="newName" maxlength="20" placeholder="Type your first name" autocomplete="off"><button class="btn gold" id="addPlayer">Let's go!</button></div>
+      <div class="label" id="newLabel">New player</div>
+      <div class="addrow" style="margin-bottom:14px;"><span class="newpreview" id="newPreview"></span><input id="newName" maxlength="20" placeholder="Type your first name" autocomplete="off"></div>
+      <div class="label">Pick your picture</div>
+      <div class="avgrid" id="avGrid"></div>
+      <div class="row"><button class="btn gold" id="addPlayer">Let's go!</button><button class="btn hidden" id="editCancel">Cancel</button></div>
     </div>
   </div></div>
 
   <!-- ===== HOME ===== -->
   <div class="screen hidden" id="scrHome"><div class="wrap">
+    <div class="switchtip" id="switchTip">Tap your name to switch or add a player <span class="arr">&#11014;&#65039;</span></div>
     <h1 class="big" id="hello">Hi!</h1>
     <p class="sub">Pick a game. Try to beat your own high score, earn trophies, and learn your memory verses and catechism.</p>
     <div class="statstrip" id="statStrip"></div>
@@ -566,7 +586,8 @@ function show(name){
   screen=name;const target=SCREENS[name];
   new Set(Object.values(SCREENS)).forEach(id=>$(id).classList.toggle("hidden",id!==target));
   $("homeBtn").classList.toggle("hidden",name==="home"||name==="players");
-  const p=me();$("playerBtn").classList.toggle("hidden",!p||name==="players");if(p)$("playerName").textContent=p.name;
+  const p=me();$("playerBtn").classList.toggle("hidden",!p||name==="players");if(p){$("playerName").textContent=p.name;$("playerAv").innerHTML=avOf(p);}
+  $("switchHint").classList.toggle("hidden",!p||name!=="home");
   const g=gameById(name);$("brandText").innerHTML=g?g.tt:name==="progress"?"My Progress":`Solo <span class="full">Challenge</span>`;
   $(target).scrollTop=0;
   if(name==="players")renderPlayers();
@@ -583,18 +604,34 @@ $("playerBtn").onclick=()=>show("players");
 const bestChip=gid=>{const b=(me()&&me().best[gid])||0;return b?`&#127942; Best: ${fmt(b)}`:"No high score yet";};
 
 /* ==================== PLAYERS ==================== */
-const AVATARS=["&#129409;","&#128059;","&#129418;","&#128032;","&#129413;","&#128034;","&#128030;","&#129412;","&#128044;","&#129417;"];
+const AVATARS=["&#129409;","&#128059;","&#129418;","&#128032;","&#129413;","&#128034;","&#128030;","&#129412;","&#128044;","&#129417;",
+  "&#128054;","&#128049;","&#128048;","&#128060;","&#128056;","&#128039;","&#128025;","&#129426;","&#128011;","&#129427;",
+  "&#128640;","&#9917;","&#127936;","&#9918;","&#127944;","&#127928;","&#127912;","&#127752;","&#11088;","&#127829;",
+  "&#127790;","&#128187;","&#129408;","&#127873;","&#128293;","&#128081;"];
+const avOf=p=>p.av||AVATARS[Math.max(0,store.players.indexOf(p))%10];
+let newAv=null,editId=null;
+function renderAvGrid(){const g=$("avGrid");g.innerHTML="";AVATARS.forEach(a=>{const b=document.createElement("button");b.className="avbtn"+(a===newAv?" on":"");b.innerHTML=a;b.setAttribute("aria-label","Pick this picture");
+    b.onclick=()=>{newAv=a;sBlip();renderAvGrid();};g.appendChild(b);});$("newPreview").innerHTML=newAv||"&#128100;";}
+function startEdit(p){editId=p?p.id:null;
+  if(p){newAv=avOf(p);$("newName").value=p.name;$("newLabel").textContent=`Change ${p.name}'s name or picture`;$("addPlayer").textContent="Save";$("editCancel").classList.remove("hidden");}
+  else{const used=new Set(store.players.map(avOf));const free=AVATARS.filter(a=>!used.has(a));newAv=(free.length?free:AVATARS)[Math.floor(Math.random()*(free.length||AVATARS.length))];
+    $("newName").value="";$("newLabel").textContent="New player";$("addPlayer").textContent="Let's go!";$("editCancel").classList.add("hidden");}
+  renderAvGrid();}
+$("editCancel").onclick=()=>startEdit(null);
 function renderPlayers(){
   const list=$("playerList");list.innerHTML="";
   store.players.forEach((p,i)=>{const b=document.createElement("button");b.className="pbtn";
-    b.innerHTML=`<span class="av">${AVATARS[i%AVATARS.length]}</span>${esc(p.name)}<span class="del" title="Remove player">&#10005;</span>`;
-    b.onclick=e=>{if(e.target.classList.contains("del")){if(confirm(`Remove ${p.name} and all of ${p.name}'s scores and progress from this device?`)){store.players=store.players.filter(x=>x.id!==p.id);if(store.current===p.id)store.current=null;saveStore();renderPlayers();}return;}
+    b.innerHTML=`<span class="edit" title="Change name or picture">&#9998; Edit</span><span class="av">${avOf(p)}</span>${esc(p.name)}<span class="del" title="Remove player">&#10005;</span>`;
+    b.onclick=e=>{if(e.target.classList.contains("edit")){startEdit(p);$("newName").focus();$("newName").scrollIntoView({behavior:"smooth",block:"center"});return;}
+      if(e.target.classList.contains("del")){if(confirm(`Remove ${p.name} and all of ${p.name}'s scores and progress from this device?`)){store.players=store.players.filter(x=>x.id!==p.id);if(store.current===p.id)store.current=null;saveStore();renderPlayers();}return;}
       store.current=p.id;saveStore();sBlip();show("home");};
     list.appendChild(b);});
   if(!store.players.length)list.innerHTML="";
+  if(!editId||!store.players.some(x=>x.id===editId))startEdit(null);
 }
 function addPlayer(){const n=$("newName").value.trim().slice(0,20);if(!n){$("newName").focus();return;}
-  const p=newPlayer(n);store.players.push(p);store.current=p.id;saveStore();$("newName").value="";AC();sRight();show("home");}
+  if(editId){const p=store.players.find(x=>x.id===editId);if(p){p.name=n;p.av=newAv;saveStore();}editId=null;sRight();renderPlayers();return;}
+  const p=newPlayer(n);p.av=newAv;store.players.push(p);store.current=p.id;saveStore();$("newName").value="";AC();sRight();show("home");}
 $("addPlayer").onclick=addPlayer;$("newName").addEventListener("keydown",e=>{if(e.key==="Enter")addPlayer();});
 
 /* ==================== HOME ==================== */
