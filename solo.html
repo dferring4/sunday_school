@@ -324,6 +324,7 @@
   .msg .bub .hd{display:inline-block;background:rgba(255,255,255,.18);border-radius:8px;padding:1px 8px;font-weight:900;letter-spacing:.5px;}
   .msg .name{font-size:11px;font-weight:900;color:var(--muted);margin:0 4px 2px;}
   .typing .bub{color:#64748b;letter-spacing:3px;}
+  .chatdiv{align-self:center;background:#7c2d12;color:#fed7aa;border:1px solid #f97316;border-radius:999px;padding:4px 14px;font-weight:900;font-size:13px;letter-spacing:.5px;margin:6px 0;}
   .shask{font-weight:900;color:var(--gold);font-size:clamp(16px,2.1vw,22px);margin:12px 0 10px;min-height:1.2em;}
   .choice.small{font-size:clamp(15px,1.8vw,19px);padding:12px 14px;}
   .choice .ref{display:block;font-weight:900;color:var(--gold);}
@@ -623,7 +624,7 @@
   <div class="screen hidden" id="scrShare"><div class="wrap">
     <div id="shPick">
       <div class="ghead"><h2>&#128172; Share It!</h2><div class="chip gold" id="shBestChip"></div></div>
-      <p class="rules">Your friend <b>Jordan</b> wants to know what the Gospel is all about. Walk Jordan through it <b>in order</b>: pick each heading, each point, and the Bible verse that proves it. A wrong pick costs points, but you can always try again.</p>
+      <p class="rules">Your friend <b>Ryan</b> believes there’s a God, but doesn’t really know the Gospel. Have a real conversation with him! When it’s your turn, pick <b>which part comes next</b>, <b>the point to share</b>, <b>the verse that proves it</b>, and the <b>best way to answer</b> Ryan’s questions. A wrong pick costs points and tells you why, so you can try again.</p>
       <div class="label">Choose your mode</div>
       <div class="pills" id="shModes" style="margin-bottom:20px;"></div>
       <button class="btn gold" id="shGo">Start the Conversation &#9654;</button>
@@ -633,6 +634,7 @@
       <div class="chat" id="shChat"></div>
       <div class="shask" id="shAsk"></div>
       <div class="choices" id="shChoices"></div>
+      <div class="feedback" id="shFb"></div>
     </div>
   </div></div>
 
@@ -717,7 +719,7 @@ const GAMES=[
   {id:"voyager",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly your ship through the right words to build a verse. Outrun the fog!"},
   {id:"path",sec:"gpath",ic:"&#129517;",tt:"Gospel Path",tc:"#fde047",td:"Start here! Learn the Gospel one point at a time, with quick checks along the way."},
   {id:"bridge",sec:"gospel",ic:"&#127753;",tt:"Bridge Builder",tc:"#f97316",td:"Build the Gospel bridge: pillars, planks, and bolts. Then walk across!"},
-  {id:"share",sec:"gospel",ic:"&#128172;",tt:"Share It!",tc:"#38bdf8",td:"Your friend Jordan asks about the Gospel. Explain it in order, with the verses."},
+  {id:"share",sec:"gospel",ic:"&#128172;",tt:"Share It!",tc:"#38bdf8",td:"Talk with your friend Ryan and walk him through the Gospel, verse by verse."},
   {id:"scroll",sec:"gospel",ic:"&#129530;",tt:"Scroll Catcher",tc:"#fb923c",td:"Tap the right falling scroll before it lands. Headings, points, and verses!"},
 ];
 const gameById=id=>GAMES.find(g=>g.id===id);
@@ -736,7 +738,7 @@ const TROPHIES=[
   {id:"heart",ic:"&#10084;&#65039;",tt:"Hidden in My Heart",td:"Know every memory verse. \u201cI have stored up your word in my heart\u201d (Psalm 119:11)."},
   {id:"bridge",ic:"&#127753;",tt:"Bridge Builder",td:"Finish building the Gospel bridge.",g:1},
   {id:"masterbuilder",ic:"&#127959;&#65039;",tt:"Master Builder",td:"Build the whole Gospel bridge with no mistakes.",g:1},
-  {id:"messenger",ic:"&#128227;",tt:"Good News Messenger",td:"Share the whole Gospel with Jordan in Share It!",g:1},
+  {id:"messenger",ic:"&#128227;",tt:"Good News Messenger",td:"Share the whole Gospel with Ryan in Share It!",g:1},
   {id:"ready",ic:"&#127894;&#65039;",tt:"Ready to Share",td:"Share the whole Gospel in Pro mode with no wrong picks.",g:1},
   {id:"scrollkeeper",ic:"&#129530;",tt:"Scroll Keeper",td:"Catch 25 scrolls in one game of Scroll Catcher.",g:1},
   {id:"onfire",ic:"&#128293;",tt:"On Fire!",td:"Catch 10 scrolls in a row in Scroll Catcher.",g:1},
@@ -1477,9 +1479,151 @@ const Bridge=(()=>{
 })();
 
 /* ==================== SHARE IT! ==================== */
+/* A real-life conversation with a friend (Ryan). The player says the next point, shares the verse,
+   and picks the best way to answer Ryan's questions. Script adapted from the church's sample conversation. */
+const SHARE_SCRIPT=[
+  {f:"So what did you do yesterday?"},
+  {m:"Went to church in the morning, then we went to my grandparents’ house. What about you?"},
+  {f:"Nothing much. Played video games. We used to go to church sometimes, but we haven’t gone in a while."},
+  {m:"Do you believe in God?"},
+  {f:"Yeah, I guess so. I mean, I believe there’s a God."},
+  {m:"What do you think God is like?"},
+  {f:"I don’t know. He’s good, right? And He made everything?"},
+  {part:0,q:"Here’s your chance to share the Gospel! Which part do you start with?",say:"Yeah! That’s something we talked about in Sunday school. Can I show you something in the Bible?"},
+  {f:"Sure."},
+  {point:"g1",q:"What’s the first thing to know about God?",lead:"Here\u2019s the first thing to know about God:"},
+  {verse:"gs-gen-1-1",q:"Show Ryan a verse that proves it:"},
+  {f:"Yeah, I’ve heard that before."},
+  {m:"So if God created everything, that means He created you and me, too. And it means He has authority over everything He made."},
+  {f:"What do you mean by authority?"},
+  {ask:"How would you explain it?",opts:[
+    ["If you make up a game, you get to decide the rules, right? God didn’t just make a game. He made the whole universe, so He has the right to tell us how to live.",1],
+    ["It means God is the strongest being there is. He made everything, so He’s almighty and powerful, but He lets each of us decide for ourselves what’s right and what’s wrong.",0,"Because God made us, He gets to decide what’s right and wrong, not us."],
+    ["It means God is in charge of church and the Bible. He made the world and set the rules for Sunday, but the rest of the week is up to us.",0,"God made everything, so He’s in charge of all of life, every day of the week."]]},
+  {f:"Okay, that makes sense."},
+  {verse:"gs-ps-24-1",q:"There’s another verse that shows God owns everything. Share it!"},
+  {f:"So God owns everything?"},
+  {m:"Exactly. Including us. We belong to Him because He made us."},
+  {point:"g2",q:"What’s point #2 about God?",lead:"Here’s something else about God."},
+  {f:"Holy? Like, really good?"},
+  {ask:"What does holy mean?",opts:[
+    ["It means God is completely pure and perfect. He never sins, and there’s nothing evil about Him.",1],
+    ["It means God is the nicest person ever. He’s way better than other people, and He almost never does anything wrong.",0,"God doesn’t “almost never” sin. He never sins at all. He is perfect."],
+    ["It means God is really, really good, a lot like the best people we know, just a little bit better than they are.",0,"God isn’t just a little better than good people. He is perfectly pure, with no sin at all."]]},
+  {f:"Nobody’s perfect, though."},
+  {verse:"gs-matt-5-48",q:"Jesus said something about that. Share the verse:"},
+  {f:"Wait. We’re supposed to be perfect?"},
+  {m:"That’s what Jesus says. God’s standard isn’t just being better than other people. His standard is perfection, because He is perfectly holy."},
+  {f:"That sounds impossible."},
+  {m:"For us, it is. And that’s part of why we need Jesus."},
+  {point:"g3",q:"What’s point #3 about God?",lead:"And there’s one more thing."},
+  {m:"Have you ever lied? Ever disobeyed your parents?"},
+  {f:"Like, a million times."},
+  {verse:"gs-jas-2-10",q:"Share the verse that shows how serious that is:"},
+  {f:"So even if I only did one bad thing, I’d still be guilty?"},
+  {ask:"What do you say?",opts:[
+    ["Yeah. And we’ve both done way more than one bad thing. God is perfectly holy and requires perfect obedience, but neither of us is perfect.",1],
+    ["Not really. God mostly looks at whether your good things outweigh your bad things, and just one bad thing won’t be enough to tip the scale against you.",0,"James 2:10 says breaking even one point makes you guilty of all of it."],
+    ["Only if it was a really big sin. Little things, like a small lie, don’t count against you the way the big things do.",0,"Every sin breaks God’s law, even the “little” ones."]]},
+  {f:"Okay. So what happens?"},
+  {part:1,q:"What part of the Gospel comes next?",say:"Well, first we need to understand something about ourselves."},
+  {point:"m1",q:"What’s the first point about us?",lead:"Here\u2019s the first thing about us:"},
+  {verse:"gs-rom-3-10",q:"Share the verse:"},
+  {f:"Not even really good people? My grandma is pretty nice."},
+  {ask:"How do you answer?",opts:[
+    ["Mine too! But being nice doesn’t mean someone has never sinned. Even the nicest people have done things God says are wrong.",1],
+    ["True! Some people are so kind and loving that they really haven’t sinned, and from what you say, your grandma sounds like one of them.",0,"Romans 3:10 says no one is righteous, not even one."],
+    ["Yeah, really nice people like her are already close to God. It’s mostly people who do bad stuff who need Him.",0,"Everyone has sinned, so everyone needs Jesus."]]},
+  {verse:"mv-romans-3-23",q:"There’s another verse that says everyone has sinned. Share it!"},
+  {f:"What exactly counts as sin? Just doing bad stuff?"},
+  {ask:"How do you explain sin?",opts:[
+    ["It’s anything against what God commands, like lying, stealing, or disobeying our parents. It can even be in our hearts, like hating someone or being selfish.",1],
+    ["It’s breaking the really important rules, like the Ten Commandments, by stealing or hurting someone. The stuff we only think about in our heads doesn’t count as sin.",0,"Sin can be in our hearts, too, like hating someone or being selfish."],
+    ["It’s doing something wrong that other people can see, like lying or stealing. If nobody knows about it and nobody gets hurt, it isn’t really sin.",0,"God knows what we’re thinking and what we do in secret."]]},
+  {f:"Then everybody’s in trouble."},
+  {m:"Exactly. Including me. That’s why I can’t act like I’m better than anybody else. We’re all sinners."},
+  {f:"But doesn’t God just forgive people when they mess up?"},
+  {ask:"What do you say?",opts:[
+    ["God does forgive sinners, but He’s also perfectly just. Imagine a judge letting a bike thief go just because he seems nice. That wouldn’t be fair!",1],
+    ["Yes! God is love, so He just forgets about sin and lets everyone off the hook. He isn’t anything like a strict judge who has to punish wrong things.",0,"God is loving, but He is also perfectly just, so sin has to be paid for."],
+    ["Yeah, as long as you say sorry and really mean it. Saying sorry is what makes up for the wrong thing you did.",0,"Saying sorry can’t pay for sin. Only Jesus could pay sin’s penalty."]]},
+  {f:"So what’s the punishment for sin?"},
+  {point:"m2",q:"What’s point #2 about us?",lead:"This is serious:"},
+  {verse:"gs-rom-6-23",q:"Share the verse:"},
+  {f:"That’s pretty scary."},
+  {m:"It is serious. But remember the second half of that verse? It talks about a free gift from God: eternal life through Jesus. So there’s really good news, too!"},
+  {f:"Well, what if I try really hard to be good from now on? Would that fix it?"},
+  {point:"m3",q:"What’s point #3 about us?",lead:"Actually, no."},
+  {ask:"Explain it with an example:",opts:[
+    ["Suppose you stole something last week, but helped clean the kitchen every day this week. Does that mean you never stole it? Doing good things doesn’t erase the wrong things.",1],
+    ["It’s like a scale. If you do enough good things, like helping your mom clean the kitchen every day, they can balance out the bad things you did.",0,"Good works can’t erase sin. Titus 3:5 says God saves us because of His mercy."],
+    ["Trying hard helps a lot! Go to church every week, read your Bible, pray, and be kind to everybody, and God will see that you’ve earned a spot in heaven with Him.",0,"Those are good things, but nobody can earn salvation."]]},
+  {f:"So what are we supposed to do?"},
+  {verse:"gs-titus-3-5",q:"Share the verse that shows how God saves:"},
+  {f:"What does mercy mean again?"},
+  {ask:"What is mercy?",opts:[
+    ["Mercy is when someone doesn’t give you the punishment you deserve. We deserve God’s judgment for our sins, but God is merciful.",1],
+    ["Mercy is when God rewards you with something good because you worked really hard and did your best to obey Him, even when it wasn’t easy.",0,"That would be a reward. Mercy is not getting the punishment we deserve."],
+    ["Mercy is when God decides sin isn’t a big deal anymore, so His rules don’t really matter once you’re a Christian.",0,"Sin is a big deal. In mercy, God holds back the punishment we deserve."]]},
+  {f:"Then how does anybody get saved?"},
+  {part:2,q:"That’s the best part! What part of the Gospel comes next?",say:"That’s the best part. It’s why Jesus came."},
+  {f:"I know Jesus died on a cross. But why did He have to do that?"},
+  {m:"Well, first, do you know who Jesus really is?"},
+  {f:"God’s Son?"},
+  {point:"j1",q:"What’s the first point about Jesus?",lead:"Yes, and even more:"},
+  {verse:"gs-col-2-9",q:"Share the verse:"},
+  {f:"So Jesus is God? And He never sinned? Not even when He was a kid?"},
+  {m:"Seriously. He always obeyed God perfectly. Remember God’s standard of perfection? Jesus actually met it."},
+  {f:"Okay. So why did He die?"},
+  {point:"j2",q:"What’s point #2 about Jesus?",lead:"Remember, the punishment for sin is death."},
+  {f:"So He was punished for things other people did?"},
+  {verse:"gs-rom-5-8",q:"Share the verse:"},
+  {f:"Even though people were doing bad things?"},
+  {ask:"What do you say?",opts:[
+    ["Yes! God didn’t wait for people to become good enough first. Jesus died for sinners, like me.",1],
+    ["Well, He died for the people who were trying their best. God saw how much they wanted to be good, so Jesus died for them.",0,"Romans 5:8 says Christ died for us while we were still sinners."],
+    ["Sort of. The people who arrested Jesus were stronger than Him, so He didn’t have a choice, but God still used it for good.",0,"Jesus willingly gave His life to pay the penalty for sin."]]},
+  {f:"I guess I never really thought about it like that. But Jesus died. How does that help us now?"},
+  {point:"j3",q:"What’s point #3 about Jesus?",lead:"Because He didn’t stay dead!"},
+  {verse:"gs-1cor-15-4",q:"Share the verse:"},
+  {f:"So people actually saw Him after He came back to life?"},
+  {m:"Yes! He really rose from the dead. It actually happened, and Jesus is alive today."},
+  {f:"So if Jesus paid for sin and came back to life, does that mean everybody automatically goes to heaven?"},
+  {ask:"How do you answer?",opts:[
+    ["No. Jesus really did pay for sin, but the Bible tells us how each person needs to respond to Jesus.",1],
+    ["Pretty much! Jesus already paid for everyone’s sin, so everybody goes to heaven no matter what they believe or do.",0,"God calls every sinner to repent and believe in Jesus."],
+    ["Almost. Jesus did His part, and now we do our part by being good enough to make up for the rest.",0,"We can’t earn it. But we do need to respond by repenting and believing."]]},
+  {part:3,q:"What’s the last part of the Gospel?",say:"That brings us to the last part. Here\u2019s what God calls every sinner to do."},
+  {f:"Okay. So what do I have to do?"},
+  {point:"r1",q:"What’s point #1?",lead:"First:"},
+  {f:"I’ve heard the word repent before, but I don’t really know what it means."},
+  {ask:"What does repent mean?",opts:[
+    ["It means turning away from your sin and turning to God. It’s more than saying sorry because you got caught.",1],
+    ["It means saying sorry to God whenever you get caught doing something wrong, so you won’t get in trouble with Him.",0,"Repenting is more than saying sorry because you got caught. It’s turning from sin to God."],
+    ["It means promising God you’ll never mess up again, and then being perfect from now on so He’ll accept you.",0,"Christians still struggle with sin. Repenting means turning to God, not making yourself perfect."]]},
+  {verse:"gs-isa-55-7",q:"Share the verse:"},
+  {f:"So God actually wants people to come back to Him?"},
+  {m:"Yes! He’s merciful. He calls sinners to turn to Him, and He offers forgiveness."},
+  {f:"And what does believing in Jesus mean? Because I already believe He existed."},
+  {point:"r2",q:"What’s point #2?",lead:"It’s more than that."},
+  {ask:"Explain it with an example:",opts:[
+    ["If you were drowning and someone threw you a life preserver, just believing it’s real wouldn’t save you. You’d have to trust it to hold you up. You need to trust Jesus to save you.",1],
+    ["It’s knowing the true facts about Jesus: that He was a real person, that He lived in Israel, that He did miracles, that He died on a cross, and that people wrote about Him in the Bible.",0,"Even knowing true facts isn’t enough. Saving faith means trusting Jesus to save you."],
+    ["It means believing deep down that you’re a good person, and that God will let you into heaven because your heart is good.",0,"We trust Jesus to save us, not our own goodness."]]},
+  {verse:"mv-romans-10-9",q:"Share the verse:"},
+  {f:"And if I do that, God forgives me?"},
+  {m:"Yes. Everyone who truly repents and trusts in Christ is saved by God’s grace. Not because they’re good enough, but because of what Jesus did."},
+  {f:"That’s a lot to think about."},
+  {ask:"How do you wrap up the conversation?",opts:[
+    ["You can ask me if you have more questions. Or come to church with me sometime, and we can talk with my Sunday school teacher, too.",1],
+    ["Just say this special prayer after me, word for word, and then you’ll be a Christian forever and you won’t ever have to think about it again.",0,"There are no magic words. Jesus is the one who saves."],
+    ["It’s okay if it doesn’t make sense yet. You don’t need to decide anything, so we don’t have to talk about it anymore.",0,"Keep the door open! Invite your friend to keep asking and keep talking."]]},
+  {f:"I think I might want to do that. Thanks for explaining it. I actually understood most of that."},
+  {m:"Good. I’m glad we talked about it!"},
+];
 const Share=(()=>{
-  const FRIEND={name:"Jordan",av:"&#129490;"};
-  const S={mode:"starter",score:0,miss:0,run:0,busy:false};
+  const FRIEND={name:"Ryan",av:"&#129490;"};
+  const S={mode:"starter",score:0,miss:0,run:0};
   function enter(){S.run++;$("shPick").classList.remove("hidden");$("shPlay").classList.add("hidden");$("shBestChip").innerHTML=bestChip("share");
     const m=$("shModes");m.innerHTML="";[["starter","Starter: verses are shown"],["pro","Pro: references only (1.5× points)"]].forEach(([v,l])=>{const b=document.createElement("button");b.className="pill"+(S.mode===v?" on":"");b.textContent=l;b.onclick=()=>{S.mode=v;enter();};m.appendChild(b);});}
   const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -1487,40 +1631,39 @@ const Share=(()=>{
     d.className="msg "+(who==="f"?"friend":"me");d.innerHTML=`<span class="av">${who==="f"?FRIEND.av:avOf(p)}</span><div><div class="name">${who==="f"?FRIEND.name:esc(p.name)}</div><div class="bub">${html}</div></div>`;
     c.appendChild(d);c.scrollTop=c.scrollHeight;return d;}
   async function friend(html,run){const c=$("shChat");const t=document.createElement("div");t.className="msg friend typing";t.innerHTML=`<span class="av">${FRIEND.av}</span><div class="bub">•••</div>`;c.appendChild(t);c.scrollTop=c.scrollHeight;
-    await wait(650+Math.min(900,html.length*12));if(run!==S.run)throw "stop";t.remove();bubble("f",html);tone(990,.05,"sine",.08);}
-  /* show choices; resolve when the right one is picked. Wrong picks cost points. */
+    await wait(550+Math.min(1000,html.length*9));if(run!==S.run)throw "stop";t.remove();bubble("f",html);tone(990,.05,"sine",.08);}
+  async function mine(html,run){await wait(350);if(run!==S.run)throw "stop";bubble("m",html);}
+  /* show choices; resolve when the right one is picked. Wrong picks cost points and can explain why. */
   function ask(q,opts,run,{first=300,second=100,later=25}={}){return new Promise((res,rej)=>{
-    $("shAsk").textContent=q;const box=$("shChoices");box.innerHTML="";let tries=0;setTimeout(()=>{const r=box.getBoundingClientRect();if(r.bottom>innerHeight)box.scrollIntoView({behavior:"smooth",block:"end"});},60);
+    $("shAsk").textContent=q;const box=$("shChoices");box.innerHTML="";let tries=0;const fb=$("shFb");fb.innerHTML="";
+    setTimeout(()=>{const r=box.getBoundingClientRect();if(r.bottom>innerHeight)box.scrollIntoView({behavior:"smooth",block:"end"});},60);
     opts.forEach(o=>{const b=document.createElement("button");b.className="choice small";b.innerHTML=o.html;
       b.onclick=()=>{if(run!==S.run){rej("stop");return;}
-        if(o.ok){const pts=tries===0?first:tries===1?second:later;S.score+=pts;$("shScore").textContent=fmt(S.score);sRight();floatText("+"+pts,"var(--green)");box.innerHTML="";$("shAsk").textContent="";res(o);}
-        else{tries++;S.miss++;S.score=Math.max(0,S.score-25);$("shScore").textContent=fmt(S.score);b.disabled=true;b.classList.add("wrong");sWrong();}};
+        if(o.ok){const pts=tries===0?first:tries===1?second:later;S.score+=pts;$("shScore").textContent=fmt(S.score);sRight();floatText("+"+pts,"var(--green)");box.innerHTML="";$("shAsk").textContent="";fb.innerHTML="";res(o);}
+        else{tries++;S.miss++;S.score=Math.max(0,S.score-25);$("shScore").textContent=fmt(S.score);b.disabled=true;b.classList.add("wrong");sWrong();
+          fb.className="feedback bad";fb.innerHTML=`Not quite.${o.why?` <small>${esc(o.why)}</small>`:""}`;follow(fb,"nearest");}};
       box.appendChild(b);});});}
   function steps(hi){$("shSteps").innerHTML=GOSPEL.map((g,i)=>`<span class="lvl${i===hi?" on":i<hi?" done":""}">${i<hi?"&#10004; ":""}${esc(g.short)}</span>`).join("");}
   function verseOpt(v,ok){return S.mode==="pro"?{html:`<span class="ref" style="color:inherit">${esc(v.ref)}</span>`,ok,v}:{html:`<span class="ref">${esc(v.ref)}</span><span class="txt">“${esc(v.text)}”</span>`,ok,v};}
-  async function start(){S.run++;const run=S.run;S.score=0;S.miss=0;const p=me();
-    $("shPick").classList.add("hidden");$("shPlay").classList.remove("hidden");$("shChat").innerHTML="";$("shChoices").innerHTML="";$("shAsk").textContent="";$("shScore").textContent="0";steps(0);
+  async function start(){S.run++;const run=S.run;S.score=0;S.miss=0;const p=me();let hi=-1;
+    $("shPick").classList.add("hidden");$("shPlay").classList.remove("hidden");$("shChat").innerHTML="";$("shChoices").innerHTML="";$("shAsk").textContent="";$("shFb").innerHTML="";$("shScore").textContent="0";steps(0);
     try{
-      await friend(`Hey ${esc(p.name)}! You go to church, right? Somebody told me the Gospel is “good news.” What is it?`,run);
-      for(let hi=0;hi<GOSPEL.length;hi++){const g=GOSPEL[hi];steps(hi);
-        const hq=hi===0?"Where do you start?":"What comes next?";
-        await ask(hq,shuffle(GOSPEL.map((x,i)=>({html:`<b>${esc(x.h)}</b>`,ok:i===hi}))),run,{first:200,second:50,later:10});
-        bubble("m",hi===0?`It starts with <span class="hd">${esc(g.h.toUpperCase())}</span>.`:`Next, <span class="hd">${esc(g.h.toUpperCase())}</span>.`);
-        await friend(esc(g.fq),run);
-        for(const pt of g.pts){
-          const same=g.pts.filter(x=>x!==pt),other=pickN(GPTS.filter(x=>x.hi!==hi),4);const pool=same.concat(other).slice(0,3);
-          await ask(`Point #${pt.n} under ${g.h}:`,shuffle([pt,...pool]).map(x=>({html:esc(x.t),ok:x===pt})),run);
-          bubble("m",esc(pt.t));
-          await friend(["How do you know that?","Where does the Bible say that?","Is that really in the Bible?"][pt.n%3],run);
-          const mine=GVS.filter(v=>v.pid===pt.id);let used=[];
-          for(let j=0;j<mine.length;j++){const others=pickN(GVS.filter(v=>v.pid!==pt.id),S.mode==="pro"?3:2);
-            const choices=shuffle([...mine.filter(v=>!used.includes(v)),...others]).map(v=>verseOpt(v,v.pid===pt.id));
-            const got=await ask(j===0?"Share a verse that proves it:":"This point has another verse. Share it too!",choices,run);used.push(got.v);
-            bubble("m",`${j===0?"The Bible says":"And"} in <b>${esc(got.v.ref)}</b>:<span class="vq">“${esc(got.v.text)}”</span>`);}
-          await friend(esc(pt.r),run);}
+      for(const st of SHARE_SCRIPT){
+        if(st.f)await friend(esc(st.f),run);
+        else if(st.m)await mine(esc(st.m),run);
+        else if(st.part!=null){hi=st.part;steps(hi);
+          await ask(st.q,shuffle(GOSPEL.map((x,i)=>({html:`<b>${esc(x.h)}</b>`,ok:i===hi}))),run,{first:200,second:50,later:10});
+          await mine(esc(st.say),run);const dv=document.createElement("div");dv.className="chatdiv";dv.textContent=`Part ${hi+1}: ${GOSPEL[hi].h}`;$("shChat").appendChild(dv);$("shChat").scrollTop=$("shChat").scrollHeight;}
+        else if(st.point){const pt=gPt(st.point),same=GOSPEL[pt.hi].pts.filter(x=>x!==pt),pool=same.concat(pickN(GPTS.filter(x=>x.hi!==pt.hi),4)).slice(0,3);
+          await ask(st.q,shuffle([pt,...pool]).map(x=>({html:esc(x.t),ok:x===pt})),run);
+          await mine(`${esc(st.lead)} <b>${esc(pt.t)}</b>`,run);}
+        else if(st.verse){const v=GVS.find(x=>x.id===st.verse),others=pickN(GVS.filter(x=>x.pid!==v.pid),S.mode==="pro"?3:2);
+          await ask(st.q,shuffle([v,...others]).map(x=>verseOpt(x,x===v)),run);
+          await mine(`Look at <b>${esc(v.ref)}</b>:<span class="vq">“${esc(v.text)}”</span>`,run);}
+        else if(st.ask){const got=await ask(st.ask,shuffle(st.opts.map(o=>({html:esc(o[0]),ok:!!o[1],why:o[2],t:o[0]}))),run,{first:200,second:75,later:25});
+          await mine(esc(got.t),run);}
       }
-      await friend(`I’m really going to think about this. Thanks for telling me the Gospel, ${esc(p.name)}!`,run);
-      if(run!==S.run)return;
+      if(run!==S.run)return;steps(4);
       const pro=S.mode==="pro";let final=S.score+1000;if(pro)final=Math.round(final*1.5);
       markAllGospelPracticed();const tr=["messenger"];if(pro&&!S.miss)tr.push("ready");
       setTimeout(()=>finishGame("share",final,{title:"You shared the whole Gospel!",detail:`${S.miss?`${S.miss} wrong pick${S.miss===1?"":"s"}`:"No wrong picks!"} &middot; ${pro?"Pro mode (1.5×)":"Starter mode"} &middot; +1,000 for finishing`,
