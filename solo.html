@@ -42,7 +42,7 @@
   .switchtip{display:none;justify-content:flex-end;align-items:center;gap:6px;color:var(--gold);font-weight:800;font-size:14px;margin:-6px 0 8px;text-align:right;}
   .switchtip .arr{font-size:20px;animation:nudgeup 1.2s ease-in-out infinite;}
   @keyframes nudgeup{50%{transform:translateY(-4px);}}
-  @media (max-width:900px){.switchhint{display:none!important;} .switchtip{display:flex;}}
+  @media (max-width:1180px){.switchhint{display:none!important;} .switchtip{display:flex;}}
   .avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px;margin:4px 0 14px;}
   .avbtn{background:var(--bg2);border:2px solid var(--line);border-radius:14px;font-size:32px;line-height:1;padding:9px 0;}
   .avbtn:hover{border-color:var(--muted);}
@@ -395,6 +395,15 @@
   @keyframes bob{50%{transform:translate(-50%,-5px);}}
   @media (prefers-reduced-motion:reduce){.morehint.show{animation:none;}}
 
+  /* trophy & high-score windows */
+  .infomodal{width:min(860px,96vw);text-align:left;border-color:var(--gold);}
+  .infomodal .ihead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+  .infomodal .ihead h2{margin:0;}
+  .infomodal .isub{color:var(--muted);font-weight:800;margin:14px 0 8px;font-size:14px;letter-spacing:1px;text-transform:uppercase;}
+  .infomodal .xbtn{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:900;}
+  .infomodal .xbtn:hover{border-color:var(--gold);color:var(--gold);}
+  @media (max-width:480px){.brand #brandText{display:none;} .topbar{gap:6px;padding-left:10px;padding-right:10px;} .navbtn{padding:8px 10px;}}
+
   /* printable progress sheet */
   #printSheet{display:none;}
   @media print{
@@ -417,6 +426,8 @@
     <span class="switchhint hidden" id="switchHint">Press this button to change players or add a new player <span class="arr">&#10132;</span></span>
     <button class="navbtn playerchip hidden" id="playerBtn" title="Change players or add a new player"><span class="pav" id="playerAv">&#128100;</span> <span id="playerName"></span></button>
     <button class="navbtn hidden" id="homeBtn">&#127968; <span class="lbl">Games</span></button>
+    <button class="navbtn hidden" id="trophyBtn" title="My trophies">&#127942; <span class="lbl">Trophies</span></button>
+    <button class="navbtn hidden" id="scoresBtn" title="My high scores">&#128200; <span class="lbl">High Scores</span></button>
     <button class="navbtn" id="soundBtn" title="Sound on/off">&#128266;</button>
     <a class="navbtn" href="./" title="Back to the start page">&#11013; <span class="lbl">Start</span></a>
   </div>
@@ -649,6 +660,7 @@
 </div>
 
 <!-- end of game -->
+<div class="overlay" id="infoOv"><div class="modal infomodal" id="infoModal"></div></div>
 <div class="overlay" id="endOv"><div class="modal" id="endModal"></div></div>
 <button class="morehint" id="moreHint" aria-label="Scroll down to see more">&#11015;&#65039; More below</button>
 <div class="toast" id="toast"></div>
@@ -800,6 +812,27 @@ const More=(()=>{let scrolled=false,raf=0;
   $("moreHint").onclick=()=>{const el=cur();if(el)el.scrollBy({top:el.clientHeight*.7,behavior:"smooth"});};
   return{reset};})();
 
+
+/* ==================== TROPHY & HIGH-SCORE WINDOWS (top bar) ==================== */
+let paused=false,pauseAt=0,pausedTotal=0;   /* games that run on a clock wait while one of these windows is open */
+function trophyCard(t,got){return`<div class="trophy${got?" got":""}"><div class="ti">${t.ic}</div><div><b>${t.tt}</b><span>${t.td}</span>${got?`<span style="display:block;color:var(--gold);margin-top:3px;">Earned ${new Date(got).toLocaleDateString()}</span>`:""}</div></div>`;}
+function openInfo(kind){const p=me();if(!p)return;if(!paused){paused=true;pauseAt=Date.now();}const m=$("infoModal");let h="";
+  if(kind==="t"){const got=TROPHIES.filter(t=>p.trophies[t.id]),need=TROPHIES.filter(t=>!p.trophies[t.id]);
+    h=`<div class="ihead"><h2>&#127942; ${esc(p.name)}’s Trophies</h2><button class="xbtn" id="infoX">Close &#10005;</button></div>
+      <div class="bestline" style="font-size:18px;">You’ve earned <b style="color:var(--gold)">${got.length} of ${TROPHIES.length}</b> trophies.</div>
+      <div class="bar" style="margin-bottom:6px;"><i style="width:${Math.round(got.length/TROPHIES.length*100)}%;background:linear-gradient(90deg,var(--gold),#f97316)"></i></div>
+      ${got.length?`<div class="isub">&#10004; Earned</div><div class="trophies">${got.map(t=>trophyCard(t,p.trophies[t.id])).join("")}</div>`:""}
+      ${need.length?`<div class="isub">Still to earn</div><div class="trophies">${need.map(t=>trophyCard(t,0)).join("")}</div>`:`<div class="detail" style="color:var(--gold)">You earned every trophy! Amazing!</div>`}`;}
+  else{const row=g=>`<tr><td>${g.ic} ${g.tt}<small>${p.plays[g.id]?`Played ${p.plays[g.id]} time${p.plays[g.id]===1?"":"s"}`:"Not played yet"}</small></td><td class="num">${p.best[g.id]?fmt(p.best[g.id]):"<span style='color:var(--muted)'>\u2014</span>"}</td></tr>`;
+    h=`<div class="ihead"><h2>&#128200; ${esc(p.name)}’s High Scores</h2><button class="xbtn" id="infoX">Close &#10005;</button></div>
+      <div class="isub">&#10013;&#65039; Share the Gospel</div><table class="scoretable">${GAMES.filter(g=>g.sec).map(row).join("")}</table>
+      <div class="isub">&#127918; More Games</div><table class="scoretable">${GAMES.filter(g=>!g.sec).map(row).join("")}</table>`;}
+  m.innerHTML=h;$("infoX").onclick=closeInfo;$("infoOv").classList.add("show");sBlip();}
+function closeInfo(){$("infoOv").classList.remove("show");if(paused){pausedTotal+=Date.now()-pauseAt;paused=false;}}
+$("infoOv").onclick=e=>{if(e.target===$("infoOv"))closeInfo();};
+addEventListener("keydown",e=>{if(e.key==="Escape"&&$("infoOv").classList.contains("show"))closeInfo();});
+$("trophyBtn").onclick=()=>openInfo("t");$("scoresBtn").onclick=()=>openInfo("s");
+
 /* ==================== ROUTER ==================== */
 let screen="players";
 const SCREENS={players:"scrPlayers",home:"scrHome",quiz:"scrQuiz",whoami:"scrWhoami",conc:"scrConc",wheel:"scrWheel",verse:"scrBuild",cat:"scrBuild",voyager:"scrVoyager",progress:"scrProgress",bridge:"scrBridge",learn:"scrLearn",path:"scrPath",share:"scrShare",scroll:"scrScroll"};
@@ -816,6 +849,7 @@ function show(name){
   $("homeBtn").classList.toggle("hidden",name==="home"||name==="players");
   const p=me();$("playerBtn").classList.toggle("hidden",!p||name==="players");if(p){$("playerName").textContent=p.name;$("playerAv").innerHTML=avOf(p);}
   $("switchHint").classList.toggle("hidden",!p||name!=="home");
+  $("trophyBtn").classList.toggle("hidden",!p||name==="players");$("scoresBtn").classList.toggle("hidden",!p||name==="players");
   const g=gameById(name);$("brandText").innerHTML=g?g.tt:name==="learn"?"Learn the Gospel":name==="progress"?"My Progress":`Solo <span class="full">Challenge</span>`;
   $(target).scrollTop=0;
   if(name==="players")renderPlayers();
@@ -910,7 +944,7 @@ const Quiz=(()=>{
       $("qCheck").onclick=go;$("qType").addEventListener("keydown",e=>{if(e.key==="Enter")go();});setTimeout(()=>{const i=$("qType");if(i)i.focus();},50);}
     else{const g=document.createElement("div");g.className="choices";const order=q.type==="tf"?[0,1]:shuffle(q.choices.map((_,i)=>i));
       order.forEach((oi,pos)=>{const b=document.createElement("button");b.className="choice";b.dataset.i=oi;b.innerHTML=`<span class="letter">${"ABCDEF"[pos]}</span><span>${esc(q.choices[oi])}</span>`;b.onclick=()=>answer(q.correct.includes(oi),null,oi);g.appendChild(b);});area.appendChild(g);}
-    paintTimer();Q.h=setInterval(()=>{Q.left-=.25;paintTimer();if(Q.left<=3&&Math.abs(Q.left-Math.round(Q.left))<.01&&Q.left>0)sTick();if(Q.left<=0)answer(false,null,null,true);},250);}
+    paintTimer();Q.h=setInterval(()=>{if(paused)return;Q.left-=.25;paintTimer();if(Q.left<=3&&Math.abs(Q.left-Math.round(Q.left))<.01&&Q.left>0)sTick();if(Q.left<=0)answer(false,null,null,true);},250);}
   function paintTimer(){$("qTimer").style.width=Math.max(0,Q.left/TIME*100)+"%";$("qTimerBar").classList.toggle("low",Q.left<=5);}
   function answer(ok,typed,picked,timeout){if(Q.done)return;Q.done=true;stop();const q=Q.qs[Q.i];
     const correctText=q.type==="fb"?q.answers[0]:q.correct.map(i=>q.choices[i]).join(", ");
@@ -984,7 +1018,7 @@ const Conc=(()=>{
     K.cards=shuffle(pairs.flatMap((p,i)=>[{pair:i,text:p[0]},{pair:i,text:p[1]}]));K.up=[];K.moves=0;K.matched=0;K.busy=false;
     $("concPick").classList.add("hidden");$("concPlay").classList.remove("hidden");
     findPics().then(l=>{const pic=s.image?("images/"+s.image):(l.length?l[Math.floor(Math.random()*l.length)]:"");$("cBoard").style.backgroundImage=pic?`url("${pic}")`:"linear-gradient(135deg,#1e3a8a,#7c3aed)";});
-    build();K.t0=Date.now();stop();K.h=setInterval(paintTime,500);paint();}
+    build();K.t0=Date.now();K.p0=pausedTotal;stop();K.h=setInterval(paintTime,500);paint();}
   function layout(){const n=K.cards.length,W=Math.min($("scrConc").clientWidth-36,1100),H=Math.max(300,$("scrConc").clientHeight-120);
     let best=null;for(let cols=2;cols<=n;cols++){const rows=Math.ceil(n/cols);const cw=(W-6*(cols+1))/cols,ch=(H-6*(rows+1))/rows;const size=Math.min(cw,ch/0.78)*(n%cols?0.9:1);if(!best||size>best.size)best={cols,rows,size};}
     const cols=best.cols,rows=best.rows,cw=Math.min((W-6*(cols+1))/cols,(H-6*(rows+1))/rows/0.78,190),ch=cw*0.78;const g=$("cGrid");g.style.gridTemplateColumns=`repeat(${best.cols},${cw}px)`;g.style.gridAutoRows=ch+"px";
@@ -997,7 +1031,7 @@ const Conc=(()=>{
       if(a.pair===b.pair){a.done=b.done=true;K.matched++;K.up=[];setTimeout(()=>{a.el.classList.add("done");b.el.classList.add("done");},250);sRight();if(K.matched===K.pairs)setTimeout(end,900);}
       else{K.busy=true;a.el.classList.add("miss");b.el.classList.add("miss");setTimeout(()=>{[a,b].forEach(x=>x.el.classList.remove("up","miss"));K.up=[];K.busy=false;},1000);}}
     paint();}
-  function secs(){return Math.floor((Date.now()-K.t0)/1000);}
+  function secs(){return Math.floor((Date.now()-K.t0-(pausedTotal-K.p0))/1000);}
   function paintTime(){const s=secs();$("cTime").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
   function paint(){$("cPairs").textContent=`${K.matched} / ${K.pairs}`;$("cMoves").textContent=K.moves;paintTime();}
   function end(){stop();const s=secs(),n=K.pairs;
@@ -1185,7 +1219,7 @@ function spawnGate(){const v=curVerse();if(!v){voy.gate=null;return;}if(voy.word
   const picks=[],used={};let guard=0;while(picks.length<VOY.LANES-1&&guard++<40){const d=pool.length?pool[Math.floor(Math.random()*pool.length)]:GENERIC_DECOYS[Math.floor(Math.random()*GENERIC_DECOYS.length)];const key=d.toLowerCase();if(used[key]&&pool.length>=VOY.LANES)continue;used[key]=1;picks.push(d);}
   const lanes=shuffle([...picks,correct]);voy.gate={x:voy.W+120,words:lanes,correct:lanes.indexOf(correct),resolved:false};}
 function laneOfY(y){const band=voy.H/VOY.LANES;return Math.max(0,Math.min(VOY.LANES-1,Math.floor(y/band)));}
-function voyLoop(ts){if(voy.phase!=="playing"){voy.raf=null;return;}let dt=(ts-voy.lastTs)/16.667;if(!(dt>0))dt=1;if(dt>3)dt=3;voy.lastTs=ts;updateVoy(dt);drawVoy();voy.raf=requestAnimationFrame(voyLoop);}
+function voyLoop(ts){if(voy.phase!=="playing"){voy.raf=null;return;}if(paused){voy.lastTs=ts;voy.raf=requestAnimationFrame(voyLoop);return;}let dt=(ts-voy.lastTs)/16.667;if(!(dt>0))dt=1;if(dt>3)dt=3;voy.lastTs=ts;updateVoy(dt);drawVoy();voy.raf=requestAnimationFrame(voyLoop);}
 function updateVoy(dt){const thr=voy.throttle,maxScroll=7.5+Math.min(voy.level,12)*.5,scroll=(.34+thr*.66)*maxScroll;
   voy.ship.y+=voy.steer*VOY.STEER*dt;const pad=voy.H*.06;voy.ship.y=Math.max(pad,Math.min(voy.H-pad,voy.ship.y));
   voy.shipXf+=voy.steerX*VOY.STEERX*dt;voy.shipXf=Math.max(.2,Math.min(.74,voy.shipXf));voy.shipX=voy.shipXf*voy.W;
@@ -1427,8 +1461,8 @@ const Bridge=(()=>{
     GPTS.forEach((p,i)=>p.v.forEach((vid,j)=>s.push({st:2,i,vid,second:j>0})));
     pickN(GVS,6).forEach(v=>s.push({st:3,v}));return s;}
   function start(){R.steps=buildSteps();R.i=0;R.score=0;R.miss=0;R.firsts=0;R.pillars=0;R.planks=0;R.bolts={};R.tested=new Set();R.done=false;R.fresh=null;
-    $("brPick").classList.add("hidden");$("brPlay").classList.remove("hidden");R.t0=Date.now();stop();R.h=setInterval(paintTime,500);step();}
-  function secs(){return Math.floor((Date.now()-R.t0)/1000);}
+    $("brPick").classList.add("hidden");$("brPlay").classList.remove("hidden");R.t0=Date.now();R.p0=pausedTotal;stop();R.h=setInterval(paintTime,500);step();}
+  function secs(){return Math.floor((Date.now()-R.t0-(pausedTotal-R.p0))/1000);}
   function paintTime(){const s=secs();$("brTime").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
   /* --- the canyon picture --- */
   const X0=170,X1=830,PW=(X1-X0)/GPTS.length,DY=150;
@@ -1720,7 +1754,7 @@ const Scroll=(()=>{
       paintHud();setTimeout(()=>{if(K.on)wave();},550);}
     else{s.dead=true;s.el.classList.add("bad");setTimeout(()=>s.el.classList.add("gone"),300);K.combo=0;loseHeart("Wrong scroll!");}}
   function loseHeart(why){K.hearts--;sWrong();shakeEl($("scPrompt"));paintHud();if(K.hearts<=0)end(why);}
-  function loop(ts){if(!K.on){K.raf=null;return;}let dt=(ts-K.last)/1000;if(!(dt>0))dt=.016;if(dt>.1)dt=.1;K.last=ts;
+  function loop(ts){if(!K.on){K.raf=null;return;}if(paused){K.last=ts;K.raf=requestAnimationFrame(loop);return;}let dt=(ts-K.last)/1000;if(!(dt>0))dt=.016;if(dt>.1)dt=.1;K.last=ts;
     const H=$("scField").clientHeight-14,sp=H/K.fall;
     K.scrolls.forEach(s=>{if(s.dead&&!s.el.classList.contains("bad"))return;s.y+=sp*dt;s.el.style.transform=`translate(${s.x}px,${s.y}px)`;
       if(!K.resolved&&s.ok&&!s.dead&&s.y+s.el.offsetHeight>=H){K.resolved=true;s.dead=true;s.el.classList.add("reveal");K.combo=0;floatText("Missed it!","#ff8a8a");
