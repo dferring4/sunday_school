@@ -180,8 +180,14 @@
   .wwword{display:flex;gap:4px;}
   .wwtile{width:var(--tw,38px);height:calc(var(--tw,38px)*1.22);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:calc(var(--tw,38px)*.68);}
   .wwtile.blank{background:#f1f5f9;color:transparent;border:2px solid #cbd5e1;}
-  .wwtile.shown{background:#f1f5f9;color:#0b1220;border:2px solid var(--gold);animation:pop .3s ease;}
+  .wwtile.shown{background:#f1f5f9;color:#0b1220;border:2px solid var(--gold);}
+  .wwtile.pop{animation:pop .3s ease;}
   .wwtile.punct{background:none;color:var(--ink);width:auto;min-width:12px;}
+  .wwtile.next{background:#e0f2fe;border:3px solid #38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.35);animation:blink 1s ease infinite;}
+  .wwstrip{background:#0c2340;border:2px solid #38bdf8;border-radius:14px;padding:8px 10px;margin:8px 0 4px;text-align:center;}
+  .wwstrip .lbl{color:#7dd3fc;font-weight:900;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+  .wwstrip .wwword{justify-content:center;flex-wrap:wrap;}
+  .wwlayout.solving .wwB{display:none;}
   .wwtile.lost{background:#fee2e2;color:#991b1b;border:2px solid #ef4444;}
   .hearts{font-size:22px;letter-spacing:2px;}
   .wwletters{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin:12px 0;}
@@ -541,7 +547,7 @@
   <div class="screen hidden" id="scrWheel"><div class="wrap">
     <div id="wwPick">
       <div class="ghead"><h2>&#127905; Word Puzzle Wheel</h2><div class="chip gold" id="wwBestChip"></div></div>
-      <p class="rules">Solve <b>3 puzzles</b>. Spin the wheel, then pick a consonant: every time it's in the puzzle, you win what you spun. <b>Vowels</b> cost 250. Each puzzle gives you <b>3 hearts</b>: a wrong letter, a wrong guess, or "Lose a Turn" costs a heart. <b>Bankrupt</b> wipes out that puzzle's money. Solve the puzzle for a <b>+2,000 bonus</b>!</p>
+      <p class="rules">Solve <b>3 puzzles</b>. Spin the wheel, then pick a consonant: every time it's in the puzzle, you win what you spun. <b>Vowels</b> cost 250. Each puzzle gives you <b>3 hearts</b>: a wrong letter or "Lose a Turn" costs a heart. <b>Bankrupt</b> wipes out that puzzle's money.<br>Think you know it? Press <b>Solve</b>, then tap the letters to fill in each empty square, in order. Get them all right for a <b>+2,000 bonus</b>, but one wrong letter and the puzzle is lost!</p>
       <button class="btn gold" id="wwGo">Start &#9654;</button>
     </div>
     <div id="wwPlay" class="hidden">
@@ -557,8 +563,9 @@
           <div class="wwmsg" id="wwMsg"></div>
         </div>
         <div class="wwC">
+          <div class="wwstrip hidden" id="wwStrip"></div>
           <div class="wwletters" id="wwLetters"></div>
-          <div class="typein" id="wwSolveRow"><input id="wwGuess" placeholder="Know it? Type the whole answer" autocomplete="off" autocapitalize="characters"><button class="btn green" id="wwSolve">Solve</button></div>
+          <div class="row center" id="wwSolveRow"><button class="btn green" id="wwSolve">&#128161; I know it! Solve</button></div>
           <div class="row center" style="margin-top:12px;"><button class="btn gold hidden" id="wwNext">Next puzzle &#9654;</button></div>
         </div>
       </div>
@@ -1089,7 +1096,7 @@ const Wheel=(()=>{
   function start(){if(!C.wordwheel.length)return;P.list=pickN(C.wordwheel,Math.min(ROUNDS,C.wordwheel.length));P.i=0;P.total=0;P.solved=0;
     $("wwPick").classList.add("hidden");$("wwPlay").classList.remove("hidden");$("wwWheel").innerHTML=wheelSvg();load();}
   function load(){const p=P.list[P.i];P.tiles=p.phrase.toUpperCase().split("").map(ch=>({ch,L:/[A-Z]/.test(ch),show:!/[A-Z]/.test(ch)}));
-    P.guessed={};P.hearts=3;P.bank=0;P.spin=0;P.phase="spin";P.busy=false;$("wwGuess").value="";msg("Spin the wheel to start!");render();}
+    P.guessed={};P.hearts=3;P.bank=0;P.spin=0;P.phase="spin";P.busy=false;msg("Spin the wheel to start!");render();}
   function msg(h,color){const m=$("wwMsg");m.innerHTML=h;m.style.color=color||"var(--gold)";}
   function render(){const p=P.list[P.i];
     $("wwNum").textContent=`${P.i+1} of ${P.list.length}`;$("wwBank").textContent=fmt(P.bank);$("wwTotal").textContent=fmt(P.total);
@@ -1098,13 +1105,21 @@ const Wheel=(()=>{
     const b=$("wwBoard");b.innerHTML="";const words=[];let cur=[];P.tiles.forEach((t,i)=>{if(t.ch===" "){if(cur.length)words.push(cur);cur=[];}else cur.push(i);});if(cur.length)words.push(cur);
     const longest=Math.max(...words.map(w=>w.length)),avail=Math.min(b.clientWidth||600,700);const tw=Math.max(18,Math.min(40,Math.floor((avail-10)/(longest*1.15))));
     const total=P.tiles.length;const tw2=total>40?Math.min(tw,30):tw;b.style.setProperty("--tw",tw2+"px");
+    const nextI=P.phase==="solving"?P.tiles.findIndex(t=>t.L&&!t.show):-1;
+    /* while solving, the wheel is put away and the word being spelled is shown right above the letters */
+    document.querySelector(".wwlayout").classList.toggle("solving",P.phase==="solving");
+    const strip=$("wwStrip");strip.classList.toggle("hidden",nextI<0);
+    if(nextI>=0){let a=nextI,z=nextI;while(a>0&&P.tiles[a-1].ch!==" ")a--;while(z<P.tiles.length-1&&P.tiles[z+1].ch!==" ")z++;
+      const wn=P.tiles.slice(0,a).filter((t,i)=>t.ch!==" "&&(i===0||P.tiles[i-1].ch===" ")).length+1,wt=words.length;
+      strip.innerHTML=`<div class="lbl">Word ${wn} of ${wt}: fill in the glowing square</div><div class="wwword" style="--tw:${Math.min(40,tw2+6)}px">${P.tiles.slice(a,z+1).map((t,k)=>`<div class="wwtile ${!t.L?"punct":t.show?"shown":"blank"}${a+k===nextI?" next":""}">${t.L?(t.show?t.ch:""):esc(t.ch)}</div>`).join("")}</div>`;}
     words.forEach(w=>{const d=document.createElement("div");d.className="wwword";w.forEach(i=>{const t=P.tiles[i],e=document.createElement("div");
-      e.className="wwtile "+(!t.L?"punct":t.show?(t.lost?"lost":"shown"):"blank");e.textContent=t.L?(t.show?t.ch:""):t.ch;d.appendChild(e);});b.appendChild(d);});
+      e.className="wwtile "+(!t.L?"punct":t.show?(t.lost?"lost":"shown"):"blank")+(i===nextI?" next":"")+(t.fresh?" pop":"");e.textContent=t.L?(t.show?t.ch:""):t.ch;d.appendChild(e);});b.appendChild(d);});
+    P.tiles.forEach(t=>t.fresh=false);
     const g=$("wwLetters");g.innerHTML="";"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(L=>{const v=VOWELS.includes(L);const bt=document.createElement("button");bt.className="wwletter"+(v?" vowel":"");bt.textContent=L;
-      bt.title=v?`Buy a vowel for ${VOWEL_COST}`:"";
-      bt.disabled=P.busy||!!P.guessed[L]||(v?(P.phase!=="spin"||P.bank<VOWEL_COST):P.phase!=="pick");bt.onclick=()=>letter(L);g.appendChild(bt);});
+      const solving=P.phase==="solving";bt.title=solving?"":v?`Buy a vowel for ${VOWEL_COST}`:"";
+      bt.disabled=P.busy||!!P.guessed[L]||(solving?false:v?(P.phase!=="spin"||P.bank<VOWEL_COST):P.phase!=="pick");bt.onclick=()=>solving?solveLetter(L):letter(L);g.appendChild(bt);});
     const over=P.phase==="solved"||P.phase==="lost";
-    $("wwSpin").disabled=P.busy||P.phase!=="spin";$("wwSolveRow").classList.toggle("hidden",over);$("wwSolve").disabled=P.busy;
+    $("wwSpin").disabled=P.busy||P.phase!=="spin";$("wwSolveRow").classList.toggle("hidden",over||P.phase==="solving");$("wwSolve").disabled=P.busy;
     $("wwNext").classList.toggle("hidden",!over);$("wwNext").textContent=P.i>=P.list.length-1?"See my score \u25B6":"Next puzzle \u25B6";}
   function spin(){if(P.busy||P.phase!=="spin")return;AC();P.busy=true;render();
     const idx=Math.floor(Math.random()*SEGS.length),seg=360/SEGS.length,target=(360-(idx*seg+seg/2))%360,curm=((P.rot%360)+360)%360;let d=target-curm;if(d<0)d+=360;
@@ -1119,20 +1134,23 @@ const Wheel=(()=>{
   function letter(L){if(P.busy||P.guessed[L])return;const v=VOWELS.includes(L);
     if(v){if(P.phase!=="spin"||P.bank<VOWEL_COST)return;P.bank-=VOWEL_COST;}else if(P.phase!=="pick")return;
     P.guessed[L]=true;const hits=P.tiles.filter(t=>t.L&&!t.show&&t.ch===L).length;
-    P.tiles.forEach(t=>{if(t.L&&t.ch===L)t.show=true;});
+    P.tiles.forEach(t=>{if(t.L&&t.ch===L&&!t.show){t.show=true;t.fresh=true;}});
     if(hits){if(!v){const gain=P.spin*hits;P.bank+=gain;floatText("+"+fmt(gain),"var(--green)");msg(`${hits} ${L}${hits>1?"'s":""}! +${fmt(gain)}. Spin again, buy a vowel, or solve!`,"var(--green)");}
       else msg(`${hits} ${L}${hits>1?"'s":""}! Spin, buy another vowel, or solve!`,"var(--green)");sRight();P.phase="spin";
       if(P.tiles.every(t=>!t.L||t.show)){solved();return;}render();follow($("wwSpin"),"center");}
     else{P.phase="spin";if(!loseHeart(`No ${L}, and that was your last heart.`)){msg(`No ${L} in this puzzle. That cost a heart.`,"#ff8a8a");render();follow($("wwSpin"),"center");}}}
-  function solve(){if(P.busy||P.phase==="solved"||P.phase==="lost")return;const g=$("wwGuess").value.toUpperCase().replace(/[^A-Z]/g,"");if(!g)return;
-    const ans=P.list[P.i].phrase.toUpperCase().replace(/[^A-Z]/g,"");
-    if(g===ans){P.tiles.forEach(t=>t.show=true);solved();}
-    else{$("wwGuess").value="";if(!loseHeart("That guess used your last heart.")){msg("Not quite! That cost a heart.","#ff8a8a");render();}}}
+  /* Solve: no more spinning or buying. Fill in every empty square, in order. One wrong letter loses the puzzle. */
+  function solve(){if(P.busy||(P.phase!=="spin"&&P.phase!=="pick"))return;AC();P.phase="solving";sBlip();
+    msg("&#128161; Solving! Tap the letter for the <b>glowing square</b>. One wrong letter and this puzzle is lost!","#7dd3fc");render();follow($("wwStrip"),"start");}
+  function solveLetter(L){if(P.phase!=="solving")return;const i=P.tiles.findIndex(t=>t.L&&!t.show);if(i<0)return;
+    if(P.tiles[i].ch===L){P.tiles[i].show=true;P.tiles[i].fresh=true;sBlip();if(P.tiles.every(t=>!t.L||t.show)){solved();return;}render();follow($("wwLetters"),"nearest");}
+    else{P.hearts=0;sWrong();shakeEl($("wwBoard"));lost(`${L} doesn\u2019t go in that square.`);}}
   function solved(){P.phase="solved";const earned=P.bank+2000;P.total+=earned;P.solved++;stat("puzzles");if((me().stats.puzzles||0)>=10)award("puzzler");
     confetti();sRight();msg(`&#127942; Solved! ${fmt(P.bank)} + 2,000 bonus = <b>${fmt(earned)}</b>`,"var(--green)");P.bank=0;render();follow($("wwNext"),"center");}
-  function lost(why){P.phase="lost";P.tiles.forEach(t=>{if(t.L&&!t.show){t.show=true;t.lost=true;}});msg(`&#128148; Out of hearts. ${esc(why)} This puzzle's money is gone.`,"#ff8a8a");P.bank=0;render();follow($("wwNext"),"center");}
+  function lost(why){const wasSolving=P.phase==="solving";P.phase="lost";P.tiles.forEach(t=>{if(t.L&&!t.show){t.show=true;t.lost=true;}});
+    msg(wasSolving?`&#128148; Oh no! ${esc(why)} Here\u2019s the answer. This puzzle\u2019s money is gone.`:`&#128148; Out of hearts. ${esc(why)} This puzzle\u2019s money is gone.`,"#ff8a8a");P.bank=0;render();follow($("wwNext"),"center");}
   function next(){if(P.i<P.list.length-1){P.i++;load();}else finishGame("wheel",P.total,{title:P.solved===P.list.length?"Puzzle champ!":"Nice spinning!",detail:`You solved <b>${P.solved} of ${P.list.length}</b> puzzles.`,again:()=>{openGame("wheel");start();}});}
-  $("wwGo").onclick=start;$("wwSpin").onclick=spin;$("wwSolve").onclick=solve;$("wwGuess").addEventListener("keydown",e=>{if(e.key==="Enter")solve();});$("wwNext").onclick=next;
+  $("wwGo").onclick=start;$("wwSpin").onclick=spin;$("wwSolve").onclick=solve;$("wwNext").onclick=next;
   return{enter};
 })();
 
