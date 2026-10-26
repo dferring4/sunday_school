@@ -71,6 +71,7 @@
   .row.center{justify-content:center;}
   .pills{display:flex;gap:8px;flex-wrap:wrap;}
   .pill{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-weight:800;font-size:14px;}
+  .hardtag{display:inline-block;background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:900;margin-left:4px;vertical-align:1px;}
   .pill.on{background:var(--gold);color:var(--gold-ink);border-color:var(--gold);}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;}
   .label{color:var(--muted);font-weight:800;letter-spacing:1.5px;font-size:12px;text-transform:uppercase;margin:0 0 8px;}
@@ -968,7 +969,7 @@ const Conc=(()=>{
   findPics();
   function enter(){stop();$("concPick").classList.remove("hidden");$("concPlay").classList.add("hidden");$("concBestChip").innerHTML=bestChip("conc");
     if(!K.set||!C.concentration.some(s=>s.id===K.set))K.set=C.concentration[0]&&C.concentration[0].id;
-    const sets=$("concSets");sets.innerHTML="";C.concentration.forEach(s=>{const b=document.createElement("button");b.className="pill"+(K.set===s.id?" on":"");b.textContent=s.title;b.onclick=()=>{K.set=s.id;enter();};sets.appendChild(b);});
+    const sets=$("concSets");sets.innerHTML="";C.concentration.forEach(s=>{const b=document.createElement("button");b.className="pill"+(K.set===s.id?" on":"");b.innerHTML=esc(s.title)+`${s.difficulty==="hard"?` <span class="hardtag">&#128293; Hard</span>`:""}`;b.onclick=()=>{K.set=s.id;enter();};sets.appendChild(b);});
     const lv=$("concLevels");lv.innerHTML="";LEVELS.forEach((x,i)=>{const b=document.createElement("button");b.className="pill"+(K.lvl===i?" on":"");b.textContent=`${x.l} (${x.n} pairs)`;b.onclick=()=>{K.lvl=i;enter();};lv.appendChild(b);});}
   function start(){const s=C.concentration.find(x=>x.id===K.set);if(!s)return;
     const pairs=pickN(s.pairs,Math.min(LEVELS[K.lvl].n,s.pairs.length));K.pairs=pairs.length;
