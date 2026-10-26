@@ -216,7 +216,7 @@
   .vitem b{font-size:18px;font-weight:900;}
   .vitem span{color:var(--muted);font-weight:600;font-size:14px;line-height:1.35;}
   .badges{display:flex;gap:6px;flex-wrap:wrap;}
-  .bdg{font-size:12px;font-weight:900;padding:3px 9px;border-radius:999px;background:var(--bg2);color:var(--muted);border:1px solid var(--line);}
+  .bdg{white-space:nowrap;display:inline-block;font-size:12px;font-weight:900;padding:3px 9px;border-radius:999px;background:var(--bg2);color:var(--muted);border:1px solid var(--line);}
   .bdg.p{color:var(--gold);border-color:var(--gold);}
   .bdg.k{color:#04241a;background:var(--green);border-color:var(--green);}
 
@@ -247,6 +247,7 @@
   /* progress */
   .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
   .prow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:10px;}
+  .prow.known{border-color:var(--green);background:linear-gradient(90deg,rgba(52,211,153,.12),var(--panel) 60%);}
   .prow .pt b{font-size:17px;font-weight:900;}
   .prow .pt div{color:var(--muted);font-weight:600;font-size:14px;line-height:1.4;margin-top:3px;}
   .prow .pa{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
@@ -404,6 +405,22 @@
   .infomodal .xbtn:hover{border-color:var(--gold);color:var(--gold);}
   @media (max-width:480px){.brand #brandText{display:none;} .topbar{gap:6px;padding-left:10px;padding-right:10px;} .navbtn{padding:8px 10px;}}
 
+  /* My Progress call-out on the home screen */
+  .progcall{background:linear-gradient(135deg,#14532d,#1e293b 70%);border:3px solid var(--green);border-radius:22px;padding:16px 18px;margin:0 0 8px;box-shadow:0 0 0 4px rgba(52,211,153,.12);}
+  .progcall h3{margin:0 0 6px;font-size:clamp(20px,2.6vw,28px);font-weight:900;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .progcall h3 .tagnew{background:var(--green);color:#04241a;border-radius:999px;padding:3px 10px;font-size:12px;letter-spacing:.5px;}
+  .progcall p{margin:0 0 12px;color:#d1fae5;font-weight:700;line-height:1.45;font-size:clamp(15px,1.7vw,18px);}
+  .progcall .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px;}
+  @media(max-width:640px){.progcall .steps{grid-template-columns:1fr;}}
+  .progcall .stp{background:rgba(0,0,0,.25);border-radius:12px;padding:8px 10px;font-weight:800;font-size:14px;line-height:1.3;display:flex;gap:8px;align-items:center;}
+  .progcall .stp .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--green);color:#04241a;display:flex;align-items:center;justify-content:center;font-weight:900;}
+  .progcall .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+  @media(max-width:520px){.progcall .mini div{font-size:11px;padding:6px 8px;} .progcall .mini b{font-size:16px;} .progcall .stp{padding:6px 8px;font-size:13px;} .progcall .steps{gap:6px;}}
+  .progcall .mini div{background:rgba(0,0,0,.25);border-radius:12px;padding:8px 10px;font-weight:800;font-size:13px;color:#a7f3d0;}
+  .progcall .mini b{display:block;color:#fff;font-size:20px;}
+  .howto{background:#14532d;border:2px solid var(--green);border-radius:18px;padding:12px 16px;margin:0 0 16px;}
+  .howto ol{margin:6px 0 0;padding-left:22px;font-weight:800;line-height:1.6;color:#d1fae5;}
+
   /* printable progress sheet */
   #printSheet{display:none;}
   @media print{
@@ -450,8 +467,8 @@
   <div class="screen hidden" id="scrHome"><div class="wrap">
     <div class="switchtip" id="switchTip">Tap your name to switch or add a player <span class="arr">&#11014;&#65039;</span></div>
     <h1 class="big" id="hello">Hi!</h1>
-    <p class="sub">Pick a game. Try to beat your own high score, earn trophies, and learn your memory verses and catechism.</p>
-    <div class="statstrip" id="statStrip"></div>
+    <p class="sub">Play the games to practice, beat your high scores, and earn trophies. Then check off what you know in <b style="color:var(--gold)">My Progress</b>!</p>
+    <div class="progcall" id="progCall"></div>
     <div class="sechead"><h2>&#10013;&#65039; Share the Gospel</h2><span class="tag">NEW</span></div>
     <div class="gospelband"><div class="gl"><b>Learn how to share the Gospel!</b> The Gospel has <b>4 parts</b>. Each part has a few points, and each point has a Bible verse that proves it. Start with Step 1, even if you've never heard it before!</div>
       <button class="stat gstat" id="gStat"></button></div>
@@ -588,7 +605,11 @@
   <!-- ===== PROGRESS ===== -->
   <div class="screen hidden" id="scrProgress"><div class="wrap">
     <div class="ghead"><h2>&#128203; My Progress</h2><button class="btn" id="printBtn" style="min-width:0;padding:10px 14px;font-size:15px;">&#128424; Print my sheet</button></div>
-    <p class="sub">A <span class="bdg p">&#9733; Practiced</span> star appears when you finish a verse or question in the Builder games. When you can say it all by heart without looking, check <b>"I know it!"</b> Show a grown-up!</p>
+    <div class="howto"><b style="font-size:18px">&#10004; How to check things off</b><ol>
+      <li>Practice with the games. A <span class="bdg p">&#9733; Practiced</span> star shows up here when you finish one.</li>
+      <li>Close your eyes and say it by heart, with no peeking!</li>
+      <li>Got it? Tap <b>&#10004; I know it!</b> below. Only you can check it off.</li>
+      <li>Show a grown-up, or tap <b>Print my sheet</b> to bring to Sunday school.</li></ol></div>
     <div class="statstrip" id="progStats"></div>
     <div class="tabs" id="progTabs"></div>
     <div id="progBody"></div>
@@ -903,11 +924,13 @@ function renderHome(){
   $("hello").textContent=`Hi, ${p.name}!`;
   const nT=Object.keys(p.trophies).length,vK=countKnown("v"),cK=countKnown("c");
   const pct=(a,b)=>b?Math.round(a/b*100):0;
-  $("statStrip").innerHTML=`
-    <button class="stat" data-go="progress"><span>&#128220; Verses I know</span><b>${vK} / ${C.memverses.length}</b><div class="bar"><i style="width:${pct(vK,C.memverses.length)}%"></i></div></button>
-    <button class="stat" data-go="progress"><span>&#9997;&#65039; Catechism I know</span><b>${cK} / ${C.catechism.length}</b><div class="bar"><i style="width:${pct(cK,C.catechism.length)}%"></i></div></button>
-    <button class="stat" data-go="progress"><span>&#127942; Trophies</span><b>${nT} / ${TROPHIES.length}</b><div class="bar"><i style="width:${pct(nT,TROPHIES.length)}%;background:linear-gradient(90deg,var(--gold),#f97316)"></i></div></button>`;
-  $("statStrip").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>show("progress"));
+  const gk0=gKnown(),total=vK+cK+gk0;
+  $("progCall").innerHTML=`<h3>&#128203; My Progress: check off what you know!${total?"":` <span class="tagnew">Start here</span>`}</h3>
+    <p>The games help you practice, but <b>only you can check off what you know</b>. Nobody else will do it for you!</p>
+    <div class="steps"><div class="stp"><span class="n">1</span>Practice with the games</div><div class="stp"><span class="n">2</span>Say it by heart without looking</div><div class="stp"><span class="n">3</span>Tap &#10004; “I know it!” and show a grown-up</div></div>
+    <div class="mini"><div>&#10013;&#65039; Gospel points<b>${gk0} / ${GPTS.length}</b></div><div>&#128220; Memory verses<b>${vK} / ${C.memverses.length}</b></div><div>&#9997;&#65039; Catechism<b>${cK} / ${C.catechism.length}</b></div></div>
+    <button class="btn green" id="progGo">&#128203; Open My Progress &#9654;</button>`;
+  $("progGo").onclick=()=>show("progress");
   const gk=gKnown();$("gStat").innerHTML=`<span>&#10013;&#65039; Gospel points I know</span><b>${gk} / ${GPTS.length}</b><div class="bar"><i style="width:${pct(gk,GPTS.length)}%;background:linear-gradient(90deg,#f97316,#fde047)"></i></div>`;
   $("gStat").onclick=()=>{progTab="g";show("progress");};
   const lr=p.gLearn||{};$("gHeads").innerHTML=GOSPEL.map((g,i)=>{const nV=g.pts.reduce((a,x)=>a+x.v.length,0);return`<button class="ghbtn" data-i="${i}">${lr[i]?'<span class="gdone">&#10004; Seen</span>':""}<span class="gn">PART ${i+1}</span><span class="gt">${esc(g.h)}</span><span class="gs">${g.pts.length} points &middot; ${nV} verse${nV===1?"":"s"}</span></button>`;}).join("");
@@ -1444,8 +1467,9 @@ const Path=(()=>{
     const nx=L<4?L+1:-1;
     finishGame("path",P.score,{title:`${LESSONS[L].t.replace(/^\d\. /,"")}: lesson complete!`,
       detail:`<div style="font-size:40px;letter-spacing:4px">${[1,2,3].map(k=>`<span style="opacity:${k<=s?1:.2}">&#11088;</span>`).join("")}</div>${P.miss?`${P.miss} slip${P.miss===1?"":"s"}. ${s<3?"Get them all right the first time for 3 stars!":""}`:"No slips! 3 stars!"}`,
-      extra:nx>=0?`<div class="row" style="justify-content:center;margin-top:6px"><button class="btn green" id="paNextL">Next lesson: ${esc(LESSONS[nx].t)} &#9654;</button></div>`:`<div class="detail" style="color:var(--gold)">You know the whole Gospel path! Now test yourself in <b>Bridge Builder</b>, <b>Share It!</b>, and <b>Scroll Catcher</b>.</div>`,
-      onReady:()=>{const b=$("paNextL");if(b)b.onclick=()=>{$("endOv").classList.remove("show");start(nx);};},
+      extra:(nx>=0?`<div class="row" style="justify-content:center;margin-top:6px"><button class="btn green" id="paNextL">Next lesson: ${esc(LESSONS[nx].t)} &#9654;</button></div>`:`<div class="detail" style="color:var(--gold)">You know the whole Gospel path! Now test yourself in <b>Bridge Builder</b>, <b>Share It!</b>, and <b>Scroll Catcher</b>.</div>`)+
+        `<div class="card" style="margin-top:10px;"><div class="detail" style="margin-top:0;">Can you say these points and verses by heart, without looking?</div><button class="btn green" id="paCheck">&#128203; Check them off in My Progress</button></div>`,
+      onReady:()=>{const b=$("paNextL");if(b)b.onclick=()=>{$("endOv").classList.remove("show");start(nx);};const c=$("paCheck");if(c)c.onclick=()=>{$("endOv").classList.remove("show");progTab="g";show("progress");};},
       trophies:tr,again:()=>{openGame("path");}});}
   return{enter,start};
 })();
@@ -1786,9 +1810,9 @@ function renderProgress(){
   if(progTab==="v"||progTab==="c"){const kind=progTab,list=kind==="v"?C.memverses:C.catechism,m=kind==="v"?p.verses:p.cat;
     if(!list.length){body.innerHTML=`<div class="empty">Nothing here yet.</div>`;return;}
     (kind==="v"?verseGroups(list):[["",list]]).forEach(([gt,arr])=>{if(gt){const h=document.createElement("div");h.className="label";h.style.cssText="margin:14px 0 8px;font-size:14px;color:var(--gold);";h.textContent=gt;body.appendChild(h);}
-    arr.forEach(it=>{const st=m[it.id]||{};const row=document.createElement("div");row.className="prow";
+    arr.forEach(it=>{const st=m[it.id]||{};const row=document.createElement("div");row.className="prow"+(st.k?" known":"");
       const title=kind==="v"?esc(it.reference):`${it.n}. ${esc(it.q)}`,text=kind==="v"?esc(it.text):esc(catAnswer(it.a,store.catShort));
-      row.innerHTML=`<div class="pt"><b>${title}</b> ${st.p||st.k?`<span class="bdg p">&#9733; Practiced</span>`:""}<div>${text}</div></div>
+      row.innerHTML=`<div class="pt"><b>${title}</b> ${st.k?`<span class="bdg k">&#10004; Known</span>`:st.p?`<span class="bdg p">&#9733; Practiced</span>`:""}<div>${text}</div></div>
         <div class="pa"><button class="smallbtn" data-act="practice">&#9654; Practice</button><button class="knowbtn${st.k?" on":""}" data-act="know"><span class="box">${st.k?"&#10004;":""}</span>I know it!</button></div>`;
       row.querySelector('[data-act="practice"]').onclick=()=>{const mode=kind==="v"?"verse":"cat";show(mode);Build.enter(mode);Build.open(it.id,mode);};
       row.querySelector('[data-act="know"]').onclick=()=>{const on=!(m[it.id]&&m[it.id].k);setItem(kind,it.id,"k",on);if(on){sRight();}else sBlip();renderProgress();};
@@ -1796,8 +1820,8 @@ function renderProgress(){
   else if(progTab==="g"){const gs=p.gospel||{};
     const intro=document.createElement("p");intro.className="sub";intro.innerHTML="Check off each point when you can say the <b>point and its verse</b> by heart. Play <b>Bridge Builder</b>, <b>Share It!</b>, or <b>Scroll Catcher</b> to practice.";body.appendChild(intro);
     GOSPEL.forEach((g,hi)=>{const h=document.createElement("div");h.className="label";h.style.cssText="margin:14px 0 8px;font-size:15px;color:#fdba74;";h.textContent=`${hi+1}. ${g.h}`;body.appendChild(h);
-      g.pts.forEach(pt=>{const st=gs[pt.id]||{};const row=document.createElement("div");row.className="prow";
-        row.innerHTML=`<div class="pt"><b>#${pt.n} \u2013 ${esc(pt.t)}</b> ${st.p||st.k?`<span class="bdg p">&#9733; Practiced</span>`:""}${pt.v.map(id=>`<div><b style="color:var(--ink);font-size:14px;">${esc(GV[id][0])}</b> \u2013 ${esc(GV[id][1])}</div>`).join("")}</div>
+      g.pts.forEach(pt=>{const st=gs[pt.id]||{};const row=document.createElement("div");row.className="prow"+(st.k?" known":"");
+        row.innerHTML=`<div class="pt"><b>#${pt.n} \u2013 ${esc(pt.t)}</b> ${st.k?`<span class="bdg k">&#10004; Known</span>`:st.p?`<span class="bdg p">&#9733; Practiced</span>`:""}${pt.v.map(id=>`<div><b style="color:var(--ink);font-size:14px;">${esc(GV[id][0])}</b> \u2013 ${esc(GV[id][1])}</div>`).join("")}</div>
           <div class="pa"><button class="knowbtn${st.k?" on":""}"><span class="box">${st.k?"&#10004;":""}</span>I know it!</button></div>`;
         row.querySelector(".knowbtn").onclick=()=>{const on=!(gs[pt.id]&&gs[pt.id].k);setGospel(pt.id,"k",on);if(on)sRight();else sBlip();renderProgress();};
         body.appendChild(row);});});}
