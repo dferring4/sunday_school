@@ -1544,7 +1544,7 @@ function makeEraser(cfg){
 const VM=makeEraser({pre:"vm",screen:"versemem",items:()=>state.memverses,
   title:v=>v.reference,
   parts:v=>[{text:v.text}],
-  pickHtml:(v,i)=>`<b>${i+1}</b><span>${esc(v.reference)}<br><span style="color:var(--muted);font-weight:700;font-size:14px;">${esc(v.text.slice(0,70))}${v.text.length>70?"&hellip;":""}</span></span>`});
+  pickHtml:(v,i)=>`<b>${i+1}</b><span>${esc(v.reference)}${v.group?` <span style="color:var(--gold);font-size:13px;">&middot; ${esc(v.group)}</span>`:""}<br><span style="color:var(--muted);font-weight:700;font-size:14px;">${esc(v.text.slice(0,70))}${v.text.length>70?"&hellip;":""}</span></span>`});
 let cmFull=true;
 function catAnswer(a){
   if(cmFull)return a.replace(/[\[\]]/g,"").replace(/\s+/g," ").trim();
