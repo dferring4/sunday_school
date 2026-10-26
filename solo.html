@@ -385,6 +385,13 @@
   .paorder{margin:0 0 12px;padding-left:28px;} .paorder li{background:rgba(52,211,153,.14);border:1px solid var(--green);border-radius:10px;padding:8px 12px;margin:6px 0;font-weight:800;}
   .pabar{height:10px;border-radius:9px;background:var(--bg2);overflow:hidden;margin:0 0 14px;} .pabar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f97316,#fde047);transition:width .3s;}
 
+  /* "more below" helper for small screens */
+  .morehint{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:55;
+    background:var(--gold);color:var(--gold-ink);font-weight:900;font-size:15px;border-radius:999px;padding:10px 18px;box-shadow:0 8px 22px rgba(0,0,0,.5);transition:opacity .25s, transform .25s;display:flex;align-items:center;gap:6px;}
+  .morehint.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;animation:bob 1.4s ease-in-out .3s infinite;}
+  @keyframes bob{50%{transform:translate(-50%,-5px);}}
+  @media (prefers-reduced-motion:reduce){.morehint.show{animation:none;}}
+
   /* printable progress sheet */
   #printSheet{display:none;}
   @media print{
@@ -639,6 +646,7 @@
 
 <!-- end of game -->
 <div class="overlay" id="endOv"><div class="modal" id="endModal"></div></div>
+<button class="morehint" id="moreHint" aria-label="Scroll down to see more">&#11015;&#65039; More below</button>
 <div class="toast" id="toast"></div>
 <canvas id="confetti"></canvas>
 <div id="printSheet"></div>
@@ -763,6 +771,25 @@ function finishGame(gid,score,opts){
   $("endOv").classList.add("show");
 }
 
+/* ==================== SMALL-SCREEN HELPERS ==================== */
+/* Scroll something into view only if part of it is off screen (phones). */
+function ensureVisible(el,block){if(!el||el.offsetParent===null)return;const r=el.getBoundingClientRect(),top=document.querySelector(".topbar").getBoundingClientRect().bottom;
+  if(r.top<top||r.bottom>innerHeight-8)el.scrollIntoView({behavior:"smooth",block:block||"nearest"});}
+function follow(el,block){setTimeout(()=>ensureVisible(el,block),90);}
+/* "More below" bubble: shows when the current screen has content below the fold, hides once the player scrolls. */
+const More=(()=>{let scrolled=false,raf=0;
+  const cur=()=>{const id=SCREENS[screen];return id?$(id):null;};
+  function check(){raf=0;const el=cur(),h=$("moreHint");if(!el){h.classList.remove("show");return;}
+    const below=el.scrollHeight-el.scrollTop-el.clientHeight;const blocked=$("endOv").classList.contains("show");
+    h.classList.toggle("show",!scrolled&&!blocked&&below>60&&el.scrollTop<40);}
+  function soon(){if(!raf)raf=requestAnimationFrame(check);}
+  function reset(){scrolled=false;soon();}
+  document.addEventListener("scroll",e=>{if(e.target===cur()&&e.target.scrollTop>20){scrolled=true;soon();}},true);
+  new MutationObserver(()=>{scrolled=cur()&&cur().scrollTop>40;soon();}).observe($("app"),{childList:true,subtree:true,attributes:true,attributeFilter:["class"]});
+  addEventListener("resize",soon);
+  $("moreHint").onclick=()=>{const el=cur();if(el)el.scrollBy({top:el.clientHeight*.7,behavior:"smooth"});};
+  return{reset};})();
+
 /* ==================== ROUTER ==================== */
 let screen="players";
 const SCREENS={players:"scrPlayers",home:"scrHome",quiz:"scrQuiz",whoami:"scrWhoami",conc:"scrConc",wheel:"scrWheel",verse:"scrBuild",cat:"scrBuild",voyager:"scrVoyager",progress:"scrProgress",bridge:"scrBridge",learn:"scrLearn",path:"scrPath",share:"scrShare",scroll:"scrScroll"};
@@ -784,6 +811,7 @@ function show(name){
   if(name==="players")renderPlayers();
   if(name==="home")renderHome();
   if(name==="progress")renderProgress();
+  More.reset();
 }
 function openGame(id){
   if(!contentReady){show("home");return;}
@@ -865,7 +893,7 @@ const Quiz=(()=>{
     $("quizPick").classList.add("hidden");$("quizPlay").classList.remove("hidden");ask();}
   function ask(){stop();const q=Q.qs[Q.i];Q.done=false;Q.left=TIME;
     $("qNum").textContent=`${Q.i+1} of ${Q.qs.length}`;$("qStreak").textContent=Q.streak;$("qScore").textContent=fmt(Q.score);
-    $("qText").textContent=q.text;$("qWeek").textContent=q.week||"";$("qWeek").classList.toggle("hidden",!q.week);$("qFeedback").textContent="";$("qFeedback").className="feedback";$("qNext").classList.add("hidden");
+    $("qText").textContent=q.text;$("qWeek").textContent=q.week||"";$("qWeek").classList.toggle("hidden",!q.week);$("qFeedback").textContent="";$("qFeedback").className="feedback";$("qNext").classList.add("hidden");follow($("qTimerBar"),"start");
     const area=$("qAnswers");area.innerHTML="";
     if(q.type==="fb"){area.innerHTML=`<div class="typein"><input id="qType" placeholder="Type your answer" autocomplete="off"><button class="btn green" id="qCheck">Check</button></div>`;
       const go=()=>{const v=$("qType").value;if(!v.trim())return;answer(typedOk(v,q.answers),v);};
@@ -883,7 +911,7 @@ const Quiz=(()=>{
       fb.className="feedback good";fb.innerHTML=`&#10004; Correct! +${fmt(pts)}<small>500 for the answer${speed?` + ${speed} speed bonus`:""}${streak?` + ${streak} streak bonus`:""}</small>`;floatText("+"+fmt(pts),"var(--green)");sRight();}
     else{Q.streak=0;fb.className="feedback bad";fb.innerHTML=`${timeout?"&#9200; Time's up!":"&#10008; Not quite."}<small>The answer is: <b style="color:var(--ink)">${esc(correctText)}</b></small>`;sWrong();shakeEl($("qText"));}
     $("qScore").textContent=fmt(Q.score);$("qStreak").textContent=Q.streak;
-    const nx=$("qNext");nx.textContent=Q.i>=Q.qs.length-1?"See my score \u25B6":"Next \u25B6";nx.classList.remove("hidden");nx.focus();}
+    const nx=$("qNext");nx.textContent=Q.i>=Q.qs.length-1?"See my score \u25B6":"Next \u25B6";nx.classList.remove("hidden");nx.focus({preventScroll:true});follow(nx,"nearest");}
   function next(){if(Q.i<Q.qs.length-1){Q.i++;ask();}else end();}
   function end(){stop();const tr=[];if(Q.right===Q.qs.length&&Q.qs.length>=10)tr.push("perfect");
     finishGame("quiz",Q.score,{title:Q.right===Q.qs.length?"Perfect!":Q.right>=Q.qs.length*.7?"Great job!":"Good try!",detail:`You got <b>${Q.right} of ${Q.qs.length}</b> right.`,trophies:tr,again:()=>{openGame("quiz");start();}});}
@@ -911,7 +939,7 @@ const Who=(()=>{
       if(W.done){b.disabled=true;if(s===q.subject)b.classList.add("right");else if(!W.wrong.has(s))b.classList.add("dim");}
       b.onclick=()=>guess(s);g.appendChild(b);});
     $("whoClueBtn").classList.toggle("hidden",W.done);$("whoClueBtn").disabled=W.shown>=q.clues.length;
-    $("whoNext").classList.toggle("hidden",!W.done);$("whoNext").textContent=W.i>=W.list.length-1?"See my score \u25B6":"Next person \u25B6";}
+    $("whoNext").classList.toggle("hidden",!W.done);$("whoNext").textContent=W.i>=W.list.length-1?"See my score \u25B6":"Next person \u25B6";follow(W.done?$("whoNext"):$("whoChoices"),"nearest");}
   function guess(s){if(W.done)return;const q=W.list[W.i];const fb=$("whoFeedback");
     if(s===q.subject){const pts=worth(q);W.score+=pts;if(W.shown===1)W.firsts++;W.done=true;W.shown=q.clues.length;
       fb.className="feedback good";fb.innerHTML=`&#10004; Yes! It's ${esc(q.subject)}! +${fmt(pts)}`;floatText("+"+fmt(pts),"var(--green)");sRight();}
@@ -1013,22 +1041,22 @@ const Wheel=(()=>{
   function land(s){
     if(s.v==="bankrupt"){sWrong();const lostAmt=P.bank;P.bank=0;msg(`&#128176; BANKRUPT!${lostAmt?` You lost ${fmt(lostAmt)}.`:""} Spin again.`,"#ff8a8a");P.phase="spin";render();}
     else if(s.v==="lose"){if(!loseHeart("Lose a Turn took your last heart.")){msg("&#10060; Lose a Turn! That cost a heart. Spin again.","#ff8a8a");P.phase="spin";render();}}
-    else{sRight();P.spin=s.v;P.phase="pick";msg(`You spun <b>$${fmt(s.v)}</b>! Pick a consonant.`);render();}}
+    else{sRight();P.spin=s.v;P.phase="pick";msg(`You spun <b>$${fmt(s.v)}</b>! Pick a consonant.`);render();follow($("wwLetters"),"center");}}
   function letter(L){if(P.busy||P.guessed[L])return;const v=VOWELS.includes(L);
     if(v){if(P.phase!=="spin"||P.bank<VOWEL_COST)return;P.bank-=VOWEL_COST;}else if(P.phase!=="pick")return;
     P.guessed[L]=true;const hits=P.tiles.filter(t=>t.L&&!t.show&&t.ch===L).length;
     P.tiles.forEach(t=>{if(t.L&&t.ch===L)t.show=true;});
     if(hits){if(!v){const gain=P.spin*hits;P.bank+=gain;floatText("+"+fmt(gain),"var(--green)");msg(`${hits} ${L}${hits>1?"'s":""}! +${fmt(gain)}. Spin again, buy a vowel, or solve!`,"var(--green)");}
       else msg(`${hits} ${L}${hits>1?"'s":""}! Spin, buy another vowel, or solve!`,"var(--green)");sRight();P.phase="spin";
-      if(P.tiles.every(t=>!t.L||t.show)){solved();return;}render();}
-    else{P.phase="spin";if(!loseHeart(`No ${L}, and that was your last heart.`)){msg(`No ${L} in this puzzle. That cost a heart.`,"#ff8a8a");render();}}}
+      if(P.tiles.every(t=>!t.L||t.show)){solved();return;}render();follow($("wwSpin"),"center");}
+    else{P.phase="spin";if(!loseHeart(`No ${L}, and that was your last heart.`)){msg(`No ${L} in this puzzle. That cost a heart.`,"#ff8a8a");render();follow($("wwSpin"),"center");}}}
   function solve(){if(P.busy||P.phase==="solved"||P.phase==="lost")return;const g=$("wwGuess").value.toUpperCase().replace(/[^A-Z]/g,"");if(!g)return;
     const ans=P.list[P.i].phrase.toUpperCase().replace(/[^A-Z]/g,"");
     if(g===ans){P.tiles.forEach(t=>t.show=true);solved();}
     else{$("wwGuess").value="";if(!loseHeart("That guess used your last heart.")){msg("Not quite! That cost a heart.","#ff8a8a");render();}}}
   function solved(){P.phase="solved";const earned=P.bank+2000;P.total+=earned;P.solved++;stat("puzzles");if((me().stats.puzzles||0)>=10)award("puzzler");
-    confetti();sRight();msg(`&#127942; Solved! ${fmt(P.bank)} + 2,000 bonus = <b>${fmt(earned)}</b>`,"var(--green)");P.bank=0;render();}
-  function lost(why){P.phase="lost";P.tiles.forEach(t=>{if(t.L&&!t.show){t.show=true;t.lost=true;}});msg(`&#128148; Out of hearts. ${esc(why)} This puzzle's money is gone.`,"#ff8a8a");P.bank=0;render();}
+    confetti();sRight();msg(`&#127942; Solved! ${fmt(P.bank)} + 2,000 bonus = <b>${fmt(earned)}</b>`,"var(--green)");P.bank=0;render();follow($("wwNext"),"center");}
+  function lost(why){P.phase="lost";P.tiles.forEach(t=>{if(t.L&&!t.show){t.show=true;t.lost=true;}});msg(`&#128148; Out of hearts. ${esc(why)} This puzzle's money is gone.`,"#ff8a8a");P.bank=0;render();follow($("wwNext"),"center");}
   function next(){if(P.i<P.list.length-1){P.i++;load();}else finishGame("wheel",P.total,{title:P.solved===P.list.length?"Puzzle champ!":"Nice spinning!",detail:`You solved <b>${P.solved} of ${P.list.length}</b> puzzles.`,again:()=>{openGame("wheel");start();}});}
   $("wwGo").onclick=start;$("wwSpin").onclick=spin;$("wwSolve").onclick=solve;$("wwGuess").addEventListener("keydown",e=>{if(e.key==="Enter")solve();});$("wwNext").onclick=next;
   return{enter};
@@ -1081,14 +1109,14 @@ const Build=(()=>{
     const rest=[...new Set(B.hidden.slice(B.pos+1).map(h=>B.toks[h.i].core))].filter(w=>w.toLowerCase()!==correct.toLowerCase());
     let decoys=pickN(rest,5);
     if(decoys.length<3){const extra=[...new Set(B.toks.filter(t=>t.core).map(t=>t.core))].filter(w=>w.toLowerCase()!==correct.toLowerCase()&&!decoys.includes(w));decoys=decoys.concat(pickN(extra,3-decoys.length));}
-    shuffle([correct,...decoys]).forEach(w=>{const b=document.createElement("button");b.className="bword";b.textContent=w;b.onclick=()=>tap(w,b);bank.appendChild(b);});}
+    shuffle([correct,...decoys]).forEach(w=>{const b=document.createElement("button");b.className="bword";b.textContent=w;b.onclick=()=>tap(w,b);bank.appendChild(b);});follow(bank,"nearest");}
   function tap(w,btn){const h=B.hidden[B.pos];if(!h)return;const correct=B.toks[h.i].core;
     if(w.toLowerCase()===correct.toLowerCase()){h.filled=true;B.pos++;B.score+=100;sBlip();
       if(B.pos>=B.hidden.length){levelDone();return;}render();}
     else{B.miss++;B.lvlMiss++;B.score=Math.max(0,B.score-50);btn.classList.add("bad");sWrong();$("bScore").textContent=fmt(B.score);$("bFeedback").innerHTML=`<span style="color:#ff8a8a">Not that one. Try again!</span>`;setTimeout(()=>btn.classList.remove("bad"),450);}}
   function levelDone(){const bonus=300+(B.lvlMiss?0:200);B.score+=bonus;render();sRight();if(B.lvl<LV.length-1)floatText(B.lvlMiss?`+${bonus}`:`Perfect! +${bonus}`,"var(--green)");
     if(B.lvl<LV.length-1){$("bBank").innerHTML="";$("bFeedback").innerHTML=`<span style="color:var(--green)">&#10004; ${LV[B.lvl].l} done${B.lvlMiss?"":" with no mistakes"}!</span>`;
-      const rd=$("bRead");rd.innerHTML=`<button class="btn gold" id="bNextLvl">Next level &#9654;</button>`;$("bNextLvl").onclick=()=>setLevel(B.lvl+1);$("bNextLvl").focus();}
+      const rd=$("bRead");rd.innerHTML=`<button class="btn gold" id="bNextLvl">Next level &#9654;</button>`;$("bNextLvl").onclick=()=>setLevel(B.lvl+1);$("bNextLvl").focus({preventScroll:true});follow($("bNextLvl"),"center");}
     else complete();}
   function complete(){const k=kind(),id=B.item.id;setItem(k,id,"p",1);if(k==="v")award("builder");stat(B.mode+"Done");
     const known=me()[k==="v"?"verses":"cat"][id]&&me()[k==="v"?"verses":"cat"][id].k;const pt=parts();
@@ -1336,7 +1364,7 @@ const Path=(()=>{
     if(screen!=="path")show("path");$("paPick").classList.add("hidden");$("paPlay").classList.remove("hidden");$("paTitle").textContent=LESSONS[L].t;step();}
   function bar(){$("paBar").style.width=Math.round(P.i/P.q.length*100)+"%";$("paScore").textContent=fmt(P.score);}
   function cont(label,fn){const b=document.createElement("button");b.className="btn gold";b.innerHTML=label;b.onclick=fn;return b;}
-  function step(){bar();if(P.i>=P.q.length){finish();return;}const c=$("paCard"),it=P.q[P.i];c.innerHTML="";c.classList.remove("shake");
+  function step(){bar();if(P.i>=P.q.length){finish();return;}const c=$("paCard"),it=P.q[P.i];c.innerHTML="";c.classList.remove("shake");follow(c,"start");
     if(it.type==="teach"){const pt=it.pt,g=GOSPEL[pt.hi];
       c.innerHTML=`<div class="pakind new">&#10024; New point</div><div class="pahead">${esc(g.h)} &middot; Point #${pt.n}</div><div class="papt">${esc(pt.t)}</div>
         ${pt.v.map(id=>`<div class="lnverse"><button class="lnsay" data-id="${id}" aria-label="Listen">&#128266;</button><div><b>${esc(GV[id][0])}</b><div class="lnvt">“${esc(GV[id][1])}”</div></div></div>`).join("")}
@@ -1350,7 +1378,7 @@ const Path=(()=>{
         if(o.ok){const pts=tries?40:(it.retry?60:100);P.score+=pts;sRight();floatText("+"+pts,"var(--green)");b.classList.add("right");
           $("paOpts").querySelectorAll("button").forEach(x=>x.disabled=true);$("paFb").className="feedback good";$("paFb").innerHTML=tries?"&#10004; There it is!":"&#10004; Yes!";
           setTimeout(()=>{P.i++;step();},tries?900:650);}
-        else{tries++;P.miss++;sWrong();b.disabled=true;b.classList.add("wrong");$("paFb").className="feedback bad";$("paFb").innerHTML=`Not quite. <small>${esc(it.why)}</small>`;
+        else{tries++;P.miss++;sWrong();b.disabled=true;b.classList.add("wrong");$("paFb").className="feedback bad";$("paFb").innerHTML=`Not quite. <small>${esc(it.why)}</small>`;follow($("paFb"),"nearest");
           if(tries===1&&!it.retry)P.q.push(Object.assign({},it,{retry:true,opts:shuffle(it.opts)}));}};$("paOpts").appendChild(b);});return;}
     if(it.type==="order"){const items=it.items;let next=0,slip=0;
       c.innerHTML=`<div class="pakind">${esc(it.kind)}</div><div class="brprompt">${it.prompt}</div><ol class="paorder" id="paDone"></ol><div class="choices one" id="paOpts"></div><div class="feedback" id="paFb"></div>`;
@@ -1426,7 +1454,7 @@ const Bridge=(()=>{
       prompt=`<small>Test the bridge! Which point does this verse prove?</small><b>${esc(v.ref)}</b><span class="vt">“${esc(v.text)}”</span>`;opts=shuffle([p,...pool]).map(x=>({html:esc(x.t),ok:x===p}));}
     $("brPrompt").innerHTML=prompt;const box=$("brChoices");box.innerHTML="";
     opts.forEach((o,k)=>{const b=document.createElement("button");b.className="choice";b.innerHTML=`<span class="letter">${"ABCD"[k]}</span><span>${o.html}</span>`;if(o.dis){b.disabled=true;b.classList.add("dim");}
-      b.onclick=()=>answer(o.ok,b);box.appendChild(b);});}
+      b.onclick=()=>answer(o.ok,b);box.appendChild(b);});follow(box,"nearest");}
   function answer(ok,btn){const S=R.steps[R.i];if(R.done)return;
     if(!ok){R.miss++;R.stepMiss++;R.score=Math.max(0,R.score-50);btn.disabled=true;btn.classList.add("wrong");sWrong();shakeEl($("brScene"));
       $("brFeedback").className="feedback bad";$("brFeedback").textContent=["Crack! Try again.","Wobbly! Try another one.","Not that piece!"][R.stepMiss%3];$("brScore").textContent=fmt(R.score);return;}
