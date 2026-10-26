@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-23T23:22:46.176Z",
+ "updated": "2026-10-26T19:05:48.000Z",
  "note": "Game Hub games. Upload this file next to hub.html in the GitHub repo.",
  "defaultsVersion": 11,
  "settings": {
@@ -2735,6 +2735,363 @@
    "correct": [
     0
    ]
+  },
+  {
+   "id": "gq-01",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "What is the FIRST main heading of the Gospel?",
+   "choices": [
+    "God",
+    "Man",
+    "Jesus",
+    "Sinners Must Repent and Believe"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-02",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Which main heading comes right after GOD?",
+   "choices": [
+    "Man",
+    "Jesus",
+    "Sinners Must Repent and Believe",
+    "Heaven"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-03",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "What is the LAST main heading of the Gospel?",
+   "choices": [
+    "Sinners Must Repent and Believe",
+    "Jesus",
+    "Man",
+    "Good Works"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-04",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "What is point #1 under GOD?",
+   "choices": [
+    "He is Creator & Owner of everything.",
+    "Everyone has broken God’s law.",
+    "Jesus rose from the grave and is alive today.",
+    "Believe in Christ as Lord and Savior."
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-05",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "What is point #2 under GOD?",
+   "choices": [
+    "He is Perfectly Holy.",
+    "He requires perfect obedience from us.",
+    "The penalty for sin is eternal death.",
+    "Repent of all that dishonors God."
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-06",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Point #3 under GOD says He requires ___ from us.",
+   "choices": [
+    "perfect obedience",
+    "good intentions",
+    "church attendance",
+    "our money"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-07",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Which verse shows that God is Creator & Owner of everything?",
+   "choices": [
+    "Genesis 1:1",
+    "Romans 6:23",
+    "Titus 3:5",
+    "Romans 5:8"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-08",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Matthew 5:48 goes with which point?",
+   "choices": [
+    "He is Perfectly Holy.",
+    "Everyone has broken God’s law.",
+    "Repent of all that dishonors God.",
+    "Jesus rose from the grave and is alive today."
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-09",
+   "type": "tf",
+   "week": "Sharing the Gospel",
+   "text": "James 2:10 says that if you stumble in just one point of the law, you are guilty of all.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-10",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "What is point #1 under MAN?",
+   "choices": [
+    "Everyone has broken God’s law.",
+    "He is Perfectly Holy.",
+    "Jesus came to earth as both God & sinless man.",
+    "Believe in Christ as Lord and Savior."
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-11",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Romans 6:23 says the wages of sin is...",
+   "choices": [
+    "death",
+    "a fine",
+    "sadness",
+    "nothing"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-12",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Romans 6:23 says the free gift of God is...",
+   "choices": [
+    "eternal life in Christ Jesus our Lord",
+    "a happy life on earth",
+    "a new house",
+    "good grades"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-13",
+   "type": "tf",
+   "week": "Sharing the Gospel",
+   "text": "Good works or good intentions can save a person.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    1
+   ]
+  },
+  {
+   "id": "gq-14",
+   "type": "fb",
+   "week": "Sharing the Gospel",
+   "text": "Romans 3:10: “There is none ___, not even one.”",
+   "answers": [
+    "righteous"
+   ]
+  },
+  {
+   "id": "gq-15",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Which verse shows that good works will not save anyone?",
+   "choices": [
+    "Titus 3:5",
+    "Genesis 1:1",
+    "Romans 10:9",
+    "Psalm 24:1"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-16",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Point #1 under JESUS: Jesus came to earth as both...",
+   "choices": [
+    "God & sinless man",
+    "a king and a priest",
+    "an angel and a man",
+    "a prophet and a teacher"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-17",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Colossians 2:9 says the fullness of what dwells in Jesus in bodily form?",
+   "choices": [
+    "Deity",
+    "angels",
+    "wisdom only",
+    "water"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-18",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Romans 5:8 says God demonstrates His love toward us because...",
+   "choices": [
+    "while we were yet sinners, Christ died for us",
+    "we were always good",
+    "we go to church",
+    "we asked Him to"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-19",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Which verse shows that Jesus rose from the grave?",
+   "choices": [
+    "1 Corinthians 15:4–5",
+    "Isaiah 55:7",
+    "James 2:10",
+    "Matthew 5:48"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-20",
+   "type": "tf",
+   "week": "Sharing the Gospel",
+   "text": "1 Corinthians 15:4–5 says Jesus was raised on the third day.",
+   "choices": [
+    "True",
+    "False"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-21",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "What is point #1 under SINNERS MUST REPENT AND BELIEVE?",
+   "choices": [
+    "Repent of all that dishonors God.",
+    "Believe in Christ as Lord and Savior.",
+    "He is Perfectly Holy.",
+    "The penalty for sin is eternal death."
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-22",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Isaiah 55:7 says God will abundantly...",
+   "choices": [
+    "pardon",
+    "punish",
+    "forget",
+    "rest"
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-23",
+   "type": "fb",
+   "week": "Sharing the Gospel",
+   "text": "Romans 10:9: “If you confess with your mouth Jesus as ___ ...”",
+   "answers": [
+    "Lord"
+   ]
+  },
+  {
+   "id": "gq-24",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "Romans 10:9 goes with which point?",
+   "choices": [
+    "Believe in Christ as Lord and Savior.",
+    "Repent of all that dishonors God.",
+    "He is Creator & Owner of everything.",
+    "Everyone has broken God’s law."
+   ],
+   "correct": [
+    0
+   ]
+  },
+  {
+   "id": "gq-25",
+   "type": "mc",
+   "week": "Sharing the Gospel",
+   "text": "How many points are under MAN?",
+   "choices": [
+    "3",
+    "2",
+    "4",
+    "5"
+   ],
+   "correct": [
+    0
+   ]
   }
  ],
  "whoami": [
@@ -5122,6 +5479,319 @@
     "q": "According to Romans 3:23, who has sinned and falls short of the glory of God?",
     "a": "All (everyone)"
    }
+  },
+  {
+   "id": "jb-sharing-the-gospel",
+   "title": "Sharing the Gospel",
+   "single": [
+    {
+     "name": "God",
+     "clues": [
+      {
+       "value": 100,
+       "q": "Point #1: He is Creator and ___ of everything.",
+       "a": "Owner"
+      },
+      {
+       "value": 200,
+       "q": "Finish Genesis 1:1: “In the beginning God created…”",
+       "a": "…the heavens and the earth."
+      },
+      {
+       "value": 300,
+       "q": "Point #2 says God is perfectly this.",
+       "a": "Holy"
+      },
+      {
+       "value": 400,
+       "q": "Matthew 5:48: “Be perfect, as your ___ is perfect.”",
+       "a": "Heavenly Father"
+      },
+      {
+       "value": 500,
+       "q": "Point #3: God requires this from us.",
+       "a": "Perfect obedience"
+      }
+     ]
+    },
+    {
+     "name": "Man",
+     "clues": [
+      {
+       "value": 100,
+       "q": "Romans 3:23: “For all have ___ and fall short of the glory of God.”",
+       "a": "Sinned"
+      },
+      {
+       "value": 200,
+       "q": "Point #1: Everyone has broken God’s ___.",
+       "a": "Law"
+      },
+      {
+       "value": 300,
+       "q": "Romans 6:23 says the wages of sin is this.",
+       "a": "Death"
+      },
+      {
+       "value": 400,
+       "q": "Point #3: Good works or ___ will not save anyone.",
+       "a": "Intentions"
+      },
+      {
+       "value": 500,
+       "q": "Titus 3:5 says He saved us according to His ___, not our deeds.",
+       "a": "Mercy"
+      }
+     ]
+    },
+    {
+     "name": "Jesus",
+     "clues": [
+      {
+       "value": 100,
+       "q": "Point #3: Jesus rose from the ___ and is alive today.",
+       "a": "Grave"
+      },
+      {
+       "value": 200,
+       "q": "Point #1: Jesus came to earth as both God and sinless ___.",
+       "a": "Man"
+      },
+      {
+       "value": 300,
+       "q": "Romans 5:8: “While we were yet ___, Christ died for us.”",
+       "a": "Sinners"
+      },
+      {
+       "value": 400,
+       "q": "Colossians 2:9 says the fullness of this dwells in Jesus in bodily form.",
+       "a": "Deity"
+      },
+      {
+       "value": 500,
+       "q": "1 Corinthians 15 says Jesus appeared to Cephas, then to these.",
+       "a": "The twelve"
+      }
+     ]
+    },
+    {
+     "name": "Repent & Believe",
+     "clues": [
+      {
+       "value": 100,
+       "q": "The last heading: Sinners must ___ and ___.",
+       "a": "Repent and believe"
+      },
+      {
+       "value": 200,
+       "q": "Romans 10:9: “Confess with your ___ Jesus as Lord.”",
+       "a": "Mouth"
+      },
+      {
+       "value": 300,
+       "q": "Point #1: Repent of all that ___ God.",
+       "a": "Dishonors"
+      },
+      {
+       "value": 400,
+       "q": "Isaiah 55:7 says God will abundantly do this.",
+       "a": "Pardon"
+      },
+      {
+       "value": 500,
+       "q": "Point #2: Believe in Christ as ___ and ___.",
+       "a": "Lord and Savior"
+      }
+     ]
+    },
+    {
+     "name": "Name That Verse",
+     "clues": [
+      {
+       "value": 100,
+       "q": "“For all have sinned and fall short of the glory of God.”",
+       "a": "Romans 3:23"
+      },
+      {
+       "value": 200,
+       "q": "“In the beginning God created the heavens and the earth.”",
+       "a": "Genesis 1:1"
+      },
+      {
+       "value": 300,
+       "q": "“For the wages of sin is death, but the free gift of God is eternal life…”",
+       "a": "Romans 6:23"
+      },
+      {
+       "value": 400,
+       "q": "“But God demonstrates His own love toward us…”",
+       "a": "Romans 5:8"
+      },
+      {
+       "value": 500,
+       "q": "“For whoever keeps the whole law and yet stumbles in one point…”",
+       "a": "James 2:10"
+      }
+     ]
+    }
+   ],
+   "double": [
+    {
+     "name": "In Order",
+     "clues": [
+      {
+       "value": 200,
+       "q": "The FIRST main heading of the Gospel.",
+       "a": "God"
+      },
+      {
+       "value": 400,
+       "q": "This heading comes right after GOD.",
+       "a": "Man"
+      },
+      {
+       "value": 600,
+       "q": "This heading comes third.",
+       "a": "Jesus"
+      },
+      {
+       "value": 800,
+       "q": "The last main heading.",
+       "a": "Sinners Must Repent and Believe"
+      },
+      {
+       "value": 1000,
+       "q": "Name all three points under JESUS, in order.",
+       "a": "Came as both God & sinless man; demonstrated God’s love by dying to pay sin’s penalty; rose from the grave and is alive today"
+      }
+     ]
+    },
+    {
+     "name": "Which Point?",
+     "clues": [
+      {
+       "value": 200,
+       "q": "Romans 6:23",
+       "a": "The penalty for sin is eternal death."
+      },
+      {
+       "value": 400,
+       "q": "Romans 10:9",
+       "a": "Believe in Christ as Lord and Savior."
+      },
+      {
+       "value": 600,
+       "q": "Psalm 24:1",
+       "a": "He is Creator & Owner of everything."
+      },
+      {
+       "value": 800,
+       "q": "Titus 3:5",
+       "a": "Good works or intentions will not save anyone."
+      },
+      {
+       "value": 1000,
+       "q": "Isaiah 55:7",
+       "a": "Repent of all that dishonors God."
+      }
+     ]
+    },
+    {
+     "name": "Where’s the Verse?",
+     "clues": [
+      {
+       "value": 200,
+       "q": "Jesus rose from the grave and is alive today.",
+       "a": "1 Corinthians 15:4–5"
+      },
+      {
+       "value": 400,
+       "q": "Jesus came to earth as both God & sinless man.",
+       "a": "Colossians 2:9"
+      },
+      {
+       "value": 600,
+       "q": "He requires perfect obedience from us.",
+       "a": "James 2:10"
+      },
+      {
+       "value": 800,
+       "q": "Everyone has broken God’s law. (Name both verses.)",
+       "a": "Romans 3:10 and Romans 3:23"
+      },
+      {
+       "value": 1000,
+       "q": "He is Creator & Owner of everything. (Name both verses.)",
+       "a": "Genesis 1:1 and Psalm 24:1"
+      }
+     ]
+    },
+    {
+     "name": "Big Bible Words",
+     "clues": [
+      {
+       "value": 200,
+       "q": "To turn away from sin and turn to God.",
+       "a": "Repent"
+      },
+      {
+       "value": 400,
+       "q": "Colossians 2:9 says the fullness of this dwells in Jesus.",
+       "a": "Deity"
+      },
+      {
+       "value": 600,
+       "q": "Romans 3:10 says there is none of these, not even one.",
+       "a": "Righteous"
+      },
+      {
+       "value": 800,
+       "q": "Cephas is another name for this apostle.",
+       "a": "Peter"
+      },
+      {
+       "value": 1000,
+       "q": "Titus 3:5 says we are saved by the washing of this (being made new).",
+       "a": "Regeneration"
+      }
+     ]
+    },
+    {
+     "name": "Finish It!",
+     "clues": [
+      {
+       "value": 200,
+       "q": "“The earth is the Lord’s and…”",
+       "a": "…all it contains."
+      },
+      {
+       "value": 400,
+       "q": "“Let the wicked forsake his way and the unrighteous man…”",
+       "a": "…his thoughts."
+      },
+      {
+       "value": 600,
+       "q": "“…believe in your heart that God raised Him from the dead, you will…”",
+       "a": "…be saved."
+      },
+      {
+       "value": 800,
+       "q": "“…but the free gift of God is eternal life in…”",
+       "a": "…Christ Jesus our Lord."
+      },
+      {
+       "value": 1000,
+       "q": "“He was raised on the ___ day according to the Scriptures.”",
+       "a": "Third"
+      }
+     ]
+    }
+   ],
+   "final": {
+    "category": "The Whole Gospel",
+    "q": "Name the four main headings of the Gospel, in order.",
+    "a": "God, Man, Jesus, Sinners Must Repent and Believe"
+   }
   }
  ],
  "concentration": [
@@ -5454,6 +6124,57 @@
      "Locust"
     ]
    ]
+  },
+  {
+   "id": "cc-gospel",
+   "title": "The Gospel",
+   "image": "",
+   "pairs": [
+    [
+     "Creator & Owner of everything",
+     "Genesis 1:1"
+    ],
+    [
+     "Perfectly holy",
+     "Matthew 5:48"
+    ],
+    [
+     "Requires perfect obedience",
+     "James 2:10"
+    ],
+    [
+     "Everyone has broken God’s law",
+     "Romans 3:23"
+    ],
+    [
+     "Penalty for sin is eternal death",
+     "Romans 6:23"
+    ],
+    [
+     "Good works won’t save",
+     "Titus 3:5"
+    ],
+    [
+     "Both God & sinless man",
+     "Colossians 2:9"
+    ],
+    [
+     "Died to pay sin’s penalty",
+     "Romans 5:8"
+    ],
+    [
+     "Rose and is alive today",
+     "1 Corinthians 15:4–5"
+    ],
+    [
+     "Repent of all that dishonors God",
+     "Isaiah 55:7"
+    ],
+    [
+     "Believe in Christ as Lord & Savior",
+     "Romans 10:9"
+    ]
+   ]
   }
  ],
  "beatclock": [
@@ -5531,6 +6252,16 @@
    "id": "bc-15",
    "week": "Bible Lists",
    "prompt": "Name parables Jesus told"
+  },
+  {
+   "id": "bc-gospel-1",
+   "week": "The Gospel",
+   "prompt": "Name the points of the Gospel, in order (God, Man, Jesus, Repent & Believe)"
+  },
+  {
+   "id": "bc-gospel-2",
+   "week": "The Gospel",
+   "prompt": "Name the Gospel verses (reference only)"
   }
  ],
  "charades": [
@@ -5734,6 +6465,61 @@
    "id": "ww-ephesians-2-10",
    "category": "Ephesians 2:10",
    "phrase": "FOR WE ARE HIS WORKMANSHIP, CREATED IN CHRIST JESUS FOR GOOD WORKS, WHICH GOD PREPARED BEFOREHAND, THAT WE SHOULD WALK IN THEM."
+  },
+  {
+   "id": "gw-01",
+   "category": "The Gospel",
+   "phrase": "HE IS CREATOR AND OWNER OF EVERYTHING"
+  },
+  {
+   "id": "gw-02",
+   "category": "The Gospel",
+   "phrase": "HE IS PERFECTLY HOLY"
+  },
+  {
+   "id": "gw-03",
+   "category": "The Gospel",
+   "phrase": "EVERYONE HAS BROKEN GOD’S LAW"
+  },
+  {
+   "id": "gw-04",
+   "category": "The Gospel",
+   "phrase": "THE PENALTY FOR SIN IS ETERNAL DEATH"
+  },
+  {
+   "id": "gw-05",
+   "category": "The Gospel",
+   "phrase": "JESUS ROSE FROM THE GRAVE AND IS ALIVE TODAY"
+  },
+  {
+   "id": "gw-06",
+   "category": "The Gospel",
+   "phrase": "REPENT OF ALL THAT DISHONORS GOD"
+  },
+  {
+   "id": "gw-07",
+   "category": "The Gospel",
+   "phrase": "BELIEVE IN CHRIST AS LORD AND SAVIOR"
+  },
+  {
+   "id": "gw-08",
+   "category": "Matthew 5:48",
+   "phrase": "THEREFORE YOU ARE TO BE PERFECT, AS YOUR HEAVENLY FATHER IS PERFECT."
+  },
+  {
+   "id": "gw-09",
+   "category": "Colossians 2:9",
+   "phrase": "FOR IN HIM ALL THE FULLNESS OF DEITY DWELLS IN BODILY FORM."
+  },
+  {
+   "id": "gw-10",
+   "category": "Romans 6:23",
+   "phrase": "FOR THE WAGES OF SIN IS DEATH, BUT THE FREE GIFT OF GOD IS ETERNAL LIFE IN CHRIST JESUS OUR LORD."
+  },
+  {
+   "id": "gw-11",
+   "category": "Romans 5:8",
+   "phrase": "BUT GOD DEMONSTRATES HIS OWN LOVE TOWARD US, IN THAT WHILE WE WERE YET SINNERS, CHRIST DIED FOR US."
   }
  ],
  "voyager": [
@@ -6618,6 +7404,445 @@
     "pray",
     "city"
    ]
+  },
+  {
+   "id": "vy-gs-gen-1-1",
+   "reference": "Genesis 1:1",
+   "group": "The Gospel",
+   "words": [
+    "In",
+    "the",
+    "beginning",
+    "God",
+    "created",
+    "the",
+    "heavens",
+    "and",
+    "the",
+    "earth"
+   ],
+   "decoys": [
+    "made",
+    "formed",
+    "stars",
+    "world",
+    "first",
+    "light"
+   ]
+  },
+  {
+   "id": "vy-gs-ps-24-1",
+   "reference": "Psalm 24:1",
+   "group": "The Gospel",
+   "words": [
+    "The",
+    "earth",
+    "is",
+    "the",
+    "Lord’s",
+    "and",
+    "all",
+    "it",
+    "contains"
+   ],
+   "decoys": [
+    "God's",
+    "heaven",
+    "owns",
+    "gives",
+    "made",
+    "holds"
+   ]
+  },
+  {
+   "id": "vy-gs-matt-5-48",
+   "reference": "Matthew 5:48",
+   "group": "The Gospel",
+   "words": [
+    "Therefore",
+    "you",
+    "are",
+    "to",
+    "be",
+    "perfect",
+    "as",
+    "your",
+    "heavenly",
+    "Father",
+    "is",
+    "perfect"
+   ],
+   "decoys": [
+    "good",
+    "kind",
+    "holy",
+    "great",
+    "Lord",
+    "always"
+   ]
+  },
+  {
+   "id": "vy-gs-jas-2-10",
+   "reference": "James 2:10",
+   "group": "The Gospel",
+   "words": [
+    "For",
+    "whoever",
+    "keeps",
+    "the",
+    "whole",
+    "law",
+    "and",
+    "yet",
+    "stumbles",
+    "in",
+    "one",
+    "point",
+    "he",
+    "has",
+    "become",
+    "guilty",
+    "of",
+    "all"
+   ],
+   "decoys": [
+    "keeps",
+    "breaks",
+    "most",
+    "one",
+    "free",
+    "sins"
+   ]
+  },
+  {
+   "id": "vy-gs-rom-3-10",
+   "reference": "Romans 3:10",
+   "group": "The Gospel",
+   "words": [
+    "As",
+    "it",
+    "is",
+    "written",
+    "There",
+    "is",
+    "none",
+    "righteous",
+    "not",
+    "even",
+    "one"
+   ],
+   "decoys": [
+    "good",
+    "perfect",
+    "many",
+    "holy",
+    "few",
+    "said"
+   ]
+  },
+  {
+   "id": "vy-gs-rom-3-23",
+   "reference": "Romans 3:23",
+   "group": "The Gospel",
+   "words": [
+    "For",
+    "all",
+    "have",
+    "sinned",
+    "and",
+    "fall",
+    "short",
+    "of",
+    "the",
+    "glory",
+    "of",
+    "God"
+   ],
+   "decoys": [
+    "some",
+    "many",
+    "sin",
+    "miss",
+    "light",
+    "honor"
+   ]
+  },
+  {
+   "id": "vy-gs-rom-6-23",
+   "reference": "Romans 6:23",
+   "group": "The Gospel",
+   "words": [
+    "For",
+    "the",
+    "wages",
+    "of",
+    "sin",
+    "is",
+    "death",
+    "but",
+    "the",
+    "free",
+    "gift",
+    "of",
+    "God",
+    "is",
+    "eternal",
+    "life",
+    "in",
+    "Christ",
+    "Jesus",
+    "our",
+    "Lord"
+   ],
+   "decoys": [
+    "pay",
+    "life",
+    "sadness",
+    "reward",
+    "present",
+    "grace"
+   ]
+  },
+  {
+   "id": "vy-gs-titus-3-5",
+   "reference": "Titus 3:5",
+   "group": "The Gospel",
+   "words": [
+    "He",
+    "saved",
+    "us",
+    "not",
+    "on",
+    "the",
+    "basis",
+    "of",
+    "deeds",
+    "which",
+    "we",
+    "have",
+    "done",
+    "in",
+    "righteousness",
+    "but",
+    "according",
+    "to",
+    "His",
+    "mercy",
+    "by",
+    "the",
+    "washing",
+    "of",
+    "regeneration",
+    "and",
+    "renewing",
+    "by",
+    "the",
+    "Holy",
+    "Spirit"
+   ],
+   "decoys": [
+    "works",
+    "love",
+    "grace",
+    "cleaning",
+    "prayer",
+    "good"
+   ]
+  },
+  {
+   "id": "vy-gs-col-2-9",
+   "reference": "Colossians 2:9",
+   "group": "The Gospel",
+   "words": [
+    "For",
+    "in",
+    "Him",
+    "all",
+    "the",
+    "fullness",
+    "of",
+    "Deity",
+    "dwells",
+    "in",
+    "bodily",
+    "form"
+   ],
+   "decoys": [
+    "power",
+    "glory",
+    "God",
+    "heaven",
+    "lives",
+    "body"
+   ]
+  },
+  {
+   "id": "vy-gs-rom-5-8",
+   "reference": "Romans 5:8",
+   "group": "The Gospel",
+   "words": [
+    "But",
+    "God",
+    "demonstrates",
+    "His",
+    "own",
+    "love",
+    "toward",
+    "us",
+    "in",
+    "that",
+    "while",
+    "we",
+    "were",
+    "yet",
+    "sinners",
+    "Christ",
+    "died",
+    "for",
+    "us"
+   ],
+   "decoys": [
+    "shows",
+    "grace",
+    "friends",
+    "sinned",
+    "lived",
+    "great"
+   ]
+  },
+  {
+   "id": "vy-gs-1cor-15-4",
+   "reference": "1 Corinthians 15:4–5",
+   "group": "The Gospel",
+   "words": [
+    "And",
+    "that",
+    "He",
+    "was",
+    "buried",
+    "and",
+    "that",
+    "He",
+    "was",
+    "raised",
+    "on",
+    "the",
+    "third",
+    "day",
+    "according",
+    "to",
+    "the",
+    "Scriptures",
+    "and",
+    "that",
+    "He",
+    "appeared",
+    "to",
+    "Cephas",
+    "then",
+    "to",
+    "the",
+    "twelve"
+   ],
+   "decoys": [
+    "rose",
+    "fourth",
+    "Peter",
+    "eleven",
+    "disciples",
+    "tomb"
+   ]
+  },
+  {
+   "id": "vy-gs-isa-55-7",
+   "reference": "Isaiah 55:7",
+   "group": "The Gospel",
+   "words": [
+    "Let",
+    "the",
+    "wicked",
+    "forsake",
+    "his",
+    "way",
+    "and",
+    "the",
+    "unrighteous",
+    "man",
+    "his",
+    "thoughts",
+    "and",
+    "let",
+    "him",
+    "return",
+    "to",
+    "the",
+    "LORD",
+    "and",
+    "He",
+    "will",
+    "have",
+    "compassion",
+    "on",
+    "him",
+    "and",
+    "to",
+    "our",
+    "God",
+    "for",
+    "He",
+    "will",
+    "abundantly",
+    "pardon"
+   ],
+   "decoys": [
+    "leave",
+    "sinful",
+    "come",
+    "mercy",
+    "forgive",
+    "love"
+   ]
+  },
+  {
+   "id": "vy-gs-rom-10-9",
+   "reference": "Romans 10:9",
+   "group": "The Gospel",
+   "words": [
+    "That",
+    "if",
+    "you",
+    "confess",
+    "with",
+    "your",
+    "mouth",
+    "Jesus",
+    "as",
+    "Lord",
+    "and",
+    "believe",
+    "in",
+    "your",
+    "heart",
+    "that",
+    "God",
+    "raised",
+    "Him",
+    "from",
+    "the",
+    "dead",
+    "you",
+    "will",
+    "be",
+    "saved"
+   ],
+   "decoys": [
+    "lips",
+    "think",
+    "hope",
+    "Christ",
+    "alive",
+    "saved"
+   ]
   }
  ],
  "memverses": [
@@ -6725,6 +7950,84 @@
    "id": "mv-ephesians-2-10",
    "reference": "Ephesians 2:10",
    "text": "For we are his workmanship, created in Christ Jesus for good works, which God prepared beforehand, that we should walk in them."
+  },
+  {
+   "id": "gs-gen-1-1",
+   "reference": "Genesis 1:1",
+   "text": "In the beginning God created the heavens and the earth.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-ps-24-1",
+   "reference": "Psalm 24:1",
+   "text": "The earth is the Lord’s and all it contains.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-matt-5-48",
+   "reference": "Matthew 5:48",
+   "text": "Therefore you are to be perfect, as your heavenly Father is perfect.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-jas-2-10",
+   "reference": "James 2:10",
+   "text": "For whoever keeps the whole law and yet stumbles in one point, he has become guilty of all.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-rom-3-10",
+   "reference": "Romans 3:10",
+   "text": "As it is written, ‘There is none righteous, not even one.’",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-rom-3-23",
+   "reference": "Romans 3:23",
+   "text": "For all have sinned and fall short of the glory of God.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-rom-6-23",
+   "reference": "Romans 6:23",
+   "text": "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-titus-3-5",
+   "reference": "Titus 3:5",
+   "text": "He saved us, not on the basis of deeds which we have done in righteousness, but according to His mercy, by the washing of regeneration and renewing by the Holy Spirit.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-col-2-9",
+   "reference": "Colossians 2:9",
+   "text": "For in Him all the fullness of Deity dwells in bodily form.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-rom-5-8",
+   "reference": "Romans 5:8",
+   "text": "But God demonstrates His own love toward us, in that while we were yet sinners, Christ died for us.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-1cor-15-4",
+   "reference": "1 Corinthians 15:4–5",
+   "text": "And that He was buried, and that He was raised on the third day according to the Scriptures, and that He appeared to Cephas, then to the twelve.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-isa-55-7",
+   "reference": "Isaiah 55:7",
+   "text": "Let the wicked forsake his way and the unrighteous man his thoughts; and let him return to the LORD, and He will have compassion on him, and to our God, for He will abundantly pardon.",
+   "group": "The Gospel"
+  },
+  {
+   "id": "gs-rom-10-9",
+   "reference": "Romans 10:9",
+   "text": "That if you confess with your mouth Jesus as Lord, and believe in your heart that God raised Him from the dead, you will be saved.",
+   "group": "The Gospel"
   }
  ],
  "catechism": [

@@ -285,6 +285,73 @@
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:90;}
   .loadmsg{padding:40px;text-align:center;color:var(--muted);font-weight:800;font-size:18px;}
 
+
+  /* ===== SHARE THE GOSPEL ===== */
+  .sechead{display:flex;align-items:center;gap:12px;margin:26px 0 12px;flex-wrap:wrap;}
+  .sechead h2{margin:0;font-size:clamp(22px,3vw,32px);font-weight:900;}
+  .sechead .tag{background:#7c2d12;color:#fed7aa;border:1px solid #f97316;border-radius:999px;padding:4px 12px;font-weight:900;font-size:13px;}
+  .gospelband{background:linear-gradient(135deg,#3b1d0b,#5b2a10 55%,#1e293b);border:1px solid #f97316;border-radius:22px;padding:16px 18px;margin-bottom:16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+  .gospelband .gl{flex:1;min-width:220px;color:#fde7d0;font-weight:700;line-height:1.45;}
+  .gospelband .gl b{color:#fff;}
+  .gospelband .heads{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .gospelband .heads span{background:rgba(0,0,0,.3);border:1px solid #fdba74;color:#fff;border-radius:10px;padding:4px 10px;font-weight:900;font-size:13px;}
+  .gstat{min-width:180px;}
+  .tiles.g .tile{background:linear-gradient(160deg,#2a1a10,var(--panel) 60%);}
+  .legal{color:var(--muted);font-size:11px;line-height:1.45;margin-top:26px;opacity:.8;}
+
+  /* Bridge Builder */
+  .scene{width:100%;border-radius:18px;overflow:hidden;border:2px solid var(--line);background:#0b1730;margin-bottom:12px;}
+  .scene svg{display:block;width:100%;height:clamp(140px,36vw,38vh);}
+  .scene .drop{animation:plankdrop .45s cubic-bezier(.3,1.4,.5,1);}
+  @keyframes plankdrop{from{transform:translateY(-70px);opacity:0}to{transform:none;opacity:1}}
+  .scene .rise{animation:rise .5s ease-out;transform-box:fill-box;transform-origin:bottom;}
+  @keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  .scene .walker{transition:transform 3.4s ease-in-out;}
+  .brprompt{font-weight:900;font-size:clamp(18px,2.6vw,30px);line-height:1.25;margin:4px 0 12px;text-wrap:balance;}
+  .brprompt small{display:block;color:var(--muted);font-size:.6em;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+  .brprompt .vt{display:block;font-family:Georgia,serif;font-weight:400;font-style:italic;color:#fde68a;font-size:.9em;margin-top:6px;}
+  .choice .sm{font-size:.8em;}
+
+  /* Share It! chat */
+  .chat{background:#0a1424;border:1px solid var(--line);border-radius:20px;padding:14px;height:min(46vh,460px);overflow-y:auto;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
+  .msg{display:flex;gap:8px;align-items:flex-end;max-width:88%;animation:pop .25s ease;}
+  .msg .av{font-size:30px;line-height:1;flex:none;}
+  .msg .bub{border-radius:18px;padding:10px 14px;font-weight:700;font-size:clamp(15px,1.9vw,19px);line-height:1.4;}
+  .msg.friend .bub{background:#e2e8f0;color:#0f172a;border-bottom-left-radius:6px;}
+  .msg.me{align-self:flex-end;flex-direction:row-reverse;}
+  .msg.me .bub{background:linear-gradient(180deg,#2563eb,#1d4ed8);color:#fff;border-bottom-right-radius:6px;}
+  .msg .bub .vq{display:block;font-family:Georgia,serif;font-style:italic;font-weight:400;margin-top:4px;color:#dbeafe;}
+  .msg .bub .hd{display:inline-block;background:rgba(255,255,255,.18);border-radius:8px;padding:1px 8px;font-weight:900;letter-spacing:.5px;}
+  .msg .name{font-size:11px;font-weight:900;color:var(--muted);margin:0 4px 2px;}
+  .typing .bub{color:#64748b;letter-spacing:3px;}
+  .shask{font-weight:900;color:var(--gold);font-size:clamp(16px,2.1vw,22px);margin:12px 0 10px;min-height:1.2em;}
+  .choice.small{font-size:clamp(15px,1.8vw,19px);padding:12px 14px;}
+  .choice .ref{display:block;font-weight:900;color:var(--gold);}
+  .choice .txt{display:block;font-family:Georgia,serif;font-weight:400;font-size:.92em;color:#cbd5e1;margin-top:3px;}
+
+  /* Scroll Catcher */
+  #scrScroll{padding:0;display:flex;flex-direction:column;overflow:hidden;}
+  .schud{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line);background:rgba(9,15,26,.6);flex-wrap:wrap;}
+  .schud .hearts{font-size:22px;}
+  .scprompt{padding:12px 16px;text-align:center;font-weight:900;font-size:clamp(17px,2.4vw,28px);line-height:1.25;background:linear-gradient(180deg,#3b1d0b,#1c1208);border-bottom:2px solid #f97316;min-height:3.2em;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .scprompt small{color:#fdba74;font-size:.55em;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px;}
+  .scprompt .vt{font-family:Georgia,serif;font-style:italic;font-weight:400;color:#fde68a;}
+  .scfield{position:relative;flex:1;min-height:0;overflow:hidden;background:
+     radial-gradient(ellipse at 50% 120%, rgba(249,115,22,.25), transparent 60%),
+     linear-gradient(180deg,#0b1730,#141c3a 70%,#2a1f14);}
+  .scfield .lane{position:absolute;top:0;bottom:0;border-left:1px dashed rgba(255,255,255,.06);}
+  .scground{position:absolute;left:0;right:0;bottom:0;height:14px;background:linear-gradient(180deg,#7c2d12,#431407);box-shadow:0 -4px 18px rgba(249,115,22,.35);}
+  .scroll{position:absolute;top:0;left:0;padding:14px 12px;border-radius:10px;background:linear-gradient(90deg,#e9d5a8,#fdf4dc 18%,#fdf4dc 82%,#e9d5a8);color:#3b2a14;font-weight:900;font-size:clamp(13px,1.7vw,18px);line-height:1.25;text-align:center;box-shadow:0 6px 14px rgba(0,0,0,.45);cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;will-change:transform;}
+  .scroll::before,.scroll::after{content:"";position:absolute;left:-4px;right:-4px;height:10px;border-radius:6px;background:linear-gradient(180deg,#b45309,#78350f);}
+  .scroll::before{top:-5px;} .scroll::after{bottom:-5px;}
+  .scroll.caught{transition:transform .35s ease, opacity .35s ease;opacity:0;}
+  .scroll.bad{background:#fecaca;color:#7f1d1d;animation:shake .35s ease;}
+  .scroll.gone{transition:opacity .3s;opacity:0;pointer-events:none;}
+  .scroll.reveal{background:#bbf7d0;color:#14532d;}
+  .scover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,7,15,.82);padding:18px;text-align:center;z-index:5;overflow:auto;}
+  .scover .voycard p{color:var(--muted);}
+  .combo{font-weight:900;color:#fb923c;}
+
   /* printable progress sheet */
   #printSheet{display:none;}
   @media print{
@@ -331,8 +398,14 @@
     <h1 class="big" id="hello">Hi!</h1>
     <p class="sub">Pick a game. Try to beat your own high score, earn trophies, and learn your memory verses and catechism.</p>
     <div class="statstrip" id="statStrip"></div>
+    <div class="sechead"><h2>&#10013;&#65039; Share the Gospel</h2><span class="tag">NEW</span></div>
+    <div class="gospelband"><div class="gl"><b>Learn how to share the Gospel!</b> Know the 4 headings, the points under each one, and the verse that proves each point.<div class="heads"><span>1. God</span><span>2. Man</span><span>3. Jesus</span><span>4. Sinners Must Repent and Believe</span></div></div>
+      <button class="stat gstat" id="gStat"></button></div>
+    <div class="tiles g" id="gTiles"></div>
+    <div class="sechead"><h2>&#127918; More Games</h2></div>
     <div class="tiles" id="tiles"></div>
     <div id="loadErr" class="loadmsg hidden"></div>
+    <p class="legal">Scripture quotations marked ESV are from the ESV&reg; Bible (The Holy Bible, English Standard Version&reg;), &copy; 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. Gospel outline verses are taken from the NASB&reg; (New American Standard Bible&reg;), Copyright &copy; 1960, 1971, 1977, 1995 by The Lockman Foundation. Used by permission. All rights reserved. lockman.org</p>
   </div></div>
 
   <!-- ===== QUIZ ===== -->
@@ -461,6 +534,48 @@
     <div class="tabs" id="progTabs"></div>
     <div id="progBody"></div>
   </div></div>
+
+  <!-- ===== BRIDGE BUILDER ===== -->
+  <div class="screen hidden" id="scrBridge"><div class="wrap">
+    <div id="brPick">
+      <div class="ghead"><h2>&#127753; Bridge Builder</h2><div class="chip gold" id="brBestChip"></div></div>
+      <p class="rules">Build the Gospel bridge across the canyon, one piece at a time!<br>
+        <b>1. Pillars:</b> put the 4 headings in order. <b>2. Planks:</b> lay down every point under each heading. <b>3. Bolts:</b> bolt each plank down with its Bible verse. <b>4. Test it:</b> read a verse and pick the point it proves. Then watch yourself walk across!<br>
+        Right answers on the first try score the most. Finish fast for a time bonus.</p>
+      <button class="btn gold" id="brGo">Start Building &#9654;</button>
+    </div>
+    <div id="brPlay" class="hidden">
+      <div class="ghead"><div class="lvls" id="brStages"></div><div class="scorebox"><div class="chip"><small>Time</small><span id="brTime">0:00</span></div><div class="chip gold num" id="brScore">0</div></div></div>
+      <div class="scene" id="brScene"></div>
+      <div class="brprompt" id="brPrompt"></div>
+      <div class="choices" id="brChoices"></div>
+      <div class="feedback" id="brFeedback"></div>
+    </div>
+  </div></div>
+
+  <!-- ===== SHARE IT! ===== -->
+  <div class="screen hidden" id="scrShare"><div class="wrap">
+    <div id="shPick">
+      <div class="ghead"><h2>&#128172; Share It!</h2><div class="chip gold" id="shBestChip"></div></div>
+      <p class="rules">Your friend <b>Jordan</b> wants to know what the Gospel is all about. Walk Jordan through it <b>in order</b>: pick each heading, each point, and the Bible verse that proves it. A wrong pick costs points, but you can always try again.</p>
+      <div class="label">Choose your mode</div>
+      <div class="pills" id="shModes" style="margin-bottom:20px;"></div>
+      <button class="btn gold" id="shGo">Start the Conversation &#9654;</button>
+    </div>
+    <div id="shPlay" class="hidden">
+      <div class="ghead"><div class="lvls" id="shSteps"></div><div class="chip gold num" id="shScore">0</div></div>
+      <div class="chat" id="shChat"></div>
+      <div class="shask" id="shAsk"></div>
+      <div class="choices" id="shChoices"></div>
+    </div>
+  </div></div>
+
+  <!-- ===== SCROLL CATCHER ===== -->
+  <div class="screen hidden" id="scrScroll">
+    <div class="schud"><span class="hearts" id="scHearts"></span><span class="chip"><small>Level</small><span id="scLevel">1</span></span><span class="chip combo" id="scCombo">x1</span><span class="chip gold num" id="scScore">0</span></div>
+    <div class="scprompt" id="scPrompt"></div>
+    <div class="scfield" id="scField"><div class="scground"></div><div class="scover" id="scOver"></div></div>
+  </div>
 </div>
 
 <!-- end of game -->
@@ -533,6 +648,9 @@ const GAMES=[
   {id:"verse",ic:"&#128220;",tt:"Verse Builder",tc:"#60a5fa",td:"Learn a memory verse by filling in the missing words, a few more each level."},
   {id:"cat",ic:"&#9997;&#65039;",tt:"Catechism Builder",tc:"#a3e635",td:"Learn a catechism question and answer, one level at a time."},
   {id:"voyager",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly your ship through the right words to build a verse. Outrun the fog!"},
+  {id:"bridge",sec:"gospel",ic:"&#127753;",tt:"Bridge Builder",tc:"#f97316",td:"Build the Gospel bridge: pillars, planks, and bolts. Then walk across!"},
+  {id:"share",sec:"gospel",ic:"&#128172;",tt:"Share It!",tc:"#38bdf8",td:"Your friend Jordan asks about the Gospel. Explain it in order, with the verses."},
+  {id:"scroll",sec:"gospel",ic:"&#129530;",tt:"Scroll Catcher",tc:"#fb923c",td:"Tap the right falling scroll before it lands. Headings, points, and verses!"},
 ];
 const gameById=id=>GAMES.find(g=>g.id===id);
 const TROPHIES=[
@@ -548,6 +666,13 @@ const TROPHIES=[
   {id:"keeper5",ic:"&#128220;",tt:"Verse Keeper",td:"Check off 5 memory verses as \u201cI know it!\u201d"},
   {id:"climber10",ic:"&#9968;&#65039;",tt:"Catechism Climber",td:"Check off 10 catechism answers as \u201cI know it!\u201d"},
   {id:"heart",ic:"&#10084;&#65039;",tt:"Hidden in My Heart",td:"Know every memory verse. \u201cI have stored up your word in my heart\u201d (Psalm 119:11)."},
+  {id:"bridge",ic:"&#127753;",tt:"Bridge Builder",td:"Finish building the Gospel bridge.",g:1},
+  {id:"masterbuilder",ic:"&#127959;&#65039;",tt:"Master Builder",td:"Build the whole Gospel bridge with no mistakes.",g:1},
+  {id:"messenger",ic:"&#128227;",tt:"Good News Messenger",td:"Share the whole Gospel with Jordan in Share It!",g:1},
+  {id:"ready",ic:"&#127894;&#65039;",tt:"Ready to Share",td:"Share the whole Gospel in Pro mode with no wrong picks.",g:1},
+  {id:"scrollkeeper",ic:"&#129530;",tt:"Scroll Keeper",td:"Catch 25 scrolls in one game of Scroll Catcher.",g:1},
+  {id:"onfire",ic:"&#128293;",tt:"On Fire!",td:"Catch 10 scrolls in a row in Scroll Catcher.",g:1},
+  {id:"wholegospel",ic:"&#10013;&#65039;",tt:"The Whole Gospel",td:"Check off every Gospel point as \u201cI know it!\u201d",g:1},
 ];
 function award(id){const p=me();if(!p||p.trophies[id])return null;p.trophies[id]=Date.now();saveStore();const t=TROPHIES.find(x=>x.id===id);if(t)toast(t.ic,`Trophy earned: <b>${t.tt}</b>`);return t;}
 function countKnown(kind){const p=me();if(!p)return 0;const m=kind==="v"?p.verses:p.cat;const list=kind==="v"?C.memverses:C.catechism;return list.filter(x=>m[x.id]&&m[x.id].k).length;}
@@ -578,11 +703,14 @@ function finishGame(gid,score,opts){
 
 /* ==================== ROUTER ==================== */
 let screen="players";
-const SCREENS={players:"scrPlayers",home:"scrHome",quiz:"scrQuiz",whoami:"scrWhoami",conc:"scrConc",wheel:"scrWheel",verse:"scrBuild",cat:"scrBuild",voyager:"scrVoyager",progress:"scrProgress"};
+const SCREENS={players:"scrPlayers",home:"scrHome",quiz:"scrQuiz",whoami:"scrWhoami",conc:"scrConc",wheel:"scrWheel",verse:"scrBuild",cat:"scrBuild",voyager:"scrVoyager",progress:"scrProgress",bridge:"scrBridge",share:"scrShare",scroll:"scrScroll"};
 function show(name){
   if(screen==="voyager"&&name!=="voyager")stopVoyager();
   if(screen==="quiz"&&name!=="quiz")Quiz.stop();
   if(screen==="conc"&&name!=="conc")Conc.stop();
+  if(screen==="bridge"&&name!=="bridge")Bridge.stop();
+  if(screen==="share"&&name!=="share")Share.stop();
+  if(screen==="scroll"&&name!=="scroll")Scroll.stop();
   screen=name;const target=SCREENS[name];
   new Set(Object.values(SCREENS)).forEach(id=>$(id).classList.toggle("hidden",id!==target));
   $("homeBtn").classList.toggle("hidden",name==="home"||name==="players");
@@ -597,7 +725,7 @@ function show(name){
 function openGame(id){
   if(!contentReady){show("home");return;}
   show(id);
-  ({quiz:Quiz,whoami:Who,conc:Conc,wheel:Wheel,verse:Build,cat:Build,voyager:{enter:enterVoyager}})[id].enter(id);
+  ({quiz:Quiz,whoami:Who,conc:Conc,wheel:Wheel,verse:Build,cat:Build,voyager:{enter:enterVoyager},bridge:Bridge,share:Share,scroll:Scroll})[id].enter(id);
 }
 $("homeBtn").onclick=()=>show("home");
 $("playerBtn").onclick=()=>show("players");
@@ -645,10 +773,12 @@ function renderHome(){
     <button class="stat" data-go="progress"><span>&#9997;&#65039; Catechism I know</span><b>${cK} / ${C.catechism.length}</b><div class="bar"><i style="width:${pct(cK,C.catechism.length)}%"></i></div></button>
     <button class="stat" data-go="progress"><span>&#127942; Trophies</span><b>${nT} / ${TROPHIES.length}</b><div class="bar"><i style="width:${pct(nT,TROPHIES.length)}%;background:linear-gradient(90deg,var(--gold),#f97316)"></i></div></button>`;
   $("statStrip").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>show("progress"));
-  const t=$("tiles");t.innerHTML="";
+  const gk=gKnown();$("gStat").innerHTML=`<span>&#10013;&#65039; Gospel points I know</span><b>${gk} / ${GPTS.length}</b><div class="bar"><i style="width:${pct(gk,GPTS.length)}%;background:linear-gradient(90deg,#f97316,#fde047)"></i></div>`;
+  $("gStat").onclick=()=>{progTab="g";show("progress");};
+  const t=$("tiles");t.innerHTML="";const gt=$("gTiles");gt.innerHTML="";
   GAMES.forEach(g=>{const d=document.createElement("button");d.className="tile";d.style.setProperty("--tc",g.tc);const b=p.best[g.id]||0;
     d.innerHTML=`<div class="barl"></div><div class="ic">${g.ic}</div><div class="tt">${g.tt}</div><div class="td">${g.td}</div><div class="best">${b?"&#127942; High score: "+fmt(b):"Not played yet"}</div>`;
-    d.onclick=()=>{AC();openGame(g.id);};t.appendChild(d);});
+    d.onclick=()=>{AC();openGame(g.id);};(g.sec==="gospel"?gt:t).appendChild(d);});
   const pr=document.createElement("button");pr.className="tile prog";
   pr.innerHTML=`<div class="barl"></div><div class="ic">&#128203;</div><div class="tt">My Progress</div><div class="td">Check off the verses and catechism you know by heart, see your trophies, and print your sheet to show your teacher.</div><div class="best">${vK+cK} checked off</div>`;
   pr.onclick=()=>show("progress");t.appendChild(pr);
@@ -857,10 +987,12 @@ const Build=(()=>{
     const len=$("bLen");len.innerHTML="";[[false,"Full answer"],[true,"Short answer"]].forEach(([v,l])=>{const b=document.createElement("button");b.className="pill"+(store.catShort===v?" on":"");b.textContent=l;b.onclick=()=>{store.catShort=v;saveStore();enter(mode);};len.appendChild(b);});
     const p=me(),m=mode==="verse"?p.verses:p.cat,list=$("bList");list.innerHTML="";
     if(!items().length){list.innerHTML=`<div class="empty">Nothing here yet.</div>`;return;}
-    items().forEach(it=>{const st=m[it.id]||{};const b=document.createElement("button");b.className="vitem";
+    const sections=mode==="verse"?verseGroups(items()):[["",items()]];
+    sections.forEach(([title,arr])=>{if(title){const h=document.createElement("div");h.className="label";h.style.cssText="grid-column:1/-1;margin:10px 0 0;font-size:14px;color:var(--gold);";h.textContent=title;list.appendChild(h);}
+    arr.forEach(it=>{const st=m[it.id]||{};const b=document.createElement("button");b.className="vitem";
       const head=mode==="verse"?esc(it.reference):`${it.n}. ${esc(it.q)}`;const body=mode==="verse"?it.text:catAnswer(it.a,store.catShort);
       b.innerHTML=`<b>${head}</b><span>${esc(body.length>90?body.slice(0,90)+"\u2026":body)}</span><div class="badges">${st.k?`<span class="bdg k">&#10004; I know it!</span>`:""}${st.p&&!st.k?`<span class="bdg p">&#9733; Practiced</span>`:""}${!st.p&&!st.k?`<span class="bdg">New</span>`:""}</div>`;
-      b.onclick=()=>open(it.id);list.appendChild(b);});}
+      b.onclick=()=>open(it.id);list.appendChild(b);});});}
   function open(id,mode){if(mode)B.mode=mode;const it=items().find(x=>x.id===id);if(!it)return;B.item=it;B.score=0;B.miss=0;
     $("bPick").classList.add("hidden");$("bPlay").classList.remove("hidden");setLevel(0);}
   function parts(){const it=B.item;return B.mode==="verse"?{ref:it.reference,q:null,a:it.text}:{ref:`Question ${it.n}`,q:it.q,a:catAnswer(it.a,store.catShort)};}
@@ -928,7 +1060,7 @@ function readyVoy(){voy.phase="idle";updateVoyHud();
     <div class="label">Start with this verse</div><div class="voypick" id="voyPick"></div>
     <button class="btn green wide" id="voyStartBtn">Start Flight</button>
     <p style="margin-top:12px;font-size:15px;">${best?`&#127942; Your high score: <b style="color:var(--gold)">${fmt(best)}</b>`:"Set your first high score!"}</p></div>`);
-  const pk=$("voyPick");[[-1,"&#127922; Surprise me"]].concat(C.voyager.map((v,i)=>[i,esc(v.reference)])).forEach(([i,l])=>{const b=document.createElement("button");b.className="pill"+(voyStart===i?" on":"");b.innerHTML=l;b.onclick=()=>{voyStart=i;pk.querySelectorAll(".pill").forEach(x=>x.classList.remove("on"));b.classList.add("on");};pk.appendChild(b);});
+  const pk=$("voyPick");[[-1,"&#127922; Surprise me"]].concat(C.voyager.map((v,i)=>[i,esc(v.reference)+(v.group?` <span style="opacity:.7">&middot; ${esc(v.group)}</span>`:"")])).forEach(([i,l])=>{const b=document.createElement("button");b.className="pill"+(voyStart===i?" on":"");b.innerHTML=l;b.onclick=()=>{voyStart=i;pk.querySelectorAll(".pill").forEach(x=>x.classList.remove("on"));b.classList.add("on");};pk.appendChild(b);});
   $("voyStartBtn").onclick=startVoy;drawVoy();}
 function startVoy(){hideVoyOverlay();AC();
   const idx=[...C.voyager.keys()];const first=voyStart>=0?voyStart:Math.floor(Math.random()*idx.length);voy.order=[first,...shuffle(idx.filter(i=>i!==first))];
@@ -1004,6 +1136,254 @@ function updateVoyHud(){const v=voy.phase==="idle"?null:curVerse();$("voyRef").t
   addEventListener("resize",()=>{if(screen==="voyager"){voyResize();if(voy.phase!=="playing")drawVoy();}});
 })();
 
+
+/* ==================== SHARE THE GOSPEL: outline + verses ==================== */
+/* The church's Gospel outline. Verses are NASB, worded exactly as on the teaching sheet. */
+const GV={
+  "gs-gen-1-1":["Genesis 1:1","In the beginning God created the heavens and the earth."],
+  "gs-ps-24-1":["Psalm 24:1","The earth is the Lord’s and all it contains."],
+  "gs-matt-5-48":["Matthew 5:48","Therefore you are to be perfect, as your heavenly Father is perfect."],
+  "gs-jas-2-10":["James 2:10","For whoever keeps the whole law and yet stumbles in one point, he has become guilty of all."],
+  "gs-rom-3-10":["Romans 3:10","As it is written, ‘There is none righteous, not even one.’"],
+  "gs-rom-3-23":["Romans 3:23","For all have sinned and fall short of the glory of God."],
+  "gs-rom-6-23":["Romans 6:23","For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord."],
+  "gs-titus-3-5":["Titus 3:5","He saved us, not on the basis of deeds which we have done in righteousness, but according to His mercy, by the washing of regeneration and renewing by the Holy Spirit."],
+  "gs-col-2-9":["Colossians 2:9","For in Him all the fullness of Deity dwells in bodily form."],
+  "gs-rom-5-8":["Romans 5:8","But God demonstrates His own love toward us, in that while we were yet sinners, Christ died for us."],
+  "gs-1cor-15-4":["1 Corinthians 15:4–5","And that He was buried, and that He was raised on the third day according to the Scriptures, and that He appeared to Cephas, then to the twelve."],
+  "gs-isa-55-7":["Isaiah 55:7","Let the wicked forsake his way and the unrighteous man his thoughts; and let him return to the LORD, and He will have compassion on him, and to our God, for He will abundantly pardon."],
+  "gs-rom-10-9":["Romans 10:9","That if you confess with your mouth Jesus as Lord, and believe in your heart that God raised Him from the dead, you will be saved."],
+};
+const GOSPEL=[
+  {h:"God",short:"GOD",ask:"So… where does it start?",fq:"Who is God, anyway?",pts:[
+    {id:"g1",t:"He is Creator & Owner of everything.",v:["gs-gen-1-1","gs-ps-24-1"],r:"So everything belongs to God… even me?"},
+    {id:"g2",t:"He is Perfectly Holy.",v:["gs-matt-5-48"],r:"Perfect? Like, never ever wrong?"},
+    {id:"g3",t:"He requires perfect obedience from us.",v:["gs-jas-2-10"],r:"Perfect obedience? Nobody can do that!"}]},
+  {h:"Man",short:"MAN",fq:"Okay. So what about people like us?",pts:[
+    {id:"m1",t:"Everyone has broken God’s law.",v:["gs-rom-3-10","gs-rom-3-23"],r:"Everyone? Even really nice people?"},
+    {id:"m2",t:"The penalty for sin is eternal death.",v:["gs-rom-6-23"],r:"Whoa. That’s serious."},
+    {id:"m3",t:"Good works or intentions will not save anyone.",v:["gs-titus-3-5"],r:"So trying really hard to be good won’t fix it?"}]},
+  {h:"Jesus",short:"JESUS",fq:"That sounds bad. Is there any hope?",pts:[
+    {id:"j1",t:"Jesus came to earth as both God & sinless man.",v:["gs-col-2-9"],r:"Jesus is God AND a man? Wow."},
+    {id:"j2",t:"Jesus demonstrated God’s love in dying on the cross to pay sin’s penalty.",v:["gs-rom-5-8"],r:"He died for people who did wrong? That’s amazing love."},
+    {id:"j3",t:"Jesus rose from the grave and is alive today.",v:["gs-1cor-15-4"],r:"He’s alive right now?!"}]},
+  {h:"Sinners Must Repent and Believe",short:"REPENT & BELIEVE",fq:"So what am I supposed to do?",pts:[
+    {id:"r1",t:"Repent of all that dishonors God.",v:["gs-isa-55-7"],r:"Turn away from my sin and turn to God…"},
+    {id:"r2",t:"Believe in Christ as Lord and Savior.",v:["gs-rom-10-9"],r:"Believe Jesus is Lord, and that God raised Him from the dead…"}]},
+];
+const GPTS=GOSPEL.flatMap((g,hi)=>g.pts.map((p,n)=>Object.assign(p,{hi,n:n+1})));
+const GVS=GPTS.flatMap(p=>p.v.map(id=>({id,ref:GV[id][0],text:GV[id][1],pid:p.id,hi:p.hi})));
+const gPt=id=>GPTS.find(p=>p.id===id);
+const ORD=["1st","2nd","3rd","4th"];
+const trunc=(t,n)=>{const w=t.split(/\s+/);return w.length>n?w.slice(0,n).join(" ")+"…":t;};
+function setGospel(pid,key,val){const p=me();if(!p)return;p.gospel=p.gospel||{};p.gospel[pid]=Object.assign({},p.gospel[pid]||{});p.gospel[pid][key]=val?1:0;if(key==="k"&&val)p.gospel[pid].p=1;saveStore();
+  if(GPTS.every(x=>p.gospel[x.id]&&p.gospel[x.id].k))award("wholegospel");}
+const gKnown=()=>{const p=me();return p&&p.gospel?GPTS.filter(x=>p.gospel[x.id]&&p.gospel[x.id].k).length:0;};
+const gPracticed=()=>{const p=me();return p&&p.gospel?GPTS.filter(x=>p.gospel[x.id]&&(p.gospel[x.id].p||p.gospel[x.id].k)).length:0;};
+function markAllGospelPracticed(){GPTS.forEach(x=>{const p=me();p.gospel=p.gospel||{};if(!(p.gospel[x.id]&&p.gospel[x.id].p))setGospel(x.id,"p",1);});
+  GVS.forEach(v=>{if(C.memverses.some(m=>m.id===v.id))setItem("v",v.id,"p",1);});}
+
+/* Question maker used by Bridge Builder and Scroll Catcher. Returns {kind, prompt(html), opts:[{html,ok}]}. n = number of choices. */
+function gQ(type,n){
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  const fill=(correct,pool,key)=>{const seen=new Set([key(correct)]);const out=[];shuffle(pool).forEach(x=>{if(out.length<n-1&&!seen.has(key(x))){seen.add(key(x));out.push(x);}});return shuffle([{x:correct,ok:true},...out.map(x=>({x,ok:false}))]);};
+  const H=i=>esc(GOSPEL[i].h),P=p=>esc(p.t);
+  if(type==="hOrd"){const k=Math.floor(Math.random()*4);return{kind:"Order",prompt:`Which heading comes <b>${ORD[k]}</b>?`,opts:fill(k,[0,1,2,3],x=>x).map(o=>({html:H(o.x),ok:o.ok}))};}
+  if(type==="p2h"){const p=pick(GPTS);return{kind:"Which heading?",prompt:`“${P(p)}”`,opts:fill(p.hi,[0,1,2,3],x=>x).map(o=>({html:H(o.x),ok:o.ok}))};}
+  if(type==="pNum"){const p=pick(GPTS);const same=GPTS.filter(x=>x.hi===p.hi&&x!==p),other=GPTS.filter(x=>x.hi!==p.hi);
+    return{kind:"Point by number",prompt:`Point <b>#${p.n}</b> under <b>${H(p.hi)}</b>`,opts:fill(p,same.concat(pickN(other,3)),x=>x.id).map(o=>({html:P(o.x),ok:o.ok}))};}
+  if(type==="h2p"){const hi=Math.floor(Math.random()*4),p=pick(GPTS.filter(x=>x.hi===hi));
+    return{kind:"Which point?",prompt:`Which point goes under <b>${H(hi)}</b>?`,opts:fill(p,GPTS.filter(x=>x.hi!==hi),x=>x.id).map(o=>({html:P(o.x),ok:o.ok}))};}
+  if(type==="p2v"){const p=pick(GPTS),v=pick(GVS.filter(x=>x.pid===p.id));
+    return{kind:"Which verse?",prompt:`“${P(p)}”`,opts:fill(v,GVS.filter(x=>x.pid!==p.id),x=>x.ref).map(o=>({html:esc(o.x.ref),ok:o.ok}))};}
+  if(type==="v2p"){const v=pick(GVS),p=gPt(v.pid);return{kind:"Which point does it prove?",prompt:esc(v.ref),opts:fill(p,GPTS,x=>x.id).map(o=>({html:P(o.x),ok:o.ok}))};}
+  if(type==="txt2ref"){const v=pick(GVS);return{kind:"Name that verse",prompt:`<span class="vt">“${esc(trunc(v.text,16))}”</span>`,opts:fill(v,GVS,x=>x.ref).map(o=>({html:esc(o.x.ref),ok:o.ok}))};}
+  if(type==="ref2txt"){const v=pick(GVS);return{kind:"How does it start?",prompt:esc(v.ref),opts:fill(v,GVS,x=>x.ref).map(o=>({html:`“${esc(trunc(o.x.text,7))}”`,ok:o.ok}))};}
+  if(type==="txt2h"){const v=pick(GVS);return{kind:"Which heading?",prompt:`<span class="vt">“${esc(trunc(v.text,16))}”</span>`,opts:fill(v.hi,[0,1,2,3],x=>x).map(o=>({html:H(o.x),ok:o.ok}))};}
+  if(type==="next"){const i=Math.floor(Math.random()*(GPTS.length-1)),p=GPTS[i],nx=GPTS[i+1];
+    return{kind:"What comes next?",prompt:`After “${P(p)}”`,opts:fill(nx,GPTS.filter(x=>x!==p),x=>x.id).map(o=>({html:P(o.x),ok:o.ok}))};}
+  return gQ("p2h",n);
+}
+
+/* ==================== BRIDGE BUILDER ==================== */
+const Bridge=(()=>{
+  const STAGES=["Pillars","Planks","Bolts","Test"];
+  const R={steps:[],i:0,score:0,miss:0,firsts:0,stepMiss:0,t0:0,h:null,pillars:0,planks:0,bolts:{},tested:new Set(),fresh:null,done:false};
+  function enter(){stop();$("brPick").classList.remove("hidden");$("brPlay").classList.add("hidden");$("brBestChip").innerHTML=bestChip("bridge");}
+  function buildSteps(){const s=[];
+    for(let k=0;k<4;k++)s.push({st:0,k});
+    GPTS.forEach((p,i)=>s.push({st:1,i}));
+    GPTS.forEach((p,i)=>p.v.forEach((vid,j)=>s.push({st:2,i,vid,second:j>0})));
+    pickN(GVS,6).forEach(v=>s.push({st:3,v}));return s;}
+  function start(){R.steps=buildSteps();R.i=0;R.score=0;R.miss=0;R.firsts=0;R.pillars=0;R.planks=0;R.bolts={};R.tested=new Set();R.done=false;R.fresh=null;
+    $("brPick").classList.add("hidden");$("brPlay").classList.remove("hidden");R.t0=Date.now();stop();R.h=setInterval(paintTime,500);step();}
+  function secs(){return Math.floor((Date.now()-R.t0)/1000);}
+  function paintTime(){const s=secs();$("brTime").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+  /* --- the canyon picture --- */
+  const X0=170,X1=830,PW=(X1-X0)/GPTS.length,DY=150;
+  function scene(walk){
+    const p=me();let s=`<svg viewBox="-250 0 1500 360" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Bridge across a canyon"><defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#f59e0b" stop-opacity=".55"/></linearGradient>
+      <radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff7cc"/><stop offset="1" stop-color="#fff7cc" stop-opacity="0"/></radialGradient></defs>
+      <rect x="-250" width="1500" height="360" fill="url(#sky)"/>
+      <rect x="150" y="${DY}" width="700" height="210" fill="#1c1209"/><path d="M150 340 Q500 320 850 340 L850 360 L150 360Z" fill="#1d4ed8" opacity=".7"/>
+      <path d="M-250 ${DY} L175 ${DY} L160 360 L-250 360Z" fill="#7c4a1e"/><path d="M-250 ${DY} L175 ${DY} L172 ${DY+12} L-250 ${DY+12}Z" fill="#4d7c0f"/>
+      <path d="M825 ${DY} L1250 ${DY} L1250 360 L840 360Z" fill="#7c4a1e"/><path d="M825 ${DY} L1250 ${DY} L1250 ${DY+12} L828 ${DY+12}Z" fill="#4d7c0f"/>
+      <circle cx="925" cy="70" r="70" fill="url(#glow)"/><rect x="921" y="40" width="8" height="${DY-40}" fill="#fef3c7"/><rect x="905" y="62" width="40" height="8" fill="#fef3c7"/>
+      <text x="912" y="${DY+40}" text-anchor="middle" fill="#fde68a" font-size="17" font-weight="900" font-family="system-ui">Peace with God</text>`;
+    // pillars (one per heading), centered under that heading's planks
+    let idx=0;GOSPEL.forEach((g,hi)=>{const a=X0+idx*PW,b=a+g.pts.length*PW;idx+=g.pts.length;
+      if(hi<R.pillars){const cx=(a+b)/2,w=Math.min(56,(b-a)*.42);const cls=R.fresh==="p"+hi?' class="rise"':"";
+        s+=`<g${cls}><rect x="${cx-w/2}" y="${DY+14}" width="${w}" height="${330-DY}" fill="#9ca3af" stroke="#4b5563" stroke-width="3"/>`;
+        const lines=g.short.split(" & ");lines.forEach((ln,k)=>s+=`<text x="${cx}" y="${DY+60+k*22}" text-anchor="middle" fill="#fff" stroke="#111827" stroke-width="3" paint-order="stroke" font-size="${ln.length>7?15:19}" font-weight="900" font-family="system-ui">${k?"& ":""}${esc(ln)}</text>`);s+=`</g>`;}});
+    // planks
+    GPTS.forEach((pt,i)=>{if(i>=R.planks)return;const x=X0+i*PW,tested=R.tested.has(pt.id);const cls=R.fresh==="k"+i?' class="drop"':"";
+      s+=`<g${cls}><rect x="${x+1}" y="${DY-4}" width="${PW-2}" height="18" rx="3" fill="${tested?"#22c55e":"#b45309"}" stroke="#451a03" stroke-width="2"/>
+        <text x="${x+PW/2}" y="${DY+9}" text-anchor="middle" fill="#fff7ed" font-size="11" font-weight="900" font-family="system-ui">${GOSPEL[pt.hi].short[0]}${pt.n}</text>`;
+      (R.bolts[pt.id]||[]).forEach((vid,j)=>{s+=`<circle cx="${x+10+j*(PW-20)}" cy="${DY+5}" r="5" fill="#fbbf24" stroke="#78350f" stroke-width="2"/>`;});s+=`</g>`;});
+    if(R.planks>=GPTS.length)s+=`<line x1="${X0}" y1="${DY-14}" x2="${X1}" y2="${DY-14}" stroke="#78350f" stroke-width="4"/>`;
+    // walker = the player's own avatar
+    s+=`<g class="walker" id="brWalker" style="transform:translateX(${walk?810:0}px)"><text x="85" y="${DY-6}" text-anchor="middle" font-size="54">${p?avOf(p):"&#128578;"}</text></g></svg>`;
+    $("brScene").innerHTML=s;R.fresh=null;}
+  function stagesBar(st){$("brStages").innerHTML=STAGES.map((x,i)=>`<span class="lvl${i===st?" on":i<st?" done":""}">${i<st?"&#10004; ":""}${i+1}. ${x}</span>`).join("");}
+  function step(){if(R.i>=R.steps.length){finish();return;}
+    const S=R.steps[R.i];R.stepMiss=0;stagesBar(S.st);scene();$("brScore").textContent=fmt(R.score);$("brFeedback").textContent="";
+    let prompt="",opts=[];
+    if(S.st===0){prompt=`<small>Raise pillar ${S.k+1} of 4</small>Which heading comes <b>${ORD[S.k]}</b>?`;opts=GOSPEL.map((g,hi)=>({html:esc(g.h),ok:hi===S.k,dis:hi<S.k}));}
+    else if(S.st===1){const p=GPTS[S.i];const same=GPTS.filter(x=>x.hi===p.hi&&x!==p),other=pickN(GPTS.filter(x=>x.hi!==p.hi),4);
+      const pool=shuffle(same).concat(other).filter(x=>x!==p).slice(0,3);
+      prompt=`<small>Lay plank ${S.i+1} of ${GPTS.length}</small>Point <b>#${p.n}</b> under <b>${esc(GOSPEL[p.hi].h)}</b>:`;opts=shuffle([p,...pool]).map(x=>({html:esc(x.t),ok:x===p}));}
+    else if(S.st===2){const p=GPTS[S.i];const others=pickN(GVS.filter(v=>v.pid!==p.id),3);const vv=GVS.find(v=>v.id===S.vid);
+      prompt=`<small>Bolt it down with a verse</small>“${esc(p.t)}”${S.second?"<br><span style='color:var(--gold);font-size:.75em'>This point has two verses. Pick the other one!</span>":""}`;
+      opts=shuffle([vv,...others]).map(v=>({html:esc(v.ref),ok:v===vv}));}
+    else{const v=S.v,p=gPt(v.pid);const pool=pickN(GPTS.filter(x=>x!==p),3);
+      prompt=`<small>Test the bridge! Which point does this verse prove?</small><b>${esc(v.ref)}</b><span class="vt">“${esc(v.text)}”</span>`;opts=shuffle([p,...pool]).map(x=>({html:esc(x.t),ok:x===p}));}
+    $("brPrompt").innerHTML=prompt;const box=$("brChoices");box.innerHTML="";
+    opts.forEach((o,k)=>{const b=document.createElement("button");b.className="choice";b.innerHTML=`<span class="letter">${"ABCD"[k]}</span><span>${o.html}</span>`;if(o.dis){b.disabled=true;b.classList.add("dim");}
+      b.onclick=()=>answer(o.ok,b);box.appendChild(b);});}
+  function answer(ok,btn){const S=R.steps[R.i];if(R.done)return;
+    if(!ok){R.miss++;R.stepMiss++;R.score=Math.max(0,R.score-50);btn.disabled=true;btn.classList.add("wrong");sWrong();shakeEl($("brScene"));
+      $("brFeedback").className="feedback bad";$("brFeedback").textContent=["Crack! Try again.","Wobbly! Try another one.","Not that piece!"][R.stepMiss%3];$("brScore").textContent=fmt(R.score);return;}
+    const pts=R.stepMiss?50:(S.st===0?100:200);if(!R.stepMiss)R.firsts++;R.score+=pts;btn.classList.add("right");sRight();floatText("+"+pts,"var(--green)");
+    if(S.st===0){R.pillars++;R.fresh="p"+S.k;}
+    else if(S.st===1){R.planks++;R.fresh="k"+S.i;}
+    else if(S.st===2){const id=GPTS[S.i].id;(R.bolts[id]=R.bolts[id]||[]).push(S.vid);}
+    else R.tested.add(S.v.pid);
+    document.querySelectorAll("#brChoices .choice").forEach(b=>b.disabled=true);
+    R.i++;setTimeout(step,S.st===0||S.st===1?650:450);}
+  function finish(){R.done=true;stop();stagesBar(4);scene(false);$("brPrompt").innerHTML="The bridge is finished! Here you go…";$("brChoices").innerHTML="";
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{const w=$("brWalker");if(w)w.style.transform="translateX(810px)";}));sFanfare();
+    $("brFeedback").textContent="";const s=secs(),acc=R.firsts/R.steps.length,timeBonus=Math.round(Math.max(0,360-s)*4*acc*acc),perfect=R.miss?0:1000;R.score+=timeBonus+perfect;
+    markAllGospelPracticed();
+    const tr=["bridge"];if(!R.miss)tr.push("masterbuilder");
+    setTimeout(()=>finishGame("bridge",R.score,{title:"You made it across!",detail:`${R.miss?`${R.miss} wobbly piece${R.miss===1?"":"s"}`:"No mistakes at all!"} &middot; ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}<br><span style="color:var(--muted);font-size:14px;">Includes ${fmt(timeBonus)} time bonus${perfect?" + 1,000 perfect-bridge bonus":""}</span>`,trophies:tr,again:()=>{openGame("bridge");start();}}),3600);}
+  function stop(){if(R.h){clearInterval(R.h);R.h=null;}}
+  $("brGo").onclick=start;
+  return{enter,stop};
+})();
+
+/* ==================== SHARE IT! ==================== */
+const Share=(()=>{
+  const FRIEND={name:"Jordan",av:"&#129490;"};
+  const S={mode:"starter",score:0,miss:0,run:0,busy:false};
+  function enter(){S.run++;$("shPick").classList.remove("hidden");$("shPlay").classList.add("hidden");$("shBestChip").innerHTML=bestChip("share");
+    const m=$("shModes");m.innerHTML="";[["starter","Starter: verses are shown"],["pro","Pro: references only (1.5× points)"]].forEach(([v,l])=>{const b=document.createElement("button");b.className="pill"+(S.mode===v?" on":"");b.textContent=l;b.onclick=()=>{S.mode=v;enter();};m.appendChild(b);});}
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  function bubble(who,html){const c=$("shChat");const d=document.createElement("div");const p=me();
+    d.className="msg "+(who==="f"?"friend":"me");d.innerHTML=`<span class="av">${who==="f"?FRIEND.av:avOf(p)}</span><div><div class="name">${who==="f"?FRIEND.name:esc(p.name)}</div><div class="bub">${html}</div></div>`;
+    c.appendChild(d);c.scrollTop=c.scrollHeight;return d;}
+  async function friend(html,run){const c=$("shChat");const t=document.createElement("div");t.className="msg friend typing";t.innerHTML=`<span class="av">${FRIEND.av}</span><div class="bub">•••</div>`;c.appendChild(t);c.scrollTop=c.scrollHeight;
+    await wait(650+Math.min(900,html.length*12));if(run!==S.run)throw "stop";t.remove();bubble("f",html);tone(990,.05,"sine",.08);}
+  /* show choices; resolve when the right one is picked. Wrong picks cost points. */
+  function ask(q,opts,run,{first=300,second=100,later=25}={}){return new Promise((res,rej)=>{
+    $("shAsk").textContent=q;const box=$("shChoices");box.innerHTML="";let tries=0;setTimeout(()=>{const r=box.getBoundingClientRect();if(r.bottom>innerHeight)box.scrollIntoView({behavior:"smooth",block:"end"});},60);
+    opts.forEach(o=>{const b=document.createElement("button");b.className="choice small";b.innerHTML=o.html;
+      b.onclick=()=>{if(run!==S.run){rej("stop");return;}
+        if(o.ok){const pts=tries===0?first:tries===1?second:later;S.score+=pts;$("shScore").textContent=fmt(S.score);sRight();floatText("+"+pts,"var(--green)");box.innerHTML="";$("shAsk").textContent="";res(o);}
+        else{tries++;S.miss++;S.score=Math.max(0,S.score-25);$("shScore").textContent=fmt(S.score);b.disabled=true;b.classList.add("wrong");sWrong();}};
+      box.appendChild(b);});});}
+  function steps(hi){$("shSteps").innerHTML=GOSPEL.map((g,i)=>`<span class="lvl${i===hi?" on":i<hi?" done":""}">${i<hi?"&#10004; ":""}${esc(g.short)}</span>`).join("");}
+  function verseOpt(v,ok){return S.mode==="pro"?{html:`<span class="ref" style="color:inherit">${esc(v.ref)}</span>`,ok,v}:{html:`<span class="ref">${esc(v.ref)}</span><span class="txt">“${esc(v.text)}”</span>`,ok,v};}
+  async function start(){S.run++;const run=S.run;S.score=0;S.miss=0;const p=me();
+    $("shPick").classList.add("hidden");$("shPlay").classList.remove("hidden");$("shChat").innerHTML="";$("shChoices").innerHTML="";$("shAsk").textContent="";$("shScore").textContent="0";steps(0);
+    try{
+      await friend(`Hey ${esc(p.name)}! You go to church, right? Somebody told me the Gospel is “good news.” What is it?`,run);
+      for(let hi=0;hi<GOSPEL.length;hi++){const g=GOSPEL[hi];steps(hi);
+        const hq=hi===0?"Where do you start?":"What comes next?";
+        await ask(hq,shuffle(GOSPEL.map((x,i)=>({html:`<b>${esc(x.h)}</b>`,ok:i===hi}))),run,{first:200,second:50,later:10});
+        bubble("m",hi===0?`It starts with <span class="hd">${esc(g.h.toUpperCase())}</span>.`:`Next, <span class="hd">${esc(g.h.toUpperCase())}</span>.`);
+        await friend(esc(g.fq),run);
+        for(const pt of g.pts){
+          const same=g.pts.filter(x=>x!==pt),other=pickN(GPTS.filter(x=>x.hi!==hi),4);const pool=same.concat(other).slice(0,3);
+          await ask(`Point #${pt.n} under ${g.h}:`,shuffle([pt,...pool]).map(x=>({html:esc(x.t),ok:x===pt})),run);
+          bubble("m",esc(pt.t));
+          await friend(["How do you know that?","Where does the Bible say that?","Is that really in the Bible?"][pt.n%3],run);
+          const mine=GVS.filter(v=>v.pid===pt.id);let used=[];
+          for(let j=0;j<mine.length;j++){const others=pickN(GVS.filter(v=>v.pid!==pt.id),S.mode==="pro"?3:2);
+            const choices=shuffle([...mine.filter(v=>!used.includes(v)),...others]).map(v=>verseOpt(v,v.pid===pt.id));
+            const got=await ask(j===0?"Share a verse that proves it:":"This point has another verse. Share it too!",choices,run);used.push(got.v);
+            bubble("m",`${j===0?"The Bible says":"And"} in <b>${esc(got.v.ref)}</b>:<span class="vq">“${esc(got.v.text)}”</span>`);}
+          await friend(esc(pt.r),run);}
+      }
+      await friend(`I’m really going to think about this. Thanks for telling me the Gospel, ${esc(p.name)}!`,run);
+      if(run!==S.run)return;
+      const pro=S.mode==="pro";let final=S.score+1000;if(pro)final=Math.round(final*1.5);
+      markAllGospelPracticed();const tr=["messenger"];if(pro&&!S.miss)tr.push("ready");
+      setTimeout(()=>finishGame("share",final,{title:"You shared the whole Gospel!",detail:`${S.miss?`${S.miss} wrong pick${S.miss===1?"":"s"}`:"No wrong picks!"} &middot; ${pro?"Pro mode (1.5×)":"Starter mode"} &middot; +1,000 for finishing`,
+        extra:pro?"":`<div class="detail" style="color:var(--gold)">Ready for a challenge? Try <b>Pro mode</b>, where you only see the verse references.</div>`,trophies:tr,again:()=>{openGame("share");start();}}),900);
+    }catch(e){/* left the screen */}
+  }
+  $("shGo").onclick=start;
+  return{enter,stop:()=>{S.run++;}};
+})();
+
+/* ==================== SCROLL CATCHER ==================== */
+const Scroll=(()=>{
+  const TYPES=[["hOrd","p2h","pNum"],["h2p","p2v","v2p"],["txt2ref","ref2txt","txt2h","next"]];
+  const K={on:false,raf:null,hearts:3,score:0,combo:0,bestCombo:0,caught:0,level:1,wave:0,scrolls:[],resolved:false,last:0,fall:11};
+  function enter(){stopLoop();clearField();paintHud();$("scPrompt").innerHTML="Catch the right scroll!";
+    const best=(me().best.scroll)||0;
+    over(`<div class="voycard"><h2 style="color:#fdba74">&#129530; Scroll Catcher</h2>
+      <p>A question appears at the top and scrolls start falling. <b>Tap the right scroll</b> before it hits the ground! Tapping a wrong scroll, or letting the right one fall, costs a heart. You have 3. Catch scrolls in a row for a <b>combo</b> (up to 4× points), and catch them early for extra points. It gets faster, and trickier, as you level up.</p>
+      <button class="btn gold wide" id="scStart">Start &#9654;</button><p style="margin-top:12px;font-size:15px;">${best?`&#127942; Your high score: <b style="color:var(--gold)">${fmt(best)}</b>`:"Set your first high score!"}</p></div>`);
+    $("scStart").onclick=start;}
+  function over(h){const o=$("scOver");o.innerHTML=h;o.classList.remove("hidden");}
+  function clearField(){K.scrolls.forEach(s=>s.el.remove());K.scrolls=[];$("scField").querySelectorAll(".scroll").forEach(e=>e.remove());}
+  function start(){AC();$("scOver").classList.add("hidden");Object.assign(K,{on:true,hearts:3,score:0,combo:0,bestCombo:0,caught:0,level:1,wave:0,fall:11});paintHud();wave();K.last=performance.now();K.raf=requestAnimationFrame(loop);}
+  function mult(){return K.combo>=10?4:K.combo>=6?3:K.combo>=3?2:1;}
+  function paintHud(){$("scHearts").innerHTML=[0,1,2].map(i=>`<span style="opacity:${i<K.hearts?1:.2}">&#10084;&#65039;</span>`).join("");$("scLevel").textContent=K.level;$("scScore").textContent=fmt(K.score);$("scCombo").textContent=`x${mult()}${K.combo>=3?` · ${K.combo} in a row`:""}`;}
+  function wave(){clearField();K.wave++;K.resolved=false;
+    const pool=TYPES.slice(0,Math.min(3,K.level)).flat();const q=gQ(pool[Math.floor(Math.random()*pool.length)],3);
+    $("scPrompt").innerHTML=`<small>${esc(q.kind)}</small><div>${q.prompt}</div>`;
+    const f=$("scField"),W=f.clientWidth,lw=W/3;
+    const longest=Math.max(...q.opts.map(o=>o.html.length));K.fall=Math.max(5.2,11-K.wave*.22)+Math.min(3,longest/45);
+    const sw=Math.min(lw-18,320);q.opts.forEach((o,i)=>{const el=document.createElement("div");el.className="scroll";el.innerHTML=o.html;el.style.width=sw+"px";f.appendChild(el);
+      const s={el,ok:o.ok,y:-el.offsetHeight-10-Math.random()*60,x:i*lw+(lw-sw)/2,dead:false};el.style.transform=`translate(${s.x}px,${s.y}px)`;
+      el.addEventListener("pointerdown",e=>{e.preventDefault();tap(s);});K.scrolls.push(s);});}
+  function tap(s){if(!K.on||K.resolved||s.dead)return;const f=$("scField");
+    if(s.ok){K.resolved=true;K.combo++;K.bestCombo=Math.max(K.bestCombo,K.combo);K.caught++;const early=Math.max(0,1-(s.y+s.el.offsetHeight)/f.clientHeight);
+      const pts=Math.round((100+early*100)*mult());K.score+=pts;s.dead=true;s.el.classList.add("caught");s.el.style.transform=`translate(${s.x}px,${s.y-60}px) scale(1.15)`;
+      floatText("+"+fmt(pts),"var(--green)");sRight();K.scrolls.forEach(o=>{if(o!==s){o.dead=true;o.el.classList.add("gone");}});
+      if(K.caught%6===0&&K.level<3){K.level++;toast("&#11014;&#65039;",`Level ${K.level}! New kinds of questions.`);}
+      paintHud();setTimeout(()=>{if(K.on)wave();},550);}
+    else{s.dead=true;s.el.classList.add("bad");setTimeout(()=>s.el.classList.add("gone"),300);K.combo=0;loseHeart("Wrong scroll!");}}
+  function loseHeart(why){K.hearts--;sWrong();shakeEl($("scPrompt"));paintHud();if(K.hearts<=0)end(why);}
+  function loop(ts){if(!K.on){K.raf=null;return;}let dt=(ts-K.last)/1000;if(!(dt>0))dt=.016;if(dt>.1)dt=.1;K.last=ts;
+    const H=$("scField").clientHeight-14,sp=H/K.fall;
+    K.scrolls.forEach(s=>{if(s.dead&&!s.el.classList.contains("bad"))return;s.y+=sp*dt;s.el.style.transform=`translate(${s.x}px,${s.y}px)`;
+      if(!K.resolved&&s.ok&&!s.dead&&s.y+s.el.offsetHeight>=H){K.resolved=true;s.dead=true;s.el.classList.add("reveal");K.combo=0;floatText("Missed it!","#ff8a8a");
+        K.scrolls.forEach(o=>{if(o!==s){o.dead=true;o.el.classList.add("gone");}});loseHeart("A scroll hit the ground!");if(K.on)setTimeout(()=>{if(K.on)wave();},1100);}});
+    K.raf=requestAnimationFrame(loop);}
+  function end(why){K.on=false;stopLoop();const tr=[];if(K.caught>=25)tr.push("scrollkeeper");if(K.bestCombo>=10)tr.push("onfire");
+    setTimeout(()=>finishGame("scroll",K.score,{title:"Game over!",detail:`You caught <b>${K.caught}</b> scroll${K.caught===1?"":"s"} and reached level ${K.level}. Best streak: <b>${K.bestCombo}</b> in a row.`,trophies:tr,again:()=>{openGame("scroll");start();}}),800);}
+  function stopLoop(){if(K.raf){cancelAnimationFrame(K.raf);K.raf=null;}}
+  return{enter,stop:()=>{K.on=false;stopLoop();clearField();}};
+})();
+
+/* Memory verses can belong to a group (e.g. "The Gospel"); show groups first, then everything else */
+function verseGroups(list){const out=[];const groups=[...new Set(list.map(v=>v.group).filter(Boolean))];
+  groups.forEach(g=>out.push([g==="The Gospel"?"\u271D\uFE0F Share the Gospel verses":g,list.filter(v=>v.group===g)]));
+  const rest=list.filter(v=>!v.group);if(rest.length)out.push([groups.length?"Memory Verses":"",rest]);return out;}
 /* ==================== MY PROGRESS ==================== */
 let progTab="v";
 function renderProgress(){
@@ -1013,18 +1393,28 @@ function renderProgress(){
   $("progStats").innerHTML=`
     <div class="stat"><span>&#128220; Memory verses</span><b>${vK} / ${C.memverses.length} known</b><div class="bar"><i style="width:${pct(vK,C.memverses.length)}%"></i></div><span style="display:block;margin-top:6px;">${vP} practiced</span></div>
     <div class="stat"><span>&#9997;&#65039; Catechism</span><b>${cK} / ${C.catechism.length} known</b><div class="bar"><i style="width:${pct(cK,C.catechism.length)}%"></i></div><span style="display:block;margin-top:6px;">${cP} practiced</span></div>
+    <div class="stat"><span>&#10013;&#65039; Gospel points</span><b>${gKnown()} / ${GPTS.length} known</b><div class="bar"><i style="width:${pct(gKnown(),GPTS.length)}%;background:linear-gradient(90deg,#f97316,#fde047)"></i></div><span style="display:block;margin-top:6px;">${gPracticed()} practiced</span></div>
     <div class="stat"><span>&#127942; Trophies</span><b>${nT} / ${TROPHIES.length}</b><div class="bar"><i style="width:${pct(nT,TROPHIES.length)}%;background:linear-gradient(90deg,var(--gold),#f97316)"></i></div></div>`;
-  const tabs=$("progTabs");tabs.innerHTML="";[["v","&#128220; Memory Verses"],["c","&#9997;&#65039; Catechism"],["t","&#127942; Trophies"],["s","&#128200; High Scores"]].forEach(([k,l])=>{const b=document.createElement("button");b.className="pill"+(progTab===k?" on":"");b.innerHTML=l;b.onclick=()=>{progTab=k;renderProgress();};tabs.appendChild(b);});
+  const tabs=$("progTabs");tabs.innerHTML="";[["g","&#10013;&#65039; The Gospel"],["v","&#128220; Memory Verses"],["c","&#9997;&#65039; Catechism"],["t","&#127942; Trophies"],["s","&#128200; High Scores"]].forEach(([k,l])=>{const b=document.createElement("button");b.className="pill"+(progTab===k?" on":"");b.innerHTML=l;b.onclick=()=>{progTab=k;renderProgress();};tabs.appendChild(b);});
   const body=$("progBody");body.innerHTML="";
   if(progTab==="v"||progTab==="c"){const kind=progTab,list=kind==="v"?C.memverses:C.catechism,m=kind==="v"?p.verses:p.cat;
     if(!list.length){body.innerHTML=`<div class="empty">Nothing here yet.</div>`;return;}
-    list.forEach(it=>{const st=m[it.id]||{};const row=document.createElement("div");row.className="prow";
+    (kind==="v"?verseGroups(list):[["",list]]).forEach(([gt,arr])=>{if(gt){const h=document.createElement("div");h.className="label";h.style.cssText="margin:14px 0 8px;font-size:14px;color:var(--gold);";h.textContent=gt;body.appendChild(h);}
+    arr.forEach(it=>{const st=m[it.id]||{};const row=document.createElement("div");row.className="prow";
       const title=kind==="v"?esc(it.reference):`${it.n}. ${esc(it.q)}`,text=kind==="v"?esc(it.text):esc(catAnswer(it.a,store.catShort));
       row.innerHTML=`<div class="pt"><b>${title}</b> ${st.p||st.k?`<span class="bdg p">&#9733; Practiced</span>`:""}<div>${text}</div></div>
         <div class="pa"><button class="smallbtn" data-act="practice">&#9654; Practice</button><button class="knowbtn${st.k?" on":""}" data-act="know"><span class="box">${st.k?"&#10004;":""}</span>I know it!</button></div>`;
       row.querySelector('[data-act="practice"]').onclick=()=>{const mode=kind==="v"?"verse":"cat";show(mode);Build.enter(mode);Build.open(it.id,mode);};
       row.querySelector('[data-act="know"]').onclick=()=>{const on=!(m[it.id]&&m[it.id].k);setItem(kind,it.id,"k",on);if(on){sRight();}else sBlip();renderProgress();};
-      body.appendChild(row);});}
+      body.appendChild(row);});});}
+  else if(progTab==="g"){const gs=p.gospel||{};
+    const intro=document.createElement("p");intro.className="sub";intro.innerHTML="Check off each point when you can say the <b>point and its verse</b> by heart. Play <b>Bridge Builder</b>, <b>Share It!</b>, or <b>Scroll Catcher</b> to practice.";body.appendChild(intro);
+    GOSPEL.forEach((g,hi)=>{const h=document.createElement("div");h.className="label";h.style.cssText="margin:14px 0 8px;font-size:15px;color:#fdba74;";h.textContent=`${hi+1}. ${g.h}`;body.appendChild(h);
+      g.pts.forEach(pt=>{const st=gs[pt.id]||{};const row=document.createElement("div");row.className="prow";
+        row.innerHTML=`<div class="pt"><b>#${pt.n} \u2013 ${esc(pt.t)}</b> ${st.p||st.k?`<span class="bdg p">&#9733; Practiced</span>`:""}${pt.v.map(id=>`<div><b style="color:var(--ink);font-size:14px;">${esc(GV[id][0])}</b> \u2013 ${esc(GV[id][1])}</div>`).join("")}</div>
+          <div class="pa"><button class="knowbtn${st.k?" on":""}"><span class="box">${st.k?"&#10004;":""}</span>I know it!</button></div>`;
+        row.querySelector(".knowbtn").onclick=()=>{const on=!(gs[pt.id]&&gs[pt.id].k);setGospel(pt.id,"k",on);if(on)sRight();else sBlip();renderProgress();};
+        body.appendChild(row);});});}
   else if(progTab==="t"){const g=document.createElement("div");g.className="trophies";
     TROPHIES.forEach(t=>{const got=p.trophies[t.id];const d=document.createElement("div");d.className="trophy"+(got?" got":"");d.innerHTML=`<div class="ti">${t.ic}</div><div><b>${t.tt}</b><span>${t.td}</span>${got?`<span style="display:block;color:var(--gold);margin-top:3px;">Earned ${new Date(got).toLocaleDateString()}</span>`:""}</div>`;g.appendChild(d);});body.appendChild(g);}
   else{const t=document.createElement("table");t.className="scoretable";t.innerHTML=GAMES.map(g=>`<tr><td>${g.ic} ${g.tt}<small>Played ${p.plays[g.id]||0} time${(p.plays[g.id]||0)===1?"":"s"}</small></td><td class="num">${p.best[g.id]?fmt(p.best[g.id]):"\u2014"}</td></tr>`).join("");
@@ -1033,7 +1423,8 @@ function renderProgress(){
 $("printBtn").onclick=()=>{const p=me();if(!p)return;
   const row=(title,text,st)=>`<tr><td><b>${title}</b><br>${text}</td><td class="c">${st.p||st.k?"&#9733;":""}</td><td class="c">${st.k?"&#10004;":""}</td><td class="c"></td></tr>`;
   const head=`<tr><th>What to learn</th><th class="c">Practiced</th><th class="c">I know it</th><th class="c">Grown-up check</th></tr>`;
-  $("printSheet").innerHTML=`<h1>${esc(p.name)}'s Memory Progress</h1><div>Printed ${new Date().toLocaleDateString()} &middot; Verses known: ${countKnown("v")} of ${C.memverses.length} &middot; Catechism known: ${countKnown("c")} of ${C.catechism.length}</div>
+  $("printSheet").innerHTML=`<h1>${esc(p.name)}'s Memory Progress</h1><div>Printed ${new Date().toLocaleDateString()} &middot; Verses known: ${countKnown("v")} of ${C.memverses.length} &middot; Catechism known: ${countKnown("c")} of ${C.catechism.length} &middot; Gospel points known: ${gKnown()} of ${GPTS.length}</div>
+    <h2>The Gospel</h2><table>${head}${GPTS.map(pt=>row(`${esc(GOSPEL[pt.hi].h)} #${pt.n}: ${esc(pt.t)}`,pt.v.map(id=>`<b>${esc(GV[id][0])}</b> \u2013 ${esc(GV[id][1])}`).join("<br>"),(p.gospel||{})[pt.id]||{})).join("")}</table>
     <h2>Memory Verses</h2><table>${head}${C.memverses.map(v=>row(esc(v.reference),esc(v.text),p.verses[v.id]||{})).join("")}</table>
     <h2>Catechism</h2><table>${head}${C.catechism.map(c=>row(`${c.n}. ${esc(c.q)}`,esc(catAnswer(c.a,store.catShort)),p.cat[c.id]||{})).join("")}</table>`;
   window.print();};

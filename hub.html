@@ -559,7 +559,7 @@
     <p class="sub">Pick a game. The scoreboard up top is shared &mdash; scores carry across every game.</p>
     <div class="syncnote hidden" id="hubSync"></div>
     <div class="tiles" id="tiles"></div>
-    <p class="sub" style="margin-top:22px;font-size:12px;opacity:.75;">Scripture quotations are from the ESV&reg; Bible (The Holy Bible, English Standard Version&reg;), &copy; 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.</p>
+    <p class="sub" style="margin-top:22px;font-size:12px;opacity:.75;">Scripture quotations are from the ESV&reg; Bible (The Holy Bible, English Standard Version&reg;), &copy; 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. Gospel outline verses are from the NASB&reg; (New American Standard Bible&reg;), Copyright &copy; 1960, 1971, 1977, 1995 by The Lockman Foundation. Used by permission. All rights reserved. lockman.org</p>
   </div>
 
   <!-- ============ QUIZ ============ -->
@@ -1544,7 +1544,7 @@ function makeEraser(cfg){
 const VM=makeEraser({pre:"vm",screen:"versemem",items:()=>state.memverses,
   title:v=>v.reference,
   parts:v=>[{text:v.text}],
-  pickHtml:(v,i)=>`<b>${i+1}</b><span>${esc(v.reference)}<br><span style="color:var(--muted);font-weight:700;font-size:14px;">${esc(v.text.slice(0,70))}${v.text.length>70?"&hellip;":""}</span></span>`});
+  pickHtml:(v,i)=>`<b>${i+1}</b><span>${esc(v.reference)}${v.group?` <span style="color:var(--gold);font-size:13px;">&middot; ${esc(v.group)}</span>`:""}<br><span style="color:var(--muted);font-weight:700;font-size:14px;">${esc(v.text.slice(0,70))}${v.text.length>70?"&hellip;":""}</span></span>`});
 let cmFull=true;
 function catAnswer(a){
   if(cmFull)return a.replace(/[\[\]]/g,"").replace(/\s+/g," ").trim();
