@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-26T19:05:48.000Z",
+ "updated": "2026-10-26T22:48:58.000Z",
  "note": "Game Hub games. Upload this file next to hub.html in the GitHub repo.",
  "defaultsVersion": 11,
  "settings": {
@@ -6173,6 +6173,391 @@
     [
      "Believe in Christ as Lord & Savior",
      "Romans 10:9"
+    ]
+   ]
+  },
+  {
+   "id": "cc-who-said-it",
+   "title": "Who Said It?",
+   "image": "",
+   "pairs": [
+    [
+     "Let my people go!",
+     "Moses"
+    ],
+    [
+     "Here I am! Send me.",
+     "Isaiah"
+    ],
+    [
+     "Speak, for your servant hears.",
+     "Samuel"
+    ],
+    [
+     "We will serve the LORD.",
+     "Joshua"
+    ],
+    [
+     "Where you go I will go.",
+     "Ruth"
+    ],
+    [
+     "The LORD is my shepherd.",
+     "David"
+    ],
+    [
+     "You are the Christ!",
+     "Peter"
+    ],
+    [
+     "My Lord and my God!",
+     "Thomas"
+    ],
+    [
+     "Am I my brother’s keeper?",
+     "Cain"
+    ],
+    [
+     "If I perish, I perish.",
+     "Esther"
+    ],
+    [
+     "Behold, the Lamb of God!",
+     "John the Baptist"
+    ],
+    [
+     "What must I do to be saved?",
+     "The Philippian jailer"
+    ]
+   ]
+  },
+  {
+   "id": "cc-heroes",
+   "title": "Heroes and Their Stories",
+   "image": "",
+   "pairs": [
+    [
+     "Noah",
+     "Built the ark"
+    ],
+    [
+     "Moses",
+     "Led Israel out of Egypt"
+    ],
+    [
+     "David",
+     "Defeated Goliath"
+    ],
+    [
+     "Daniel",
+     "The lions’ den"
+    ],
+    [
+     "Jonah",
+     "Swallowed by a great fish"
+    ],
+    [
+     "Joseph",
+     "Robe of many colors"
+    ],
+    [
+     "Samson",
+     "Amazing strength"
+    ],
+    [
+     "Abraham",
+     "Father of many nations"
+    ],
+    [
+     "Gideon",
+     "300 men with trumpets"
+    ],
+    [
+     "Joshua",
+     "Walls of Jericho fell"
+    ],
+    [
+     "Elijah",
+     "Fire from heaven"
+    ],
+    [
+     "Solomon",
+     "Asked God for wisdom"
+    ]
+   ]
+  },
+  {
+   "id": "cc-parables",
+   "title": "Parables of Jesus",
+   "image": "",
+   "pairs": [
+    [
+     "The Lost Sheep",
+     "Left the 99"
+    ],
+    [
+     "The Prodigal Son",
+     "Father ran to meet him"
+    ],
+    [
+     "The Good Samaritan",
+     "Helped the hurt man"
+    ],
+    [
+     "The Sower",
+     "Seed on four soils"
+    ],
+    [
+     "The Mustard Seed",
+     "Tiny seed, big tree"
+    ],
+    [
+     "The Wise Builder",
+     "House on the rock"
+    ],
+    [
+     "The Lost Coin",
+     "Swept the whole house"
+    ],
+    [
+     "The Ten Virgins",
+     "Lamps and oil"
+    ],
+    [
+     "The Talents",
+     "Servants invest money"
+    ],
+    [
+     "The Hidden Treasure",
+     "Treasure in a field"
+    ],
+    [
+     "The Pearl",
+     "Sold all for one pearl"
+    ],
+    [
+     "The Rich Fool",
+     "Built bigger barns"
+    ]
+   ]
+  },
+  {
+   "id": "cc-miracles",
+   "title": "Miracles of Jesus",
+   "image": "",
+   "pairs": [
+    [
+     "Water into wine",
+     "Wedding at Cana"
+    ],
+    [
+     "Fed the 5,000",
+     "Five loaves, two fish"
+    ],
+    [
+     "Walked on water",
+     "Sea of Galilee"
+    ],
+    [
+     "Raised Lazarus",
+     "Four days in the tomb"
+    ],
+    [
+     "Calmed the storm",
+     "“Peace! Be still!”"
+    ],
+    [
+     "Healed ten lepers",
+     "Only one said thanks"
+    ],
+    [
+     "Healed Bartimaeus",
+     "Blind beggar"
+    ],
+    [
+     "Healed a paralyzed man",
+     "Lowered through the roof"
+    ],
+    [
+     "Raised Jairus’s daughter",
+     "“Little girl, arise.”"
+    ],
+    [
+     "Huge catch of fish",
+     "Nets began to break"
+    ],
+    [
+     "Healed a man born blind",
+     "Washed in Siloam"
+    ],
+    [
+     "Coin in a fish’s mouth",
+     "Paid the temple tax"
+    ]
+   ]
+  },
+  {
+   "id": "cc-jesus-names-meaning",
+   "title": "What Jesus’ Names Mean",
+   "image": "",
+   "pairs": [
+    [
+     "Immanuel",
+     "God with us"
+    ],
+    [
+     "Jesus",
+     "He will save His people"
+    ],
+    [
+     "Christ",
+     "The Anointed One"
+    ],
+    [
+     "Alpha and Omega",
+     "The first and the last"
+    ],
+    [
+     "Good Shepherd",
+     "Lays down His life"
+    ],
+    [
+     "Bread of Life",
+     "Never hunger again"
+    ],
+    [
+     "Light of the World",
+     "Never walk in darkness"
+    ],
+    [
+     "The True Vine",
+     "We are the branches"
+    ],
+    [
+     "Lamb of God",
+     "Takes away sin"
+    ],
+    [
+     "The Resurrection",
+     "Said at Lazarus’s tomb"
+    ],
+    [
+     "The Door",
+     "Enter and be saved"
+    ],
+    [
+     "The Way",
+     "Only way to the Father"
+    ]
+   ]
+  },
+  {
+   "id": "cc-books-inside",
+   "title": "Books of the Bible",
+   "image": "",
+   "pairs": [
+    [
+     "Genesis",
+     "Creation and the flood"
+    ],
+    [
+     "Exodus",
+     "Escape from Egypt"
+    ],
+    [
+     "Joshua",
+     "Into the Promised Land"
+    ],
+    [
+     "Ruth",
+     "Loyal daughter-in-law"
+    ],
+    [
+     "Nehemiah",
+     "Rebuilt Jerusalem’s walls"
+    ],
+    [
+     "Esther",
+     "Queen who saved her people"
+    ],
+    [
+     "Psalms",
+     "150 songs and prayers"
+    ],
+    [
+     "Proverbs",
+     "Wise sayings"
+    ],
+    [
+     "Jonah",
+     "Ran from God, then obeyed"
+    ],
+    [
+     "John",
+     "“That you may believe”"
+    ],
+    [
+     "Acts",
+     "The early church"
+    ],
+    [
+     "Revelation",
+     "Jesus is coming back"
+    ]
+   ]
+  },
+  {
+   "id": "cc-new-names",
+   "title": "New Names in the Bible",
+   "image": "",
+   "pairs": [
+    [
+     "Abram",
+     "Abraham"
+    ],
+    [
+     "Sarai",
+     "Sarah"
+    ],
+    [
+     "Jacob",
+     "Israel"
+    ],
+    [
+     "Simon",
+     "Peter"
+    ],
+    [
+     "Saul",
+     "Paul"
+    ],
+    [
+     "Hoshea",
+     "Joshua"
+    ],
+    [
+     "Daniel",
+     "Belteshazzar"
+    ],
+    [
+     "Hadassah",
+     "Esther"
+    ],
+    [
+     "Naomi",
+     "Mara"
+    ],
+    [
+     "Hananiah",
+     "Shadrach"
+    ],
+    [
+     "Mishael",
+     "Meshach"
+    ],
+    [
+     "Azariah",
+     "Abednego"
     ]
    ]
   }
