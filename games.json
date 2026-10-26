@@ -2860,7 +2860,7 @@
    "id": "gq-09",
    "type": "tf",
    "week": "Sharing the Gospel",
-   "text": "James 2:10 says that if you stumble in just one point of the law, you are guilty of all.",
+   "text": "James 2:10 says that whoever keeps the whole law but fails in one point has become guilty of all of it.",
    "choices": [
     "True",
     "False"
@@ -2931,7 +2931,7 @@
    "id": "gq-14",
    "type": "fb",
    "week": "Sharing the Gospel",
-   "text": "Romans 3:10: “There is none ___, not even one.”",
+   "text": "Romans 3:10: “None is ___, no, not one.”",
    "answers": [
     "righteous"
    ]
@@ -2970,9 +2970,9 @@
    "id": "gq-17",
    "type": "mc",
    "week": "Sharing the Gospel",
-   "text": "Colossians 2:9 says the fullness of what dwells in Jesus in bodily form?",
+   "text": "Colossians 2:9 says the whole fullness of what dwells in Jesus bodily?",
    "choices": [
-    "Deity",
+    "deity",
     "angels",
     "wisdom only",
     "water"
@@ -2985,9 +2985,9 @@
    "id": "gq-18",
    "type": "mc",
    "week": "Sharing the Gospel",
-   "text": "Romans 5:8 says God demonstrates His love toward us because...",
+   "text": "Romans 5:8 says God shows his love for us in that...",
    "choices": [
-    "while we were yet sinners, Christ died for us",
+    "while we were still sinners, Christ died for us",
     "we were always good",
     "we go to church",
     "we asked Him to"
@@ -3058,7 +3058,7 @@
    "id": "gq-23",
    "type": "fb",
    "week": "Sharing the Gospel",
-   "text": "Romans 10:9: “If you confess with your mouth Jesus as ___ ...”",
+   "text": "Romans 10:9: “If you confess with your mouth that Jesus is ___ ...”",
    "answers": [
     "Lord"
    ]
@@ -5504,7 +5504,7 @@
       },
       {
        "value": 400,
-       "q": "Matthew 5:48: “Be perfect, as your ___ is perfect.”",
+       "q": "Matthew 5:48: “You therefore must be perfect, as your ___ is perfect.”",
        "a": "Heavenly Father"
       },
       {
@@ -5539,7 +5539,7 @@
       },
       {
        "value": 500,
-       "q": "Titus 3:5 says He saved us according to His ___, not our deeds.",
+       "q": "Titus 3:5 says he saved us according to his own ___, not because of our works.",
        "a": "Mercy"
       }
      ]
@@ -5559,12 +5559,12 @@
       },
       {
        "value": 300,
-       "q": "Romans 5:8: “While we were yet ___, Christ died for us.”",
+       "q": "Romans 5:8: “While we were still ___, Christ died for us.”",
        "a": "Sinners"
       },
       {
        "value": 400,
-       "q": "Colossians 2:9 says the fullness of this dwells in Jesus in bodily form.",
+       "q": "Colossians 2:9 says the whole fullness of this dwells in Jesus bodily.",
        "a": "Deity"
       },
       {
@@ -5584,7 +5584,7 @@
       },
       {
        "value": 200,
-       "q": "Romans 10:9: “Confess with your ___ Jesus as Lord.”",
+       "q": "Romans 10:9: “If you confess with your ___ that Jesus is Lord…”",
        "a": "Mouth"
       },
       {
@@ -5614,7 +5614,7 @@
       },
       {
        "value": 200,
-       "q": "“In the beginning God created the heavens and the earth.”",
+       "q": "“In the beginning, God created the heavens and the earth.”",
        "a": "Genesis 1:1"
       },
       {
@@ -5624,12 +5624,12 @@
       },
       {
        "value": 400,
-       "q": "“But God demonstrates His own love toward us…”",
+       "q": "“But God shows his love for us in that while we were still sinners, Christ died for us.”",
        "a": "Romans 5:8"
       },
       {
        "value": 500,
-       "q": "“For whoever keeps the whole law and yet stumbles in one point…”",
+       "q": "“For whoever keeps the whole law but fails in one point…”",
        "a": "James 2:10"
       }
      ]
@@ -5736,12 +5736,12 @@
       },
       {
        "value": 400,
-       "q": "Colossians 2:9 says the fullness of this dwells in Jesus.",
+       "q": "Colossians 2:9 says the whole fullness of this dwells in Jesus bodily.",
        "a": "Deity"
       },
       {
        "value": 600,
-       "q": "Romans 3:10 says there is none of these, not even one.",
+       "q": "Romans 3:10 says none is this, no, not one.",
        "a": "Righteous"
       },
       {
@@ -5761,17 +5761,17 @@
      "clues": [
       {
        "value": 200,
-       "q": "“The earth is the Lord’s and…”",
-       "a": "…all it contains."
+       "q": "“The earth is the LORD’s and…”",
+       "a": "…the fullness thereof."
       },
       {
        "value": 400,
-       "q": "“Let the wicked forsake his way and the unrighteous man…”",
+       "q": "“Let the wicked forsake his way, and the unrighteous man…”",
        "a": "…his thoughts."
       },
       {
        "value": 600,
-       "q": "“…believe in your heart that God raised Him from the dead, you will…”",
+       "q": "“…and believe in your heart that God raised him from the dead, you will…”",
        "a": "…be saved."
       },
       {
@@ -5781,7 +5781,7 @@
       },
       {
        "value": 1000,
-       "q": "“He was raised on the ___ day according to the Scriptures.”",
+       "q": "“He was raised on the ___ day in accordance with the Scriptures.”",
        "a": "Third"
       }
      ]
@@ -6504,12 +6504,12 @@
   {
    "id": "gw-08",
    "category": "Matthew 5:48",
-   "phrase": "THEREFORE YOU ARE TO BE PERFECT, AS YOUR HEAVENLY FATHER IS PERFECT."
+   "phrase": "YOU THEREFORE MUST BE PERFECT, AS YOUR HEAVENLY FATHER IS PERFECT."
   },
   {
    "id": "gw-09",
    "category": "Colossians 2:9",
-   "phrase": "FOR IN HIM ALL THE FULLNESS OF DEITY DWELLS IN BODILY FORM."
+   "phrase": "FOR IN HIM THE WHOLE FULLNESS OF DEITY DWELLS BODILY"
   },
   {
    "id": "gw-10",
@@ -6519,7 +6519,7 @@
   {
    "id": "gw-11",
    "category": "Romans 5:8",
-   "phrase": "BUT GOD DEMONSTRATES HIS OWN LOVE TOWARD US, IN THAT WHILE WE WERE YET SINNERS, CHRIST DIED FOR US."
+   "phrase": "BUT GOD SHOWS HIS LOVE FOR US IN THAT WHILE WE WERE STILL SINNERS, CHRIST DIED FOR US."
   }
  ],
  "voyager": [
@@ -6677,7 +6677,8 @@
     "world",
     "first",
     "above"
-   ]
+   ],
+   "group": "The Gospel"
   },
   {
    "id": "vy-1-peter-1-16",
@@ -6733,7 +6734,8 @@
     "honor",
     "love",
     "grace"
-   ]
+   ],
+   "group": "The Gospel"
   },
   {
    "id": "vy-luke-13-3",
@@ -7160,7 +7162,8 @@
     "grave",
     "sure",
     "spirit"
-   ]
+   ],
+   "group": "The Gospel"
   },
   {
    "id": "vy-james-1-13",
@@ -7406,31 +7409,6 @@
    ]
   },
   {
-   "id": "vy-gs-gen-1-1",
-   "reference": "Genesis 1:1",
-   "group": "The Gospel",
-   "words": [
-    "In",
-    "the",
-    "beginning",
-    "God",
-    "created",
-    "the",
-    "heavens",
-    "and",
-    "the",
-    "earth"
-   ],
-   "decoys": [
-    "made",
-    "formed",
-    "stars",
-    "world",
-    "first",
-    "light"
-   ]
-  },
-  {
    "id": "vy-gs-ps-24-1",
    "reference": "Psalm 24:1",
    "group": "The Gospel",
@@ -7439,11 +7417,18 @@
     "earth",
     "is",
     "the",
-    "Lord’s",
+    "LORD’s",
     "and",
-    "all",
-    "it",
-    "contains"
+    "the",
+    "fullness",
+    "thereof",
+    "the",
+    "world",
+    "and",
+    "those",
+    "who",
+    "dwell",
+    "therein"
    ],
    "decoys": [
     "God's",
@@ -7459,10 +7444,9 @@
    "reference": "Matthew 5:48",
    "group": "The Gospel",
    "words": [
-    "Therefore",
-    "you",
-    "are",
-    "to",
+    "You",
+    "therefore",
+    "must",
     "be",
     "perfect",
     "as",
@@ -7492,18 +7476,18 @@
     "the",
     "whole",
     "law",
-    "and",
-    "yet",
-    "stumbles",
+    "but",
+    "fails",
     "in",
     "one",
     "point",
-    "he",
     "has",
     "become",
     "guilty",
     "of",
-    "all"
+    "all",
+    "of",
+    "it"
    ],
    "decoys": [
     "keeps",
@@ -7519,16 +7503,15 @@
    "reference": "Romans 3:10",
    "group": "The Gospel",
    "words": [
-    "As",
+    "as",
     "it",
     "is",
     "written",
-    "There",
+    "None",
     "is",
-    "none",
     "righteous",
+    "no",
     "not",
-    "even",
     "one"
    ],
    "decoys": [
@@ -7538,33 +7521,6 @@
     "holy",
     "few",
     "said"
-   ]
-  },
-  {
-   "id": "vy-gs-rom-3-23",
-   "reference": "Romans 3:23",
-   "group": "The Gospel",
-   "words": [
-    "For",
-    "all",
-    "have",
-    "sinned",
-    "and",
-    "fall",
-    "short",
-    "of",
-    "the",
-    "glory",
-    "of",
-    "God"
-   ],
-   "decoys": [
-    "some",
-    "many",
-    "sin",
-    "miss",
-    "light",
-    "honor"
    ]
   },
   {
@@ -7608,25 +7564,23 @@
    "reference": "Titus 3:5",
    "group": "The Gospel",
    "words": [
-    "He",
+    "he",
     "saved",
     "us",
     "not",
-    "on",
-    "the",
-    "basis",
+    "because",
     "of",
-    "deeds",
-    "which",
-    "we",
-    "have",
+    "works",
     "done",
+    "by",
+    "us",
     "in",
     "righteousness",
     "but",
     "according",
     "to",
-    "His",
+    "his",
+    "own",
     "mercy",
     "by",
     "the",
@@ -7634,14 +7588,14 @@
     "of",
     "regeneration",
     "and",
-    "renewing",
-    "by",
+    "renewal",
+    "of",
     "the",
     "Holy",
     "Spirit"
    ],
    "decoys": [
-    "works",
+    "deeds",
     "love",
     "grace",
     "cleaning",
@@ -7656,16 +7610,14 @@
    "words": [
     "For",
     "in",
-    "Him",
-    "all",
+    "him",
     "the",
+    "whole",
     "fullness",
     "of",
-    "Deity",
+    "deity",
     "dwells",
-    "in",
-    "bodily",
-    "form"
+    "bodily"
    ],
    "decoys": [
     "power",
@@ -7681,20 +7633,19 @@
    "reference": "Romans 5:8",
    "group": "The Gospel",
    "words": [
-    "But",
+    "but",
     "God",
-    "demonstrates",
-    "His",
-    "own",
+    "shows",
+    "his",
     "love",
-    "toward",
+    "for",
     "us",
     "in",
     "that",
     "while",
     "we",
     "were",
-    "yet",
+    "still",
     "sinners",
     "Christ",
     "died",
@@ -7715,27 +7666,26 @@
    "reference": "1 Corinthians 15:4–5",
    "group": "The Gospel",
    "words": [
-    "And",
     "that",
-    "He",
+    "he",
     "was",
     "buried",
-    "and",
     "that",
-    "He",
+    "he",
     "was",
     "raised",
     "on",
     "the",
     "third",
     "day",
-    "according",
-    "to",
+    "in",
+    "accordance",
+    "with",
     "the",
     "Scriptures",
     "and",
     "that",
-    "He",
+    "he",
     "appeared",
     "to",
     "Cephas",
@@ -7758,7 +7708,7 @@
    "reference": "Isaiah 55:7",
    "group": "The Gospel",
    "words": [
-    "Let",
+    "let",
     "the",
     "wicked",
     "forsake",
@@ -7770,16 +7720,15 @@
     "man",
     "his",
     "thoughts",
-    "and",
     "let",
     "him",
     "return",
     "to",
     "the",
     "LORD",
-    "and",
-    "He",
-    "will",
+    "that",
+    "he",
+    "may",
     "have",
     "compassion",
     "on",
@@ -7789,7 +7738,7 @@
     "our",
     "God",
     "for",
-    "He",
+    "he",
     "will",
     "abundantly",
     "pardon"
@@ -7801,47 +7750,6 @@
     "mercy",
     "forgive",
     "love"
-   ]
-  },
-  {
-   "id": "vy-gs-rom-10-9",
-   "reference": "Romans 10:9",
-   "group": "The Gospel",
-   "words": [
-    "That",
-    "if",
-    "you",
-    "confess",
-    "with",
-    "your",
-    "mouth",
-    "Jesus",
-    "as",
-    "Lord",
-    "and",
-    "believe",
-    "in",
-    "your",
-    "heart",
-    "that",
-    "God",
-    "raised",
-    "Him",
-    "from",
-    "the",
-    "dead",
-    "you",
-    "will",
-    "be",
-    "saved"
-   ],
-   "decoys": [
-    "lips",
-    "think",
-    "hope",
-    "Christ",
-    "alive",
-    "saved"
    ]
   }
  ],
@@ -7870,11 +7778,6 @@
    "id": "mv-1-kings-8-46",
    "reference": "1 Kings 8:46",
    "text": "“If they sin against you—for there is no one who does not sin—and you are angry with them and give them to an enemy, so that they are carried away captive to the land of the enemy, far off or near,"
-  },
-  {
-   "id": "mv-romans-10-9",
-   "reference": "Romans 10:9",
-   "text": "because, if you confess with your mouth that Jesus is Lord and believe in your heart that God raised him from the dead, you will be saved."
   },
   {
    "id": "mv-john-1-3",
@@ -7917,11 +7820,6 @@
    "text": "It was to show his righteousness at the present time, so that he might be just and the justifier of the one who has faith in Jesus."
   },
   {
-   "id": "mv-romans-3-23",
-   "reference": "Romans 3:23",
-   "text": "for all have sinned and fall short of the glory of God,"
-  },
-  {
    "id": "mv-luke-13-3",
    "reference": "Luke 13:3",
    "text": "No, I tell you; but unless you repent, you will all likewise perish."
@@ -7954,37 +7852,37 @@
   {
    "id": "gs-gen-1-1",
    "reference": "Genesis 1:1",
-   "text": "In the beginning God created the heavens and the earth.",
+   "text": "In the beginning, God created the heavens and the earth.",
    "group": "The Gospel"
   },
   {
    "id": "gs-ps-24-1",
    "reference": "Psalm 24:1",
-   "text": "The earth is the Lord’s and all it contains.",
+   "text": "The earth is the LORD’s and the fullness thereof, the world and those who dwell therein,",
    "group": "The Gospel"
   },
   {
    "id": "gs-matt-5-48",
    "reference": "Matthew 5:48",
-   "text": "Therefore you are to be perfect, as your heavenly Father is perfect.",
+   "text": "You therefore must be perfect, as your heavenly Father is perfect.",
    "group": "The Gospel"
   },
   {
    "id": "gs-jas-2-10",
    "reference": "James 2:10",
-   "text": "For whoever keeps the whole law and yet stumbles in one point, he has become guilty of all.",
+   "text": "For whoever keeps the whole law but fails in one point has become guilty of all of it.",
    "group": "The Gospel"
   },
   {
    "id": "gs-rom-3-10",
    "reference": "Romans 3:10",
-   "text": "As it is written, ‘There is none righteous, not even one.’",
+   "text": "as it is written: “None is righteous, no, not one;",
    "group": "The Gospel"
   },
   {
-   "id": "gs-rom-3-23",
+   "id": "mv-romans-3-23",
    "reference": "Romans 3:23",
-   "text": "For all have sinned and fall short of the glory of God.",
+   "text": "for all have sinned and fall short of the glory of God,",
    "group": "The Gospel"
   },
   {
@@ -7996,37 +7894,37 @@
   {
    "id": "gs-titus-3-5",
    "reference": "Titus 3:5",
-   "text": "He saved us, not on the basis of deeds which we have done in righteousness, but according to His mercy, by the washing of regeneration and renewing by the Holy Spirit.",
+   "text": "he saved us, not because of works done by us in righteousness, but according to his own mercy, by the washing of regeneration and renewal of the Holy Spirit,",
    "group": "The Gospel"
   },
   {
    "id": "gs-col-2-9",
    "reference": "Colossians 2:9",
-   "text": "For in Him all the fullness of Deity dwells in bodily form.",
+   "text": "For in him the whole fullness of deity dwells bodily,",
    "group": "The Gospel"
   },
   {
    "id": "gs-rom-5-8",
    "reference": "Romans 5:8",
-   "text": "But God demonstrates His own love toward us, in that while we were yet sinners, Christ died for us.",
+   "text": "but God shows his love for us in that while we were still sinners, Christ died for us.",
    "group": "The Gospel"
   },
   {
    "id": "gs-1cor-15-4",
    "reference": "1 Corinthians 15:4–5",
-   "text": "And that He was buried, and that He was raised on the third day according to the Scriptures, and that He appeared to Cephas, then to the twelve.",
+   "text": "that he was buried, that he was raised on the third day in accordance with the Scriptures, and that he appeared to Cephas, then to the twelve.",
    "group": "The Gospel"
   },
   {
    "id": "gs-isa-55-7",
    "reference": "Isaiah 55:7",
-   "text": "Let the wicked forsake his way and the unrighteous man his thoughts; and let him return to the LORD, and He will have compassion on him, and to our God, for He will abundantly pardon.",
+   "text": "let the wicked forsake his way, and the unrighteous man his thoughts; let him return to the LORD, that he may have compassion on him, and to our God, for he will abundantly pardon.",
    "group": "The Gospel"
   },
   {
-   "id": "gs-rom-10-9",
+   "id": "mv-romans-10-9",
    "reference": "Romans 10:9",
-   "text": "That if you confess with your mouth Jesus as Lord, and believe in your heart that God raised Him from the dead, you will be saved.",
+   "text": "because, if you confess with your mouth that Jesus is Lord and believe in your heart that God raised him from the dead, you will be saved.",
    "group": "The Gospel"
   }
  ],

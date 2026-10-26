@@ -405,7 +405,7 @@
     <div class="sechead"><h2>&#127918; More Games</h2></div>
     <div class="tiles" id="tiles"></div>
     <div id="loadErr" class="loadmsg hidden"></div>
-    <p class="legal">Scripture quotations marked ESV are from the ESV&reg; Bible (The Holy Bible, English Standard Version&reg;), &copy; 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. Gospel outline verses are taken from the NASB&reg; (New American Standard Bible&reg;), Copyright &copy; 1960, 1971, 1977, 1995 by The Lockman Foundation. Used by permission. All rights reserved. lockman.org</p>
+    <p class="legal">Scripture quotations are from the ESV&reg; Bible (The Holy Bible, English Standard Version&reg;), &copy; 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.</p>
   </div></div>
 
   <!-- ===== QUIZ ===== -->
@@ -1138,21 +1138,21 @@ function updateVoyHud(){const v=voy.phase==="idle"?null:curVerse();$("voyRef").t
 
 
 /* ==================== SHARE THE GOSPEL: outline + verses ==================== */
-/* The church's Gospel outline. Verses are NASB, worded exactly as on the teaching sheet. */
+/* The church's Gospel outline. Verses are ESV, matching games.json. */
 const GV={
-  "gs-gen-1-1":["Genesis 1:1","In the beginning God created the heavens and the earth."],
-  "gs-ps-24-1":["Psalm 24:1","The earth is the Lord’s and all it contains."],
-  "gs-matt-5-48":["Matthew 5:48","Therefore you are to be perfect, as your heavenly Father is perfect."],
-  "gs-jas-2-10":["James 2:10","For whoever keeps the whole law and yet stumbles in one point, he has become guilty of all."],
-  "gs-rom-3-10":["Romans 3:10","As it is written, ‘There is none righteous, not even one.’"],
-  "gs-rom-3-23":["Romans 3:23","For all have sinned and fall short of the glory of God."],
+  "gs-gen-1-1":["Genesis 1:1","In the beginning, God created the heavens and the earth."],
+  "gs-ps-24-1":["Psalm 24:1","The earth is the LORD’s and the fullness thereof, the world and those who dwell therein,"],
+  "gs-matt-5-48":["Matthew 5:48","You therefore must be perfect, as your heavenly Father is perfect."],
+  "gs-jas-2-10":["James 2:10","For whoever keeps the whole law but fails in one point has become guilty of all of it."],
+  "gs-rom-3-10":["Romans 3:10","as it is written: “None is righteous, no, not one;"],
+  "mv-romans-3-23":["Romans 3:23","for all have sinned and fall short of the glory of God,"],
   "gs-rom-6-23":["Romans 6:23","For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord."],
-  "gs-titus-3-5":["Titus 3:5","He saved us, not on the basis of deeds which we have done in righteousness, but according to His mercy, by the washing of regeneration and renewing by the Holy Spirit."],
-  "gs-col-2-9":["Colossians 2:9","For in Him all the fullness of Deity dwells in bodily form."],
-  "gs-rom-5-8":["Romans 5:8","But God demonstrates His own love toward us, in that while we were yet sinners, Christ died for us."],
-  "gs-1cor-15-4":["1 Corinthians 15:4–5","And that He was buried, and that He was raised on the third day according to the Scriptures, and that He appeared to Cephas, then to the twelve."],
-  "gs-isa-55-7":["Isaiah 55:7","Let the wicked forsake his way and the unrighteous man his thoughts; and let him return to the LORD, and He will have compassion on him, and to our God, for He will abundantly pardon."],
-  "gs-rom-10-9":["Romans 10:9","That if you confess with your mouth Jesus as Lord, and believe in your heart that God raised Him from the dead, you will be saved."],
+  "gs-titus-3-5":["Titus 3:5","he saved us, not because of works done by us in righteousness, but according to his own mercy, by the washing of regeneration and renewal of the Holy Spirit,"],
+  "gs-col-2-9":["Colossians 2:9","For in him the whole fullness of deity dwells bodily,"],
+  "gs-rom-5-8":["Romans 5:8","but God shows his love for us in that while we were still sinners, Christ died for us."],
+  "gs-1cor-15-4":["1 Corinthians 15:4–5","that he was buried, that he was raised on the third day in accordance with the Scriptures, and that he appeared to Cephas, then to the twelve."],
+  "gs-isa-55-7":["Isaiah 55:7","let the wicked forsake his way, and the unrighteous man his thoughts; let him return to the LORD, that he may have compassion on him, and to our God, for he will abundantly pardon."],
+  "mv-romans-10-9":["Romans 10:9","because, if you confess with your mouth that Jesus is Lord and believe in your heart that God raised him from the dead, you will be saved."],
 };
 const GOSPEL=[
   {h:"God",short:"GOD",ask:"So… where does it start?",fq:"Who is God, anyway?",pts:[
@@ -1160,7 +1160,7 @@ const GOSPEL=[
     {id:"g2",t:"He is Perfectly Holy.",v:["gs-matt-5-48"],r:"Perfect? Like, never ever wrong?"},
     {id:"g3",t:"He requires perfect obedience from us.",v:["gs-jas-2-10"],r:"Perfect obedience? Nobody can do that!"}]},
   {h:"Man",short:"MAN",fq:"Okay. So what about people like us?",pts:[
-    {id:"m1",t:"Everyone has broken God’s law.",v:["gs-rom-3-10","gs-rom-3-23"],r:"Everyone? Even really nice people?"},
+    {id:"m1",t:"Everyone has broken God’s law.",v:["gs-rom-3-10","mv-romans-3-23"],r:"Everyone? Even really nice people?"},
     {id:"m2",t:"The penalty for sin is eternal death.",v:["gs-rom-6-23"],r:"Whoa. That’s serious."},
     {id:"m3",t:"Good works or intentions will not save anyone.",v:["gs-titus-3-5"],r:"So trying really hard to be good won’t fix it?"}]},
   {h:"Jesus",short:"JESUS",fq:"That sounds bad. Is there any hope?",pts:[
@@ -1169,7 +1169,7 @@ const GOSPEL=[
     {id:"j3",t:"Jesus rose from the grave and is alive today.",v:["gs-1cor-15-4"],r:"He’s alive right now?!"}]},
   {h:"Sinners Must Repent and Believe",short:"REPENT & BELIEVE",fq:"So what am I supposed to do?",pts:[
     {id:"r1",t:"Repent of all that dishonors God.",v:["gs-isa-55-7"],r:"Turn away from my sin and turn to God…"},
-    {id:"r2",t:"Believe in Christ as Lord and Savior.",v:["gs-rom-10-9"],r:"Believe Jesus is Lord, and that God raised Him from the dead…"}]},
+    {id:"r2",t:"Believe in Christ as Lord and Savior.",v:["mv-romans-10-9"],r:"Believe Jesus is Lord, and that God raised Him from the dead…"}]},
 ];
 const GPTS=GOSPEL.flatMap((g,hi)=>g.pts.map((p,n)=>Object.assign(p,{hi,n:n+1})));
 const GVS=GPTS.flatMap(p=>p.v.map(id=>({id,ref:GV[id][0],text:GV[id][1],pid:p.id,hi:p.hi})));
