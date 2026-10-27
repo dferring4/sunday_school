@@ -427,6 +427,104 @@
   .howto{background:#14532d;border:2px solid var(--green);border-radius:18px;padding:12px 16px;margin:0 0 16px;}
   .howto ol{margin:6px 0 0;padding-left:22px;font-weight:800;line-height:1.6;color:#d1fae5;}
 
+
+  /* ===== NEW GAMES (shared) ===== */
+  .screen.full{padding:0;display:flex;flex-direction:column;overflow:hidden;}
+  .hud{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:rgba(9,15,26,.6);flex-wrap:wrap;}
+  .hud .hearts{font-size:22px;}
+  .hud2{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+  .qbar{padding:10px 14px;text-align:center;font-weight:900;font-size:clamp(16px,2.3vw,26px);line-height:1.25;background:#0f2a44;border-bottom:2px solid #38bdf8;min-height:2.6em;display:flex;align-items:center;justify-content:center;}
+  .story{color:#e2e8f0;font-weight:700;line-height:1.5;font-size:clamp(15px,1.8vw,19px);}
+  .daily{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(135deg,#78350f,#1e293b 70%);border:2px solid #f59e0b;border-radius:18px;padding:12px 16px;margin:0 0 14px;}
+  .daily .dt{flex:1;min-width:200px;font-weight:800;line-height:1.35;}
+  .daily .dt b{font-size:19px;display:block;}
+  .daily.done{border-color:var(--green);background:linear-gradient(135deg,#14532d,#1e293b 70%);}
+
+  /* Timeline */
+  .tlnow{background:linear-gradient(135deg,#1e3a8a,#312e81);border:3px solid #818cf8;border-radius:18px;padding:14px 16px;text-align:center;margin-bottom:6px;}
+  .tlnow small{display:block;color:#c7d2fe;font-weight:900;letter-spacing:1px;text-transform:uppercase;font-size:12px;}
+  .tlnow b{display:block;font-size:clamp(22px,3vw,32px);font-weight:900;margin:4px 0;}
+  .tlnow span{color:#c7d2fe;font-weight:700;}
+  .tllist{position:relative;margin:10px auto 0;max-width:620px;padding-left:18px;border-left:4px solid #475569;}
+  .tlend{color:var(--muted);font-weight:900;font-size:13px;margin:4px 0;}
+  .tlrow{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin:2px 0;position:relative;}
+  .tlrow::before{content:"";position:absolute;left:-27px;top:50%;width:14px;height:14px;border-radius:50%;background:#94a3b8;transform:translateY(-50%);border:3px solid var(--bg);}
+  .tlrow b{font-weight:900;} .tlrow span{color:var(--muted);font-weight:700;font-size:13px;margin-left:8px;}
+  .tlrow.fresh{border-color:var(--green);background:rgba(52,211,153,.14);animation:pop .4s ease;}
+  .tlslot{display:block;width:100%;background:none;border:2px dashed #64748b;color:#94a3b8;border-radius:10px;padding:6px;margin:4px 0;font-weight:900;font-size:13px;}
+  .tlslot:hover{border-color:var(--gold);color:var(--gold);background:rgba(255,194,51,.08);}
+
+  /* Bookshelf */
+  .shelf{display:flex;flex-wrap:wrap;align-items:flex-end;gap:4px;background:linear-gradient(180deg,#3b2414,#2a1a0e);border:3px solid #78350f;border-bottom-width:12px;border-radius:12px;padding:10px;min-height:120px;max-height:40vh;overflow:auto;}
+  .spine{writing-mode:vertical-rl;transform:rotate(180deg);background:var(--c,#475569);color:#fff;font-weight:900;font-size:12px;padding:8px 5px;border-radius:4px;height:104px;border:1px solid rgba(255,255,255,.25);box-shadow:inset -3px 0 0 rgba(0,0,0,.25);white-space:nowrap;overflow:hidden;animation:pop .25s ease;}
+  .spine.empty{background:none;border:2px dashed #a16207;color:#fde68a;animation:none;display:flex;align-items:center;justify-content:center;}
+  .shelflabel{writing-mode:vertical-rl;transform:rotate(180deg);color:var(--c);font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;height:104px;text-align:center;}
+  .pile{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+  .bk{background:var(--bg2);border:2px solid var(--c,#475569);border-radius:10px;padding:8px 11px;font-weight:900;font-size:14px;}
+  .bk:hover{background:rgba(255,255,255,.06);}
+  .bk.hint{box-shadow:0 0 0 3px var(--gold);animation:blink 1s ease infinite;}
+
+  /* Catechism Climb */
+  .climbwrap{display:grid;grid-template-columns:minmax(160px,300px) 1fr;gap:16px;align-items:start;}
+  @media(max-width:700px){.climbwrap{grid-template-columns:1fr;} .climbwrap .mtnbox{max-width:220px;margin:0 auto;}}
+  .mtn{width:100%;height:auto;display:block;background:linear-gradient(180deg,#0c4a6e,#1e293b);border-radius:18px;border:2px solid var(--line);}
+
+  /* Daily Bread calendar */
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:460px;}
+  .cday{background:var(--bg2);border:1px solid var(--line);border-radius:10px;text-align:center;padding:4px 0 6px;font-weight:900;font-size:15px;color:var(--muted);}
+  .cday small{display:block;font-size:10px;color:#64748b;}
+  .cday.done{background:rgba(245,158,11,.18);border-color:#f59e0b;color:#fff;}
+  .cday.today{outline:3px solid var(--gold);}
+
+  /* Escape */
+  .locks{display:flex;gap:6px;font-size:24px;} .lk{opacity:.35;} .lk.on{opacity:1;filter:drop-shadow(0 0 6px #fbbf24);} .lk.open{opacity:1;}
+  .cell{background:repeating-linear-gradient(90deg,#1f2937 0 34px,#111827 34px 40px);border:3px solid #6b7280;border-radius:18px;padding:16px;}
+  .cell h3{margin:2px 0 8px;font-size:clamp(20px,2.8vw,30px);font-weight:900;}
+  .cell.free{text-align:center;background:linear-gradient(180deg,#14532d,#1e293b);border-color:var(--green);animation:pop .4s ease;}
+  .dials{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0;}
+  .dial{display:flex;flex-direction:column;align-items:center;background:#0b1220;border:2px solid #9ca3af;border-radius:12px;padding:4px;}
+  .dial button{width:46px;height:32px;border-radius:8px;background:var(--line);font-weight:900;}
+  .dial button:active{background:var(--gold);color:var(--gold-ink);}
+  .dial b{font-size:30px;font-weight:900;width:46px;text-align:center;color:#fde68a;font-variant-numeric:tabular-nums;}
+
+  /* Fishers of Men */
+  .pond{position:relative;flex:1;min-height:0;overflow:hidden;background:linear-gradient(180deg,#bae6fd 0 16%,#0ea5e9 16%,#0369a1 60%,#082f49);touch-action:manipulation;}
+  .pond .boat{position:absolute;left:50%;top:2%;transform:translateX(-50%);font-size:44px;}
+  .pond .line{position:absolute;top:12%;width:2px;background:#f8fafc;height:0;opacity:0;transition:height .35s ease;}
+  .pond .line.show{opacity:1;}
+  .fish{position:absolute;left:0;top:0;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.92);color:#0c4a6e;border:3px solid #0284c7;border-radius:999px;padding:6px 14px 6px 8px;font-weight:900;font-size:clamp(14px,1.8vw,18px);white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.25);will-change:transform;}
+  .fish .fb{font-size:26px;} .fish.left .fb{transform:scaleX(-1);}
+  .fish.gold{background:linear-gradient(90deg,#fde68a,#fbbf24);border-color:#b45309;color:#451a03;box-shadow:0 0 18px #fbbf24;}
+  .fish.reel{transition:transform .6s ease, opacity .6s;opacity:0;}
+  .fish.snap{background:#fecaca;border-color:#ef4444;color:#7f1d1d;}
+  .fish.glow{box-shadow:0 0 0 4px var(--green),0 0 20px var(--green);}
+  .fish.gone{opacity:0;transition:opacity .4s;pointer-events:none;}
+
+  /* David's Sling */
+  .slwrap{position:relative;flex:1;min-height:0;}
+  #slCv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block;}
+  .stone{display:inline-block;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d1d5db,#4b5563);margin-right:3px;}
+  .stone.used{opacity:.2;}
+
+  /* Walls of Jericho */
+  .jecity{flex:0 0 auto;height:clamp(110px,26vh,220px);background:#fde68a;overflow:hidden;}
+  .jecity svg{width:100%;height:100%;display:block;}
+  .jecity .wfall{transform-origin:200px 140px;animation:wallfall 1.4s ease-in forwards;}
+  @keyframes wallfall{0%{transform:none}30%{transform:translateX(-4px) rotate(-1deg)}100%{transform:translateY(90px) scaleY(.2);opacity:.6}}
+  .jecity.rumble{animation:shake .4s ease 3;}
+  .jelane{position:relative;flex:1;min-height:110px;background:linear-gradient(180deg,#1e293b,#0f172a);overflow:hidden;}
+  .jehit{position:absolute;left:30px;top:50%;transform:translateY(-50%);width:60px;height:60px;border-radius:50%;border:4px solid #fbbf24;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 18px rgba(251,191,36,.5);}
+  .jenote{position:absolute;left:0;top:50%;margin-top:-22px;margin-left:-22px;width:44px;height:44px;border-radius:50%;background:#f59e0b;color:#451a03;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;will-change:transform;}
+  .jenote.shout{width:auto;padding:0 14px;border-radius:14px;background:#ef4444;color:#fff;font-size:18px;margin-left:-30px;}
+  .jenote.hitp,.jenote.hitg{opacity:0;transition:opacity .2s;} .jenote.miss{opacity:.25;}
+  .jejudge{position:absolute;left:100px;top:12px;font-weight:900;font-size:22px;opacity:0;transition:opacity .2s;}
+  .jejudge.show{opacity:1;} .jejudge.p{color:#fde047;} .jejudge.g{color:#86efac;} .jejudge.m{color:#fca5a5;}
+  .jetap{flex:0 0 auto;margin:10px;padding:18px;border-radius:20px;background:linear-gradient(180deg,#fbbf24,#d97706);color:#451a03;font-weight:900;font-size:clamp(20px,3vw,30px);box-shadow:0 6px 0 #92400e;touch-action:manipulation;user-select:none;-webkit-user-select:none;}
+  .jetap small{display:block;font-size:13px;opacity:.8;}
+  .jetap:active{transform:translateY(4px);box-shadow:0 2px 0 #92400e;}
+  #scr_jericho{position:relative;} #scr_jericho .scover,#scr_fish .scover,#scr_sling .scover{z-index:6;}
+  #scr_jericho .scover{position:absolute;}
+
   /* printable progress sheet */
   #printSheet{display:none;}
   @media print{
@@ -474,6 +572,7 @@
     <div class="switchtip" id="switchTip">Tap your name to switch or add a player <span class="arr">&#11014;&#65039;</span></div>
     <h1 class="big" id="hello">Hi!</h1>
     <p class="sub">Play the games to practice, beat your high scores, and earn trophies. Then check off what you know in <b style="color:var(--gold)">My Progress</b>!</p>
+    <div id="dailyBanner"></div>
     <div class="progcall" id="progCall"></div>
     <div class="sechead"><h2>&#10013;&#65039; Share the Gospel</h2><span class="tag">NEW</span></div>
     <div class="gospelband"><div class="gl"><b>Learn how to share the Gospel!</b> The Gospel has <b>4 parts</b>. Each part has a few points, and each point has a Bible verse that proves it. Start with Step 1, even if you've never heard it before!</div>
@@ -484,7 +583,9 @@
     <div class="tiles g" id="gPathTile"></div>
     <div class="gstep"><span class="n">3</span><div><b>Play it</b><span class="t">Once you know it, test yourself with these games and beat your high scores!</span></div></div>
     <div class="tiles g" id="gTiles"></div>
-    <div class="sechead"><h2>&#127918; More Games</h2></div>
+    <div class="sechead"><h2>&#129504; Learn &amp; Remember</h2></div>
+    <div class="tiles" id="tilesL"></div>
+    <div class="sechead"><h2>&#127918; Bible Adventures &amp; Arcade</h2><span class="tag">NEW GAMES</span></div>
     <div class="tiles" id="tiles"></div>
     <div id="loadErr" class="loadmsg hidden"></div>
     <p class="legal">Scripture quotations are from the ESV&reg; Bible (The Holy Bible, English Standard Version&reg;), &copy; 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.</p>
@@ -752,13 +853,22 @@ function nextToast(){const t=toastQ.shift();const el=$("toast");if(!t){toastOn=f
 
 /* ==================== GAMES LIST, HIGH SCORES, TROPHIES ==================== */
 const GAMES=[
-  {id:"quiz",ic:"&#127919;",tt:"Quiz Showdown",tc:"#ffc233",td:"10 questions against the clock. Build a streak for bonus points!"},
-  {id:"whoami",ic:"&#128373;&#65039;",tt:"Who Am I?",tc:"#34d399",td:"Guess the Bible person from the clues. The fewer clues you need, the more you score."},
-  {id:"conc",ic:"&#129513;",tt:"Concentration",tc:"#f97316",td:"Match the pairs to uncover a hidden picture."},
-  {id:"wheel",ic:"&#127905;",tt:"Word Puzzle Wheel",tc:"#eab308",td:"Spin, pick letters, and solve 3 puzzles. Watch out for Bankrupt!"},
-  {id:"verse",ic:"&#128220;",tt:"Verse Builder",tc:"#60a5fa",td:"Learn a memory verse by filling in the missing words, a few more each level."},
-  {id:"cat",ic:"&#9997;&#65039;",tt:"Catechism Builder",tc:"#a3e635",td:"Learn a catechism question and answer, one level at a time."},
-  {id:"voyager",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly your ship through the right words to build a verse. Outrun the fog!"},
+  {id:"quiz",sec:"learn",ic:"&#127919;",tt:"Quiz Showdown",tc:"#ffc233",td:"10 questions against the clock. Build a streak for bonus points!"},
+  {id:"whoami",sec:"fun",ic:"&#128373;&#65039;",tt:"Who Am I?",tc:"#34d399",td:"Guess the Bible person from the clues. The fewer clues you need, the more you score."},
+  {id:"conc",sec:"fun",ic:"&#129513;",tt:"Concentration",tc:"#f97316",td:"Match the pairs to uncover a hidden picture."},
+  {id:"wheel",sec:"fun",ic:"&#127905;",tt:"Word Puzzle Wheel",tc:"#eab308",td:"Spin, pick letters, and solve 3 puzzles. Watch out for Bankrupt!"},
+  {id:"verse",sec:"learn",ic:"&#128220;",tt:"Verse Builder",tc:"#60a5fa",td:"Learn a memory verse by filling in the missing words, a few more each level."},
+  {id:"cat",sec:"learn",ic:"&#9997;&#65039;",tt:"Catechism Builder",tc:"#a3e635",td:"Learn a catechism question and answer, one level at a time."},
+  {id:"voyager",sec:"fun",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly your ship through the right words to build a verse. Outrun the fog!"},
+  {id:"daily",sec:"learn",ic:"&#127838;",tt:"Daily Bread",tc:"#f59e0b",td:"A quick 4-question challenge every day. Keep your streak going!"},
+  {id:"climb",sec:"learn",ic:"&#9968;&#65039;",tt:"Catechism Climb",tc:"#38bdf8",td:"Climb the mountain one catechism answer at a time. Base camps save your spot!"},
+  {id:"sprint",sec:"learn",ic:"&#9889;",tt:"Verse Scramble Sprint",tc:"#facc15",td:"A verse explodes into pieces. Put it back together as fast as you can!"},
+  {id:"timeline",sec:"learn",ic:"&#128336;",tt:"Timeline Builder",tc:"#818cf8",td:"Put the big events of the Bible in order, from Creation to Paul."},
+  {id:"books",sec:"learn",ic:"&#128218;",tt:"Bible Bookshelf",tc:"#d97706",td:"Put all 66 books of the Bible back on the shelf, in order. Beat your time!"},
+  {id:"escape",sec:"fun",ic:"&#128275;",tt:"Escape the Prison",tc:"#a8a29e",td:"Help Paul and Silas! Solve 5 Bible locks to escape the Philippian jail."},
+  {id:"fish",sec:"fun",ic:"&#127907;",tt:"Fishers of Men",tc:"#0ea5e9",td:"Catch the fish carrying the right answer. Golden fish are worth double!"},
+  {id:"sling",sec:"fun",ic:"&#129686;",tt:"David\u2019s Sling",tc:"#fcd34d",td:"Pull back the sling and hit the jar with the right answer. Then face Goliath!"},
+  {id:"jericho",sec:"fun",ic:"&#127930;",tt:"Walls of Jericho",tc:"#fb923c",td:"March around Jericho to the beat. Stay in rhythm and the walls fall down!"},
   {id:"path",sec:"gpath",ic:"&#129517;",tt:"Gospel Path",tc:"#fde047",td:"Start here! Learn the Gospel one point at a time, with quick checks along the way."},
   {id:"bridge",sec:"gospel",ic:"&#127753;",tt:"Bridge Builder",tc:"#f97316",td:"Build the Gospel bridge: pillars, planks, and bolts. Then walk across!"},
   {id:"share",sec:"gospel",ic:"&#128172;",tt:"Share It!",tc:"#38bdf8",td:"Talk with your friend Ryan and walk him through the Gospel, verse by verse."},
@@ -790,6 +900,28 @@ const TROPHIES=[
   {id:"ready",ic:"&#127894;&#65039;",tt:"Ready to Share",td:"Share the whole Gospel in Pro mode with no wrong picks.",g:1},
   {id:"scrollkeeper",ic:"&#129530;",tt:"Scroll Keeper",td:"Catch 25 scrolls in one game of Scroll Catcher.",g:1},
   {id:"onfire",ic:"&#128293;",tt:"On Fire!",td:"Catch 10 scrolls in a row in Scroll Catcher.",g:1},
+  {id:"timetraveler",ic:"&#128368;&#65039;",tt:"Time Traveler",td:"Finish all 4 levels of Timeline Builder."},
+  {id:"perfecttime",ic:"&#9201;&#65039;",tt:"Perfect Timing",td:"Finish a Timeline level of 9 or more events with no mistakes."},
+  {id:"librarian",ic:"&#128218;",tt:"Librarian",td:"Finish every section shelf in Bible Bookshelf."},
+  {id:"bookworm",ic:"&#128027;",tt:"Bookworm",td:"Finish the Speed Shelf with all 66 books."},
+  {id:"speedlib",ic:"&#128640;",tt:"Lightning Librarian",td:"Finish the Speed Shelf in 3 minutes or less, with 3 or fewer mistakes."},
+  {id:"basecamp",ic:"&#127957;&#65039;",tt:"Base Camp",td:"Reach base camp 10 in Catechism Climb."},
+  {id:"halfway",ic:"&#9968;&#65039;",tt:"Halfway Up",td:"Climb halfway up the catechism mountain."},
+  {id:"summit",ic:"&#128681;",tt:"Summit!",td:"Climb every catechism question to the top of the mountain."},
+  {id:"daily1",ic:"&#127838;",tt:"Daily Bread",td:"Finish your first Daily Bread."},
+  {id:"week",ic:"&#128197;",tt:"Week Streak",td:"Do Daily Bread 7 days in a row."},
+  {id:"month",ic:"&#128198;",tt:"Month Streak",td:"Do Daily Bread 30 days in a row."},
+  {id:"hundred",ic:"&#128142;",tt:"100-Day Streak",td:"Do Daily Bread 100 days in a row!"},
+  {id:"sprinter",ic:"&#127939;",tt:"Sprinter",td:"Finish a Verse Scramble Sprint with no wrong taps."},
+  {id:"lightning",ic:"&#127785;&#65039;",tt:"Lightning Fingers",td:"Finish the one-word round of a Sprint in about a second per word."},
+  {id:"free",ic:"&#9939;&#65039;",tt:"Free at Last",td:"Escape the prison with Paul and Silas."},
+  {id:"escaper",ic:"&#128477;&#65039;",tt:"Master Escaper",td:"Escape the prison with no hints in 4 minutes or less."},
+  {id:"bigcatch",ic:"&#128031;",tt:"Full Net",td:"Catch all 15 fish in one trip in Fishers of Men."},
+  {id:"goldnet",ic:"&#10024;",tt:"Golden Net",td:"Catch 5 golden fish."},
+  {id:"giant",ic:"&#129704;",tt:"Giant Slayer",td:"Defeat Goliath in David\u2019s Sling."},
+  {id:"sharpshooter",ic:"&#127919;",tt:"Sharpshooter",td:"Hit 10 right jars in a row in David\u2019s Sling."},
+  {id:"wallsfell",ic:"&#129521;",tt:"The Walls Came Down",td:"Bring down the walls of Jericho."},
+  {id:"perfectmarch",ic:"&#127930;",tt:"Perfect March",td:"Hit 90% of the beats perfectly in Walls of Jericho."},
   {id:"trail",ic:"&#129517;",tt:"Trail Blazer",td:"Finish all 5 Gospel Path lessons.",g:1},
   {id:"starstudent",ic:"&#127775;",tt:"Star Student",td:"Earn 3 stars on every Gospel Path lesson.",g:1},
   {id:"wholegospel",ic:"&#10013;&#65039;",tt:"The Whole Gospel",td:"Check off every Gospel point as \u201cI know it!\u201d",g:1},
@@ -853,10 +985,11 @@ function openInfo(kind){const p=me();if(!p)return;if(!paused){paused=true;pauseA
       ${need.length?`<div class="isub">Still to earn</div><div class="trophies">${need.map(t=>trophyCard(t,0)).join("")}</div>`:`<div class="detail" style="color:var(--gold)">You earned every trophy! Amazing!</div>`}`;}
   else{const row=g=>`<tr><td>${g.ic} ${g.tt}<small>${p.plays[g.id]?`Played ${p.plays[g.id]} time${p.plays[g.id]===1?"":"s"}`:"Not played yet"}</small></td><td class="num">${p.best[g.id]?fmt(p.best[g.id]):"<span style='color:var(--muted)'>\u2014</span>"}</td></tr>`;
     h=`<div class="ihead"><h2>&#128200; ${esc(p.name)}’s High Scores</h2><button class="xbtn" id="infoX">Close &#10005;</button></div>
-      <div class="isub">&#10013;&#65039; Share the Gospel</div><table class="scoretable">${GAMES.filter(g=>g.sec).map(row).join("")}</table>
-      <div class="isub">&#127918; More Games</div><table class="scoretable">${GAMES.filter(g=>!g.sec).map(row).join("")}</table>`;}
-  m.innerHTML=h;$("infoX").onclick=closeInfo;$("infoOv").classList.add("show");sBlip();}
-function closeInfo(){$("infoOv").classList.remove("show");if(paused){pausedTotal+=Date.now()-pauseAt;paused=false;}}
+      <div class="isub">&#10013;&#65039; Share the Gospel</div><table class="scoretable">${GAMES.filter(g=>g.sec==="gospel"||g.sec==="gpath").map(row).join("")}</table>
+      <div class="isub">&#129504; Learn &amp; Remember</div><table class="scoretable">${GAMES.filter(g=>g.sec==="learn").map(row).join("")}</table>
+      <div class="isub">&#127918; Bible Adventures &amp; Arcade</div><table class="scoretable">${GAMES.filter(g=>g.sec==="fun").map(row).join("")}</table>`;}
+  m.innerHTML=h;$("infoX").onclick=closeInfo;$("infoOv").classList.add("show");sBlip();if(REG[screen]&&REG[screen].pause)REG[screen].pause();}
+function closeInfo(){$("infoOv").classList.remove("show");if(REG[screen]&&REG[screen].resume)REG[screen].resume();if(paused){pausedTotal+=Date.now()-pauseAt;paused=false;}}
 $("infoOv").onclick=e=>{if(e.target===$("infoOv"))closeInfo();};
 addEventListener("keydown",e=>{if(e.key==="Escape"&&$("infoOv").classList.contains("show"))closeInfo();});
 $("trophyBtn").onclick=()=>openInfo("t");$("scoresBtn").onclick=()=>openInfo("s");
@@ -872,6 +1005,7 @@ function show(name){
   if((screen==="learn"||screen==="path")&&name!==screen)hushSpeech();
   if(screen==="share"&&name!=="share")Share.stop();
   if(screen==="scroll"&&name!=="scroll")Scroll.stop();
+  if(screen!==name&&REG[screen]&&REG[screen].stop)REG[screen].stop();
   screen=name;const target=SCREENS[name];
   new Set(Object.values(SCREENS)).forEach(id=>$(id).classList.toggle("hidden",id!==target));
   $("homeBtn").classList.toggle("hidden",name==="home"||name==="players");
@@ -888,7 +1022,7 @@ function show(name){
 function openGame(id){
   if(!contentReady){show("home");return;}
   show(id);
-  ({quiz:Quiz,whoami:Who,conc:Conc,wheel:Wheel,verse:Build,cat:Build,voyager:{enter:enterVoyager},bridge:Bridge,share:Share,scroll:Scroll,path:Path})[id].enter(id);
+  (({quiz:Quiz,whoami:Who,conc:Conc,wheel:Wheel,verse:Build,cat:Build,voyager:{enter:enterVoyager},bridge:Bridge,share:Share,scroll:Scroll,path:Path})[id]||REG[id]).enter(id);
 }
 $("homeBtn").onclick=()=>show("home");
 $("playerBtn").onclick=()=>show("players");
@@ -938,18 +1072,20 @@ function renderHome(){
     <div class="mini"><div>&#10013;&#65039; Gospel points<b>${gk0} / ${GPTS.length}</b></div><div>&#128220; Memory verses<b>${vK} / ${C.memverses.length}</b></div><div>&#9997;&#65039; Catechism<b>${cK} / ${C.catechism.length}</b></div></div>
     <button class="btn green" id="progGo">&#128203; Open My Progress &#9654;</button>`;
   $("progGo").onclick=()=>show("progress");
+  {const st=Daily.streak(),dn=Daily.doneToday();$("dailyBanner").innerHTML=`<div class="daily${dn?" done":""}"><span style="font-size:38px">&#127838;</span><div class="dt"><b>${dn?"Daily Bread: done today!":"Today\u2019s Daily Bread is ready!"}</b>${dn?`&#128293; ${st}-day streak. Come back tomorrow!`:`4 quick questions${st?` &middot; keep your &#128293; ${st}-day streak going`:" &middot; start a streak today"}`}</div>${dn?"":`<button class="btn gold" id="dailyGo">Start &#9654;</button>`}</div>`;
+   const dg=$("dailyGo");if(dg)dg.onclick=()=>{AC();openGame("daily");};}
   const gk=gKnown();$("gStat").innerHTML=`<span>&#10013;&#65039; Gospel points I know</span><b>${gk} / ${GPTS.length}</b><div class="bar"><i style="width:${pct(gk,GPTS.length)}%;background:linear-gradient(90deg,#f97316,#fde047)"></i></div>`;
   $("gStat").onclick=()=>{progTab="g";show("progress");};
   const lr=p.gLearn||{};$("gHeads").innerHTML=GOSPEL.map((g,i)=>{const nV=g.pts.reduce((a,x)=>a+x.v.length,0);return`<button class="ghbtn" data-i="${i}">${lr[i]?'<span class="gdone">&#10004; Seen</span>':""}<span class="gn">PART ${i+1}</span><span class="gt">${esc(g.h)}</span><span class="gs">${g.pts.length} points &middot; ${nV} verse${nV===1?"":"s"}</span></button>`;}).join("");
   $("gHeads").querySelectorAll(".ghbtn").forEach(b=>b.onclick=()=>{AC();Learn.open(+b.dataset.i);});
-  const t=$("tiles");t.innerHTML="";const gt=$("gTiles");gt.innerHTML="";const gp=$("gPathTile");gp.innerHTML="";
+  $("tilesL").innerHTML="";const t=$("tiles");t.innerHTML="";const gt=$("gTiles");gt.innerHTML="";const gp=$("gPathTile");gp.innerHTML="";
   GAMES.forEach(g=>{const d=document.createElement("button");d.className="tile";d.style.setProperty("--tc",g.tc);const b=p.best[g.id]||0;
     d.innerHTML=`<div class="barl"></div><div class="ic">${g.ic}</div><div class="tt">${g.tt}</div><div class="td">${g.td}</div><div class="best">${b?"&#127942; High score: "+fmt(b):"Not played yet"}</div>`;
     if(g.id==="path"){const st=p.path||{};const done=[0,1,2,3,4].filter(i=>st[i]).length;d.querySelector(".best").innerHTML=`${done} of 5 lessons done &middot; ${[0,1,2,3,4].reduce((a,i)=>a+(st[i]||0),0)} / 15 &#11088;`;}
-    d.onclick=()=>{AC();openGame(g.id);};(g.sec==="gospel"?gt:g.sec==="gpath"?gp:t).appendChild(d);});
+    d.onclick=()=>{AC();openGame(g.id);};(g.sec==="gospel"?gt:g.sec==="gpath"?gp:g.sec==="learn"?$("tilesL"):t).appendChild(d);});
   const pr=document.createElement("button");pr.className="tile prog";
   pr.innerHTML=`<div class="barl"></div><div class="ic">&#128203;</div><div class="tt">My Progress</div><div class="td">Check off the verses and catechism you know by heart, see your trophies, and print your sheet to show your teacher.</div><div class="best">${vK+cK} checked off</div>`;
-  pr.onclick=()=>show("progress");t.appendChild(pr);
+  pr.onclick=()=>show("progress");$("tilesL").appendChild(pr);
 }
 
 /* ==================== QUIZ SHOWDOWN ==================== */
@@ -1812,6 +1948,439 @@ const Scroll=(()=>{
 function verseGroups(list){const out=[];const groups=[...new Set(list.map(v=>v.group).filter(Boolean))];
   groups.forEach(g=>out.push([g==="The Gospel"?"\u271D\uFE0F Share the Gospel verses":g,list.filter(v=>v.group===g)]));
   const rest=list.filter(v=>!v.group);if(rest.length)out.push([groups.length?"Memory Verses":"",rest]);return out;}
+
+/* ==================== NEW GAMES: shared plumbing ==================== */
+/* Each new game gets its own screen, made here, and registers enter/stop (and optional pause/resume). */
+const REG={};
+function regGame(id,mod,full){const sid="scr_"+id;const d=document.createElement("div");d.className="screen hidden"+(full?" full":"");d.id=sid;
+  if(!full)d.innerHTML='<div class="wrap"></div>';$("app").appendChild(d);SCREENS[id]=sid;REG[id]=mod;return full?d:d.firstChild;}
+function hearts(n,max){return Array.from({length:max||3},(_,i)=>`<span style="opacity:${i<n?1:.2}">&#10084;&#65039;</span>`).join("");}
+function mmss(s){s=Math.max(0,Math.floor(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+/* a stopwatch that ignores time spent with the Trophies / High Scores window open */
+function clock(){const c={t0:Date.now(),p0:pausedTotal,extra:0};c.secs=()=>(Date.now()-c.t0-(pausedTotal-c.p0))/1000+c.extra;return c;}
+function seeded(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19;}
+  return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296;};}
+function sShuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function choiceBtns(box,opts,onPick){box.innerHTML="";opts.forEach(o=>{const b=document.createElement("button");b.className="choice small";b.innerHTML=o.html;b.onclick=()=>onPick(o,b);box.appendChild(b);});}
+
+/* ==================== TIMELINE BUILDER ==================== */
+const TL_EVENTS=[["Creation","Genesis 1"],["Adam and Eve leave the garden","Genesis 3"],["Noah and the flood","Genesis 6–9"],["The tower of Babel","Genesis 11"],
+  ["God calls Abram","Genesis 12"],["Joseph is sold by his brothers","Genesis 37"],["Moses at the burning bush","Exodus 3"],["The exodus from Egypt","Exodus 12–14"],
+  ["The Ten Commandments","Exodus 20"],["The walls of Jericho fall","Joshua 6"],["Gideon’s 300 men","Judges 7"],["Samson","Judges 13–16"],
+  ["David defeats Goliath","1 Samuel 17"],["Solomon builds the temple","1 Kings 6"],["Elijah on Mount Carmel","1 Kings 18"],["Jonah goes to Nineveh","Jonah 3"],
+  ["Judah is taken to Babylon","2 Kings 25"],["Daniel in the lions’ den","Daniel 6"],["Esther becomes queen","Esther 2"],["Nehemiah rebuilds the walls","Nehemiah 6"],
+  ["Jesus is born","Luke 2"],["Jesus is baptized","Matthew 3"],["Jesus feeds the 5,000","John 6"],["Jesus dies and rises again","Luke 23–24"],
+  ["Pentecost","Acts 2"],["Saul meets Jesus on the road to Damascus","Acts 9"]];
+const Timeline=(()=>{
+  const LV=[5,7,9,12];let W;
+  const T={lv:0,ev:[],placed:[],queue:[],cur:null,hearts:3,score:0,miss:0,lvMiss:0,busy:false};
+  function enter(){W=W||regGame.root.timeline;const best=me().best.timeline||0;
+    W.innerHTML=`<div class="ghead"><h2>&#128336; Timeline Builder</h2><div class="chip gold">${best?"&#127942; Best: "+fmt(best):"No high score yet"}</div></div>
+      <p class="rules">Put the big events of the Bible in order! A new event card appears, and you tap where it goes on the timeline: before, between, or after the events already there. There are <b>4 levels</b>, each with more events. You have <b>3 hearts</b>, and a wrong spot costs one.</p>
+      <button class="btn gold" id="tlGo">Start &#9654;</button>`;$("tlGo").onclick=start;}
+  function start(){T.lv=0;T.hearts=3;T.score=0;T.miss=0;level();}
+  function level(){T.lvMiss=0;const n=LV[T.lv];const idx=pickN([...TL_EVENTS.keys()],n).sort((a,b)=>a-b);const first=idx[Math.floor(Math.random()*idx.length)];
+    T.placed=[first];T.queue=shuffle(idx.filter(i=>i!==first));next();}
+  function next(){T.cur=T.queue.shift();T.busy=false;render();}
+  function render(msg){const e=TL_EVENTS[T.cur];
+    let h=`<div class="hud2"><div class="lvls">${LV.map((n,i)=>`<span class="lvl${i===T.lv?" on":i<T.lv?" done":""}">${i<T.lv?"&#10004; ":""}Level ${i+1}</span>`).join("")}</div><div class="scorebox"><span class="chip hearts">${hearts(T.hearts)}</span><span class="chip gold num">${fmt(T.score)}</span></div></div>
+      <div class="tlnow"><small>Where does this go?</small><b>${esc(e[0])}</b><span>${esc(e[1])}</span></div><div class="feedback" id="tlFb">${msg||""}</div>
+      <div class="tllist"><div class="tlend">&#9650; The beginning</div>`;
+    for(let i=0;i<=T.placed.length;i++){h+=`<button class="tlslot" data-i="${i}">&#10133; Put it here</button>`;
+      if(i<T.placed.length){const p=TL_EVENTS[T.placed[i]];h+=`<div class="tlrow${T.placed[i]===T.fresh?" fresh":""}"><b>${esc(p[0])}</b><span>${esc(p[1])}</span></div>`;}}
+    h+=`<div class="tlend">&#9660; Today</div></div>`;W.innerHTML=h;
+    W.querySelectorAll(".tlslot").forEach(b=>b.onclick=()=>pick(+b.dataset.i));follow(W.querySelector(".tlnow"),"start");}
+  function pick(i){if(T.busy)return;T.busy=true;const right=T.placed.filter(x=>x<T.cur).length;
+    if(i===right){const pts=200+T.lv*50;T.score+=pts;sRight();floatText("+"+pts,"var(--green)");}
+    else{T.hearts--;T.miss++;T.lvMiss++;sWrong();shakeEl(W);}
+    T.placed.splice(right,0,T.cur);T.fresh=T.cur;
+    if(T.hearts<=0){render(`<span style="color:#ff8a8a">Out of hearts! It went right here.</span>`);setTimeout(()=>end(false),1400);return;}
+    if(!T.queue.length){const bonus=500+(T.lvMiss?0:500);T.score+=bonus;
+      render(`<span style="color:var(--green)">&#10004; Level ${T.lv+1} complete! +${fmt(bonus)}${T.lvMiss?"":" (no mistakes!)"}</span>`);
+      if(!T.lvMiss&&LV[T.lv]>=9)award("perfecttime");
+      setTimeout(()=>{if(T.lv<LV.length-1){T.lv++;level();}else end(true);},1600);return;}
+    render(i===right?`<span style="color:var(--green)">&#10004; Right!</span>`:`<span style="color:#ff8a8a">Not quite. It goes here (look for the green card).</span>`);setTimeout(next,i===right?600:1500);}
+  function end(won){finishGame("timeline",T.score,{title:won?"Timeline complete!":"Good try!",detail:won?`You put the whole Bible timeline in order${T.miss?` with ${T.miss} mistake${T.miss===1?"":"s"}`:" with no mistakes"}!`:`You made it to level ${T.lv+1}.`,
+    trophies:won?["timetraveler"]:[],again:()=>{openGame("timeline");start();}});}
+  return{enter,stop(){}};
+})();
+
+/* ==================== BOOKS OF THE BIBLE BOOKSHELF ==================== */
+const SHELVES=[
+  ["Law","#b45309",["Genesis","Exodus","Leviticus","Numbers","Deuteronomy"]],
+  ["History","#0369a1",["Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther"]],
+  ["Poetry & Wisdom","#7c3aed",["Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon"]],
+  ["Major Prophets","#be123c",["Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel"]],
+  ["Minor Prophets","#c2410c",["Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi"]],
+  ["Gospels & Acts","#15803d",["Matthew","Mark","Luke","John","Acts"]],
+  ["Paul’s Letters","#1d4ed8",["Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon"]],
+  ["Other Letters & Revelation","#a21caf",["Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"]]];
+const Books=(()=>{
+  let W;const B={mode:null,list:[],i:0,miss:0,streakMiss:0,clk:null,h:null};
+  const MODES=[...SHELVES.map((s,i)=>({id:"s"+i,t:s[0],secs:[i]})),{id:"ot",t:"Old Testament (39)",secs:[0,1,2,3,4],big:1},{id:"nt",t:"New Testament (27)",secs:[5,6,7],big:1},{id:"all",t:"⚡ Speed Shelf: all 66",secs:[0,1,2,3,4,5,6,7],big:1}];
+  const rec=()=>{const p=me();p.books=p.books||{};return p.books;};
+  function enter(){stop();W=regGame.root.books;const r=rec();const best=me().best.books||0;
+    W.innerHTML=`<div class="ghead"><h2>&#128218; Bible Bookshelf</h2><div class="chip gold">${best?"&#127942; Best: "+fmt(best):"No high score yet"}</div></div>
+      <p class="rules">The books of the Bible fell off the shelf! Tap them in order to put them back. Start with one shelf at a time, then try a whole Testament, and finally the <b>Speed Shelf</b> with all 66. A wrong book adds <b>3 seconds</b>. Beat your best time!</p>
+      <div class="label">Pick a shelf</div><div class="vlist" id="bkModes"></div>`;
+    const box=$("bkModes");MODES.forEach(m=>{const n=m.secs.reduce((a,i)=>a+SHELVES[i][2].length,0),b=document.createElement("button");b.className="vitem";
+      b.style.borderLeft=`6px solid ${m.big?"var(--gold)":SHELVES[m.secs[0]][1]}`;b.innerHTML=`<b>${esc(m.t)}</b><span>${n} books${m.big?"":" &middot; "+SHELVES[m.secs[0]][2][0]+" to "+SHELVES[m.secs[0]][2].slice(-1)[0]}</span><div class="badges">${r[m.id]?`<span class="bdg k">&#9201;&#65039; Best ${mmss(r[m.id])}</span>`:`<span class="bdg">Not done yet</span>`}</div>`;
+      b.onclick=()=>start(m);box.appendChild(b);});}
+  function start(m){B.mode=m;B.list=m.secs.flatMap(i=>SHELVES[i][2].map(t=>({t,s:i})));B.i=0;B.miss=0;B.streakMiss=0;B.clk=clock();
+    W.innerHTML=`<div class="hud2"><b>${esc(m.t)}</b><div class="scorebox"><span class="chip"><small>Books</small><span id="bkN"></span></span><span class="chip"><small>Time</small><span id="bkT">0:00</span></span></div></div>
+      <div class="shelf" id="bkShelf"></div><div class="feedback" id="bkFb" style="text-align:center"></div><div class="label" style="margin-top:6px">Tap the next book</div><div class="pile" id="bkPile"></div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="bkQuit" style="min-width:0;padding:9px 14px;font-size:14px;">&#8592; Pick another shelf</button></div>`;
+    $("bkQuit").onclick=()=>{stop();enter();};
+    const pile=$("bkPile");shuffle(B.list).forEach(o=>{const b=document.createElement("button");b.className="bk";b.textContent=o.t;b.style.setProperty("--c",SHELVES[o.s][1]);b.onclick=()=>tap(o,b);pile.appendChild(b);});
+    paint();stop();B.h=setInterval(()=>$("bkT").textContent=mmss(B.clk.secs()),300);}
+  function paint(){$("bkN").textContent=`${B.i} / ${B.list.length}`;const sh=$("bkShelf");let h="",last=-1;
+    B.list.slice(0,B.i).forEach(o=>{if(o.s!==last&&B.mode.big){h+=`<span class="shelflabel" style="--c:${SHELVES[o.s][1]}">${esc(SHELVES[o.s][0])}</span>`;last=o.s;}h+=`<span class="spine" style="--c:${SHELVES[o.s][1]}">${esc(o.t)}</span>`;});
+    if(B.i<B.list.length)h+=`<span class="spine empty">?</span>`;sh.innerHTML=h;sh.scrollTop=sh.scrollHeight;}
+  function tap(o,btn){const want=B.list[B.i];if(!want)return;
+    if(o.t===want.t){btn.remove();B.i++;B.streakMiss=0;sBlip();$("bkFb").textContent="";paint();if(B.i>=B.list.length)end();else follow($("bkPile"),"nearest");}
+    else{B.miss++;B.streakMiss++;B.clk.extra+=3;sWrong();shakeEl(btn);
+      $("bkFb").innerHTML=`<span style="color:#ff8a8a">Not ${esc(o.t)}. +3 seconds${B.streakMiss>=2?`. Hint: it starts with “${esc(want.t.slice(0,2))}…”`:""}</span>`;
+      if(B.streakMiss>=3)$("bkPile").querySelectorAll(".bk").forEach(b=>b.classList.toggle("hint",b.textContent===want.t));}}
+  function end(){stop();const secs=Math.round(B.clk.secs()),n=B.list.length,par=n*4;const score=Math.max(0,n*100+Math.max(0,par-secs)*20-B.miss*50);
+    const r=rec(),prev=r[B.mode.id];const newTime=!prev||secs<prev;if(newTime){r[B.mode.id]=secs;saveStore();}
+    const tr=[];if(SHELVES.every((_,i)=>r["s"+i]))tr.push("librarian");if(B.mode.id==="all"){tr.push("bookworm");if(secs<=180&&B.miss<=3)tr.push("speedlib");}
+    finishGame("books",score,{title:"Shelf complete!",detail:`${esc(B.mode.t)}: <b>${mmss(secs)}</b>${newTime&&prev?` &middot; new best time! (was ${mmss(prev)})`:prev?` &middot; best time ${mmss(prev)}`:""}<br>${B.miss?`${B.miss} wrong book${B.miss===1?"":"s"} (+${B.miss*3}s)`:"No wrong books!"}`,
+      trophies:tr,again:()=>{openGame("books");start(B.mode);}});}
+  function stop(){if(B.h){clearInterval(B.h);B.h=null;}}
+  return{enter,stop};
+})();
+
+/* ==================== CATECHISM CLIMB ==================== */
+const Climb=(()=>{
+  let W;const K={pos:0,camp:0,ropes:3,score:0,busy:false,run:0};
+  const list=()=>C.catechism.slice().sort((a,b)=>a.n-b.n);
+  const rec=()=>{const p=me();p.climb=p.climb||{camp:0,best:0};return p.climb;};
+  function mountain(){const n=list().length,pts=[];for(let i=0;i<=n;i++){const t=i/n;pts.push([150+Math.sin(t*Math.PI*7)*(70*(1-t)+10),390-t*360]);}
+    const [x,y]=pts[K.pos];let flags="";for(let c=10;c<n;c+=10){const [fx,fy]=pts[c];flags+=`<g><line x1="${fx}" y1="${fy}" x2="${fx}" y2="${fy-22}" stroke="#fde68a" stroke-width="2"/><path d="M${fx} ${fy-22} l16 5 l-16 5z" fill="${c<=K.camp?"#34d399":"#94a3b8"}"/><text x="${fx+20}" y="${fy-10}" fill="#e2e8f0" stroke="#0f172a" stroke-width="3" paint-order="stroke" font-size="11" font-weight="900" font-family="system-ui">${c}</text></g>`;}
+    const [sx,sy]=pts[n];
+    return `<svg viewBox="0 0 300 410" class="mtn"><defs><linearGradient id="mt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".25" stop-color="#94a3b8"/><stop offset="1" stop-color="#334155"/></linearGradient></defs>
+      <path d="M150 20 L290 400 L10 400Z" fill="url(#mt)"/><path d="M150 20 L178 95 L160 85 L148 100 L135 84 L122 95Z" fill="#fff"/>
+      <polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#78350f" stroke-width="3" stroke-dasharray="4 4"/>
+      <polyline points="${pts.slice(0,K.pos+1).map(p=>p.join(",")).join(" ")}" fill="none" stroke="#fbbf24" stroke-width="4"/>${flags}
+      <text x="${sx}" y="${sy-6}" text-anchor="middle" font-size="22">&#128681;</text><text x="${x}" y="${y+8}" text-anchor="middle" font-size="26">${avOf(me())}</text></svg>`;}
+  function enter(){W=regGame.root.climb;const r=rec(),n=list().length;
+    W.innerHTML=`<div class="ghead"><h2>&#9968;&#65039; Catechism Climb</h2><div class="chip gold">${me().best.climb?"&#127942; Best: "+fmt(me().best.climb):"No high score yet"}</div></div>
+      <p class="rules">Climb the mountain one catechism answer at a time! Each right answer moves you up one ledge. A wrong answer costs a <b>rope</b> and slides you back to your last <b>base camp</b>. You have 3 ropes per climb. Base camps at 10, 20, 30, and so on <b>save your spot</b> for next time. Can you reach the top at question ${n}?</p>
+      <div class="climbwrap"><div class="mtnbox" id="clMtn"></div><div><div class="card"><div class="label">Your climb</div><div class="detail" style="margin:0">Highest point: <b>${r.best}</b> of ${n}<br>Next climb starts at: <b>${r.camp?"Base camp "+r.camp:"the bottom"}</b></div></div>
+      <div class="row" style="margin-top:12px"><button class="btn gold" id="clGo">${r.camp?`Climb from base camp ${r.camp} &#9654;`:"Start climbing &#9654;"}</button>${r.camp?`<button class="btn" id="clBottom">Start from the bottom</button>`:""}</div></div></div>`;
+    K.pos=r.camp;K.camp=r.camp;$("clMtn").innerHTML=mountain();$("clGo").onclick=()=>start(r.camp);const b=$("clBottom");if(b)b.onclick=()=>start(0);}
+  function start(from){K.run++;K.pos=from;K.camp=from;K.ropes=3;K.score=0;ask();}
+  function ask(msg){const L=list(),q=L[K.pos],ans=catAnswer(q.a,true);K.busy=false;
+    const others=shuffle(L.filter(x=>x!==q).map(x=>catAnswer(x.a,true)).filter((a,i,arr)=>a!==ans&&arr.indexOf(a)===i)).slice(0,2);
+    W.innerHTML=`<div class="hud2"><b>Question ${q.n} of ${L.length}</b><div class="scorebox"><span class="chip"><small>Ropes</small>${"&#129698;".repeat(K.ropes)||"0"}</span><span class="chip gold num">${fmt(K.score)}</span></div></div>
+      <div class="climbwrap"><div class="mtnbox">${mountain()}</div><div><div class="brprompt">${esc(q.q)}</div><div class="choices one" id="clOpts"></div><div class="feedback" id="clFb">${msg||""}</div></div></div>`;
+    choiceBtns($("clOpts"),shuffle([{html:esc(ans),ok:1},...others.map(a=>({html:esc(a)}))]),answer);follow($("clOpts"),"nearest");}
+  function answer(o,btn){if(K.busy)return;K.busy=true;const L=list(),r=rec();$("clOpts").querySelectorAll("button").forEach(b=>b.disabled=true);
+    if(o.ok){btn.classList.add("right");K.pos++;K.score+=100;sRight();r.best=Math.max(r.best,K.pos);
+      let note="&#10004; Up you go!";
+      if(K.pos>=L.length){K.score+=3000;r.camp=0;saveStore();award("summit");setTimeout(()=>end(true),700);return;}
+      if(K.pos%10===0){K.camp=K.pos;r.camp=Math.max(r.camp,K.pos);K.score+=500;note=`&#127957;&#65039; Base camp ${K.pos}! Your spot is saved. +500`;toast("&#127957;&#65039;",`Base camp ${K.pos} reached!`);}
+      if(r.best>=10)award("basecamp");if(r.best>=Math.ceil(L.length/2))award("halfway");saveStore();
+      setTimeout(()=>ask(`<span style="color:var(--green)">${note}</span>`),650);}
+    else{btn.classList.add("wrong");K.ropes--;sWrong();const right=catAnswer(L[K.pos].a,true);
+      $("clFb").innerHTML=`<span style="color:#ff8a8a">You slipped!</span><small>The answer is: <b style="color:var(--ink)">${esc(right)}</b></small>`;
+      if(K.ropes<=0){setTimeout(()=>end(false),1800);return;}
+      K.pos=K.camp;setTimeout(()=>ask(`<span style="color:#ff8a8a">Back to ${K.camp?"base camp "+K.camp:"the bottom"}. ${K.ropes} rope${K.ropes===1?"":"s"} left.</span>`),2000);}}
+  function end(top){const r=rec();finishGame("climb",K.score,{title:top?"You reached the summit!":"Out of ropes!",detail:top?"You climbed every catechism question! Amazing!":`You reached question ${K.pos+1}. Highest ever: ${r.best}. Next time you start at ${r.camp?"base camp "+r.camp:"the bottom"}.`,
+    again:()=>{openGame("climb");}});}
+  return{enter,stop(){K.run++;}};
+})();
+
+/* ==================== DAILY BREAD ==================== */
+const Daily=(()=>{
+  let W;const D={items:[],i:0,score:0,tries:0};
+  const key=d=>{d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+  const rec=()=>{const p=me();p.daily=p.daily||{days:{}};return p.daily;};
+  function streak(){const days=rec().days;let n=0;const d=new Date();if(!days[key(d)])d.setDate(d.getDate()-1);while(days[key(d)]){n++;d.setDate(d.getDate()-1);}return n;}
+  function doneToday(){return!!rec().days[key()];}
+  function calendar(){const days=rec().days;let h='<div class="cal">';const d=new Date();d.setDate(d.getDate()-27);
+    for(let i=0;i<28;i++){const k=key(d),today=i===27;h+=`<div class="cday${days[k]?" done":""}${today?" today":""}"><small>${["S","M","T","W","T","F","S"][d.getDay()]}</small>${days[k]?"&#127838;":d.getDate()}</div>`;d.setDate(d.getDate()+1);}return h+"</div>";}
+  function build(){const r=seeded("daily-"+key()+"-"+me().id);const items=[];
+    const mv=C.memverses;if(mv.length>1){const v=mv[Math.floor(r()*mv.length)],w=v.text.split(/\s+/),cut=Math.max(2,Math.floor(w.length*.6));const end=w.slice(cut).join(" ");
+      const others=sShuffle(mv.filter(x=>x!==v),r).slice(0,2).map(x=>{const ww=x.text.split(/\s+/);return ww.slice(Math.max(1,ww.length-(w.length-cut))).join(" ");});
+      items.push({kind:"&#128220; Finish the verse",prompt:`<b>${esc(v.reference)}</b><span class="vt">“${esc(w.slice(0,cut).join(" "))} …”</span>`,opts:sShuffle([{html:"…"+esc(end),ok:1},...others.map(o=>({html:"…"+esc(o)}))],r)});}
+    const cc=C.catechism;if(cc.length>2){const q=cc[Math.floor(r()*cc.length)],a=catAnswer(q.a,true);const others=sShuffle(cc.filter(x=>x!==q).map(x=>catAnswer(x.a,true)).filter(x=>x!==a),r).slice(0,2);
+      items.push({kind:"&#9997;&#65039; Catechism",prompt:`Question ${q.n}: ${esc(q.q)}`,opts:sShuffle([{html:esc(a),ok:1},...others.map(o=>({html:esc(o)}))],r)});}
+    const types=["p2h","pNum","p2v","v2p","txt2ref","h2p"],q=gQ(types[Math.floor(r()*types.length)],3);items.push({kind:"&#10013;&#65039; The Gospel: "+esc(q.kind),prompt:q.prompt,opts:q.opts.map(o=>({html:o.html,ok:o.ok}))});
+    const qs=C.questions.filter(x=>x.type!=="fb");if(qs.length){const x=qs[Math.floor(r()*qs.length)];const ord=x.type==="tf"?[0,1]:sShuffle(x.choices.map((_,i)=>i),r);
+      items.push({kind:"&#127919; Bible question"+(x.week?" · "+esc(x.week):""),prompt:esc(x.text),opts:ord.map(i=>({html:esc(x.choices[i]),ok:x.correct.includes(i)?1:0}))});}
+    return items;}
+  function enter(){W=regGame.root.daily;const s=streak(),done=doneToday(),best=rec().best||0;
+    W.innerHTML=`<div class="ghead"><h2>&#127838; Daily Bread</h2><div class="chip gold">&#128293; ${s}-day streak</div></div>
+      <p class="rules">A quick challenge every day: <b>4 questions</b> about memory verses, catechism, the Gospel, and the Bible. It only takes a couple of minutes! Come back every day to grow your <b>streak</b>. A new challenge appears each morning.</p>
+      ${done?`<div class="card" style="border-color:var(--green)"><div class="detail" style="margin:0;font-size:18px">&#10004; You finished today’s Daily Bread! You scored <b style="color:var(--gold)">${fmt(rec().days[key()])}</b>. Come back tomorrow to keep your streak going.</div></div>`:`<button class="btn gold" id="dbGo">Start today’s Daily Bread &#9654;</button>`}
+      <div class="label" style="margin-top:18px">The last 4 weeks</div>${calendar()}<p class="sub" style="margin-top:8px">Longest streak: <b>${best}</b> day${best===1?"":"s"}</p>`;
+    const g=$("dbGo");if(g)g.onclick=start;}
+  function start(){D.items=build();D.i=0;D.score=0;ask();}
+  function ask(){const it=D.items[D.i];D.tries=0;
+    W.innerHTML=`<div class="hud2"><b>&#127838; Daily Bread</b><div class="scorebox"><span class="chip"><small>Question</small>${D.i+1} of ${D.items.length}</span><span class="chip gold num">${fmt(D.score)}</span></div></div>
+      <div class="pacard"><div class="pakind">${it.kind}</div><div class="brprompt">${it.prompt}</div><div class="choices one" id="dbOpts"></div><div class="feedback" id="dbFb"></div></div>`;
+    choiceBtns($("dbOpts"),it.opts,(o,b)=>{if(b.disabled)return;
+      if(o.ok){const pts=D.tries?100:300;D.score+=pts;b.classList.add("right");sRight();floatText("+"+pts,"var(--green)");$("dbOpts").querySelectorAll("button").forEach(x=>x.disabled=true);
+        setTimeout(()=>{D.i++;if(D.i<D.items.length)ask();else end();},700);}
+      else{D.tries++;b.disabled=true;b.classList.add("wrong");sWrong();$("dbFb").className="feedback bad";$("dbFb").textContent="Not quite. Try again!";}});}
+  function end(){const r=rec();r.days[key()]=Math.max(1,D.score);const s=streak();r.best=Math.max(r.best||0,s);saveStore();
+    const tr=["daily1"];if(s>=7)tr.push("week");if(s>=30)tr.push("month");if(s>=100)tr.push("hundred");
+    finishGame("daily",D.score,{title:"Today’s Daily Bread: done!",detail:`&#128293; Your streak: <b>${s} day${s===1?"":"s"}</b>. Come back tomorrow for a new one!`,trophies:tr,again:()=>openGame("daily")});}
+  return{enter,stop(){},streak,doneToday};
+})();
+
+/* ==================== VERSE SCRAMBLE SPRINT ==================== */
+const Sprint=(()=>{
+  let W;const R=[{l:"Round 1: big chunks",n:4},{l:"Round 2: small chunks",n:2},{l:"Round 3: one word at a time",n:1}];
+  const S={v:null,r:0,chunks:[],i:0,miss:0,totalMiss:0,score:0,clk:null,h:null,times:[]};
+  function enter(){stop();W=regGame.root.sprint;const best=me().best.sprint||0;
+    W.innerHTML=`<div class="ghead"><h2>&#9889; Verse Scramble Sprint</h2><div class="chip gold">${best?"&#127942; Best: "+fmt(best):"No high score yet"}</div></div>
+      <p class="rules">A memory verse explodes into a jumbled pile! Tap the pieces back <b>in order</b>, as fast as you can. Round 1 uses big chunks, round 2 smaller ones, and round 3 one word at a time. A wrong tap adds <b>2 seconds</b>. It's best for verses you almost know.</p>
+      <button class="btn gold" id="spRand">&#127922; Surprise me &#9654;</button><div class="label" style="margin-top:16px">Or pick a verse</div><div class="pills" id="spList"></div>`;
+    $("spRand").onclick=()=>start(C.memverses[Math.floor(Math.random()*C.memverses.length)]);
+    const l=$("spList");C.memverses.forEach(v=>{const b=document.createElement("button");b.className="pill";b.textContent=v.reference;b.onclick=()=>start(v);l.appendChild(b);});}
+  function start(v){S.v=v;S.r=0;S.score=0;S.totalMiss=0;S.times=[];round();}
+  function round(){const w=S.v.text.split(/\s+/),n=R[S.r].n;S.chunks=[];for(let i=0;i<w.length;i+=n)S.chunks.push(w.slice(i,i+n).join(" "));S.i=0;S.miss=0;S.clk=clock();
+    W.innerHTML=`<div class="hud2"><div class="lvls">${R.map((x,i)=>`<span class="lvl${i===S.r?" on":i<S.r?" done":""}">${i<S.r?"&#10004; ":""}${i+1}</span>`).join("")}</div><div class="scorebox"><span class="chip"><small>Time</small><span id="spT">0.0</span></span><span class="chip gold num">${fmt(S.score)}</span></div></div>
+      <div class="label">${esc(R[S.r].l)}</div><div class="vcard" id="spBuilt" style="min-height:3em"><div class="ref">${esc(S.v.reference)}</div><span id="spWords"></span><span class="vw next"><span class="gap" style="--n:4">&nbsp;</span></span></div>
+      <div class="bank" id="spPile"></div><div class="feedback" id="spFb" style="text-align:center"></div>`;
+    const pile=$("spPile");shuffle(S.chunks.map((t,i)=>({t,i}))).forEach(o=>{const b=document.createElement("button");b.className="bword";b.textContent=o.t;b.onclick=()=>tap(o,b);pile.appendChild(b);});
+    stop();S.h=setInterval(()=>$("spT").textContent=S.clk.secs().toFixed(1),100);}
+  function tap(o,b){if(S.chunks[S.i]===o.t&&!b.disabled){b.remove();S.i++;sBlip();$("spWords").textContent=S.chunks.slice(0,S.i).join(" ");$("spFb").textContent="";
+      if(S.i>=S.chunks.length)roundDone();}
+    else{S.miss++;S.totalMiss++;S.clk.extra+=2;sWrong();shakeEl(b);$("spFb").innerHTML=`<span style="color:#ff8a8a">Not that one! +2 seconds</span>`;}}
+  function roundDone(){stop();const secs=S.clk.secs(),par=S.chunks.length*2.2;const pts=Math.round(S.chunks.length*60+Math.max(0,par-secs)*60);S.score+=pts;S.times.push(secs);sRight();floatText("+"+fmt(pts),"var(--green)");
+    $("spFb").innerHTML=`<span style="color:var(--green)">&#10004; ${secs.toFixed(1)} seconds! +${fmt(pts)}</span>`;
+    setTimeout(()=>{if(S.r<R.length-1){S.r++;round();}else end();},1200);}
+  function end(){const v=C.memverses.find(x=>x===S.v);if(v)setItem("v",v.id,"p",1);const words=S.v.text.split(/\s+/).length;
+    const tr=[];if(!S.totalMiss)tr.push("sprinter");if(S.times[2]<=words*1.0)tr.push("lightning");
+    finishGame("sprint",S.score,{title:"Sprint finished!",detail:`${esc(S.v.reference)}: ${S.times.map((t,i)=>`round ${i+1} in <b>${t.toFixed(1)}s</b>`).join(", ")}${S.totalMiss?` &middot; ${S.totalMiss} wrong tap${S.totalMiss===1?"":"s"}`:" &middot; no wrong taps!"}`,
+      trophies:tr,again:()=>{openGame("sprint");start(S.v);}});}
+  function stop(){if(S.h){clearInterval(S.h);S.h=null;}}
+  return{enter,stop};
+})();
+
+/* ==================== ESCAPE THE PRISON (Acts 16) ==================== */
+const Escape=(()=>{
+  let W;const E={lock:0,hints:0,wrong:0,clk:null,h:null,cfg:null};
+  const NUMS=[["How many books are in the Old Testament?",39],["How many books are in the New Testament?",27],["How many disciples did Jesus choose?",12],["How many days and nights did it rain on Noah’s ark?",40],["How many smooth stones did David pick up to fight Goliath?",5]];
+  const WORDS=[["Paul and Silas were praying and singing ___ to God. (Acts 16:25)","HYMNS"],["The jailer called for ___ and rushed in. (Acts 16:29)","LIGHTS"]];
+  const ORDER=["Lydia believes in Jesus","Paul frees a slave girl from an evil spirit","Paul and Silas are beaten and thrown in jail","An earthquake shakes the prison"];
+  const VERSE="Believe in the Lord Jesus, and you will be saved, you and your household.";
+  const LOCKS=["Number lock","Word lock","Picture lock","Scroll lock","The jailer’s question"];
+  function enter(){stop();W=regGame.root.escape;const best=me().best.escape||0;
+    W.innerHTML=`<div class="ghead"><h2>&#128275; Escape the Prison</h2><div class="chip gold">${best?"&#127942; Best: "+fmt(best):"No high score yet"}</div></div>
+      <div class="story"><p><b>Philippi, about AD 50.</b> Paul and Silas have been beaten and locked in the inner prison, with their feet in the stocks (Acts 16).</p><p>But they aren’t afraid. At midnight they are praying and singing to God… and you’re there to help! Open all <b>5 locks</b> using what you know about the Bible.</p></div>
+      <p class="rules">Each lock is a different puzzle. Stuck? Tap <b>Hint</b> (it costs points). Escape fast, with few hints, for a high score!</p>
+      <button class="btn gold" id="esGo">Begin the escape &#9654;</button>`;$("esGo").onclick=start;}
+  function start(){E.lock=0;E.hints=0;E.wrong=0;E.clk=clock();E.cfg={n:NUMS[Math.floor(Math.random()*NUMS.length)],w:WORDS[Math.floor(Math.random()*WORDS.length)]};
+    stop();E.h=setInterval(()=>{const t=$("esT");if(t)t.textContent=mmss(E.clk.secs());},500);show_();}
+  function frame(title,body,hint){W.innerHTML=`<div class="hud2"><div class="locks">${LOCKS.map((l,i)=>`<span class="lk${i<E.lock?" open":i===E.lock?" on":""}" title="${esc(l)}">${i<E.lock?"&#128275;":"&#128274;"}</span>`).join("")}</div><div class="scorebox"><span class="chip"><small>Time</small><span id="esT">${mmss(E.clk.secs())}</span></span><span class="chip"><small>Hints</small>${E.hints}</span></div></div>
+      <div class="cell"><div class="pakind">Lock ${E.lock+1} of 5 &middot; ${esc(LOCKS[E.lock])}</div><h3>${title}</h3>${body}<div class="feedback" id="esFb"></div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="esHint">&#128161; Hint</button></div><div class="detail hidden" id="esHintTxt" style="color:var(--gold)">${hint}</div></div>`;
+    $("esHint").onclick=()=>{const t=$("esHintTxt");if(t.classList.contains("hidden")){t.classList.remove("hidden");E.hints++;sBlip();}};}
+  function bad(msg){E.wrong++;sWrong();shakeEl(W.querySelector(".cell"));$("esFb").className="feedback bad";$("esFb").innerHTML=msg||"The lock won’t budge. Try again!";}
+  function open(){sRight();E.lock++;toast("&#128275;",`Lock ${E.lock} open!`);if(E.lock>=5)escape();else setTimeout(show_,500);}
+  function dials(n,chars,id){return`<div class="dials" id="${id}">${Array.from({length:n},(_,i)=>`<div class="dial"><button data-d="1">&#9650;</button><b data-i="0">${chars[0]}</b><button data-d="-1">&#9660;</button></div>`).join("")}</div>`;}
+  function wireDials(id,chars){const box=$(id);box.querySelectorAll(".dial").forEach(d=>{const v=d.querySelector("b");d.querySelectorAll("button").forEach(b=>b.onclick=()=>{let i=(+v.dataset.i+ +b.dataset.d+chars.length)%chars.length;v.dataset.i=i;v.textContent=chars[i];sTick();});});
+    return()=>[...box.querySelectorAll("b")].map(b=>b.textContent).join("");}
+  function show_(){const L=E.lock;
+    if(L===0){const [q,a]=E.cfg.n;const digits="0123456789";
+      frame("The cell door has a number lock.",`<p class="story">Someone scratched a clue on the wall: <b>“${esc(q)}”</b></p>${dials(2,digits,"esD")}<div class="row center" style="margin-top:10px"><button class="btn gold" id="esTry">Try the lock</button></div>`,
+        `The answer is a number between 1 and 99. Set the first dial to the tens and the second to the ones. (${a<10?"It’s a single-digit number, so the first dial stays on 0.":"It’s more than "+(Math.floor(a/10)*10-1)+"."})`);
+      const get=wireDials("esD",digits);$("esTry").onclick=()=>{+get()===a?open():bad();};}
+    else if(L===1){const [q,a]=E.cfg.w,abc="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      frame("The chains have a word lock.",`<p class="story">Carved into the lock: <b>“${esc(q)}”</b> The word has <b>${a.length} letters</b>.</p>${dials(a.length,abc,"esW")}<div class="row center" style="margin-top:10px"><button class="btn gold" id="esTry">Try the lock</button></div>`,
+        `It starts with “${a[0]}” and ends with “${a[a.length-1]}”.`);
+      const get=wireDials("esW",abc);$("esTry").onclick=()=>{get()===a?open():bad();};}
+    else if(L===2){let next=0;
+      frame("The stocks have a picture lock.",`<p class="story">Four pictures show what happened in Philippi. Tap them <b>in the order they happened</b> (Acts 16).</p><ol class="paorder" id="esDone"></ol><div class="choices one" id="esOpts"></div>`,
+        `It starts with Lydia, who sold purple cloth (Acts 16:14).`);
+      shuffle(ORDER.map((t,i)=>({t,i}))).forEach(o=>{const b=document.createElement("button");b.className="choice small";b.textContent=o.t;b.onclick=()=>{
+        if(o.i===next){next++;sBlip();b.remove();const li=document.createElement("li");li.textContent=o.t;$("esDone").appendChild(li);if(next===ORDER.length)open();}else bad("That one didn’t happen yet!");};$("esOpts").appendChild(b);});}
+    else if(L===3){const chunks=VERSE.match(/(\S+\s+\S+|\S+)/g);let next=0;
+      frame("A scroll is tied to the last gate.",`<p class="story">Paul’s answer to the jailer is written on it, but the words are mixed up! Tap them in order (Acts 16:31).</p><div class="vcard" style="font-size:clamp(18px,2.4vw,26px)"><span id="esBuilt"></span><span class="vw next"><span class="gap" style="--n:4">&nbsp;</span></span></div><div class="bank" id="esPile"></div>`,
+        `It starts with “Believe in the Lord Jesus…”`);
+      shuffle(chunks.map((t,i)=>({t,i}))).forEach(o=>{const b=document.createElement("button");b.className="bword";b.textContent=o.t;b.onclick=()=>{
+        if(chunks[next]===o.t){next++;sBlip();b.remove();$("esBuilt").textContent=chunks.slice(0,next).join(" ");if(next===chunks.length)open();}else bad("Not that piece yet!");};$("esPile").appendChild(b);});}
+    else{frame("Suddenly, a great earthquake!",`<p class="story">The doors fly open and everyone’s chains come loose! The jailer wakes up, terrified, and falls down before Paul and Silas. He asks: <b>“Sirs, what must I do to be saved?”</b> (Acts 16:30). What do Paul and Silas tell him?</p><div class="choices one" id="esOpts"></div>`,
+        `Look back at the scroll you just put together!`);
+      choiceBtns($("esOpts"),shuffle([{html:"Believe in the Lord Jesus, and you will be saved.",ok:1},{html:"Try your best to be a good jailer from now on.",ok:0},{html:"Quick, run away before the soldiers come!",ok:0}]),(o,b)=>{if(o.ok)open();else{b.disabled=true;b.classList.add("wrong");bad("That won’t save him. Try again!");}});}
+    follow(W.querySelector(".cell"),"start");}
+  function escape(){stop();const secs=Math.round(E.clk.secs());const score=Math.max(500,6000-secs*5-E.hints*300-E.wrong*150);
+    W.innerHTML=`<div class="cell free"><div style="font-size:64px">&#9939;&#65039;&#128165;&#128275;</div><h3>Free!</h3><p class="story">The jailer believed in God, along with his whole household. He washed Paul and Silas’s wounds, and he and his family were baptized that very night. They were filled with joy! (Acts 16:33–34)</p></div>`;
+    shakeEl(W);confetti();const tr=["free"];if(!E.hints&&secs<=240)tr.push("escaper");
+    setTimeout(()=>finishGame("escape",score,{title:"You escaped!",detail:`Time: <b>${mmss(secs)}</b> &middot; ${E.hints} hint${E.hints===1?"":"s"} &middot; ${E.wrong} wrong tr${E.wrong===1?"y":"ies"}`,trophies:tr,again:()=>{openGame("escape");start();}}),2200);}
+  function stop(){if(E.h){clearInterval(E.h);E.h=null;}}
+  return{enter,stop};
+})();
+
+/* ==================== shared: pick quiz questions with short choices ==================== */
+function shortQs(maxLen,n){const qs=C.questions.filter(q=>q.type!=="fb"&&q.choices.every(c=>c.length<=maxLen));return pickN(qs.length>=n?qs:C.questions.filter(q=>q.type!=="fb"),n);}
+function qOpts(q,max){const right=q.choices.findIndex((_,i)=>q.correct.includes(i));const wrong=shuffle(q.choices.map((_,i)=>i).filter(i=>i!==right)).slice(0,max-1);return shuffle([right,...wrong]).map(i=>({t:q.choices[i],ok:i===right}));}
+
+/* ==================== FISHERS OF MEN ==================== */
+const Fish=(()=>{
+  let W;const F={qs:[],i:0,lines:3,caught:0,golden:0,streak:0,score:0,fish:[],raf:null,last:0,busy:false,on:false,gold:false};
+  function enter(){stop();W=regGame.root.fish;W.innerHTML=`<div class="hud"><span class="hearts" id="fiLines"></span><span class="chip"><small>Caught</small><span id="fiN">0</span></span><span class="chip gold num" id="fiS">0</span></div>
+      <div class="qbar" id="fiQ">Fishers of Men</div><div class="pond" id="fiPond"><div class="boat">&#128675;</div><div class="line" id="fiLine"></div><div class="scover" id="fiOver"></div></div>`;
+    const best=me().best.fish||0;
+    $("fiOver").innerHTML=`<div class="voycard"><h2 style="color:#7dd3fc">&#127907; Fishers of Men</h2><p>“Follow me, and I will make you fishers of men.” (Matthew 4:19)</p><p>A question appears at the top. Fish swim by carrying answers. <b>Tap the fish with the right answer</b> to catch it! A wrong fish snaps your line, and you have 3 lines. Watch for <b>golden fish</b>: they’re worth double! Catch 15 to fill your net.</p>
+      <button class="btn gold wide" id="fiGo">Cast off &#9654;</button><p style="margin-top:12px;font-size:15px;">${best?`&#127942; Your high score: <b style="color:var(--gold)">${fmt(best)}</b>`:"Set your first high score!"}</p></div>`;$("fiGo").onclick=start;}
+  function start(){AC();$("fiOver").classList.add("hidden");Object.assign(F,{qs:shortQs(34,15),i:0,lines:3,caught:0,golden:0,streak:0,score:0,on:true});hud();ask();F.last=performance.now();F.raf=requestAnimationFrame(loop);}
+  function hud(){$("fiLines").innerHTML=Array.from({length:3},(_,i)=>`<span style="opacity:${i<F.lines?1:.2}">&#129693;</span>`).join("");$("fiN").textContent=`${F.caught} / ${F.qs.length}`;$("fiS").textContent=fmt(F.score);}
+  function ask(){const q=F.qs[F.i];if(!q){end();return;}F.busy=false;F.gold=Math.random()<.22;$("fiQ").innerHTML=esc(q.text);
+    F.fish.forEach(f=>f.el.remove());F.fish=[];const pond=$("fiPond"),W_=pond.clientWidth,H=pond.clientHeight;const opts=qOpts(q,q.type==="tf"?2:3);
+    const lanes=shuffle([...Array(opts.length).keys()]);
+    opts.forEach((o,k)=>{const el=document.createElement("button");const dir=Math.random()<.5?1:-1;el.className="fish"+(o.ok&&F.gold?" gold":"");
+      el.innerHTML=`<span class="fb">${dir>0?"&#128031;":"&#128031;"}</span><span class="ft">${esc(o.t)}</span>`;if(dir<0)el.classList.add("left");
+      pond.appendChild(el);const f={el,ok:o.ok,dir,x:dir>0?-el.offsetWidth-Math.random()*W_*.4:W_+Math.random()*W_*.4,y:H*(.28+lanes[k]*(.62/opts.length)),sp:(40+Math.random()*30)*(1+F.i*.03),ph:Math.random()*6};
+      el.onpointerdown=e=>{e.preventDefault();tap(f);};F.fish.push(f);});}
+  function loop(ts){if(!F.on){F.raf=null;return;}if(paused){F.last=ts;F.raf=requestAnimationFrame(loop);return;}const dt=Math.min(.05,(ts-F.last)/1000);F.last=ts;
+    const W_=$("fiPond").clientWidth;F.fish.forEach(f=>{if(f.caught)return;f.x+=f.dir*f.sp*dt;f.ph+=dt*2;const w=f.el.offsetWidth;
+      if(f.dir>0&&f.x>W_+20)f.x=-w-20;if(f.dir<0&&f.x<-w-20)f.x=W_+20;f.el.style.transform=`translate(${f.x}px,${f.y+Math.sin(f.ph)*8}px)`;});
+    F.raf=requestAnimationFrame(loop);}
+  function cast(f,cb){const line=$("fiLine"),pond=$("fiPond");const r=f.el.getBoundingClientRect(),pr=pond.getBoundingClientRect();
+    line.style.left=(r.left-pr.left+r.width/2)+"px";line.style.height=(r.top-pr.top+r.height/2)+"px";line.classList.add("show");setTimeout(()=>{line.classList.remove("show");cb();},450);}
+  function tap(f){if(F.busy||!F.on)return;F.busy=true;f.caught=true;
+    cast(f,()=>{if(f.ok){F.caught++;F.streak++;const g=f.el.classList.contains("gold");if(g){F.golden++;stat("goldfish");}const pts=(g?400:200)+Math.min(500,(F.streak-1)*50);F.score+=pts;
+        f.el.classList.add("reel");floatText((g?"✨ ":"")+"+"+fmt(pts),g?"var(--gold)":"var(--green)");sRight();if((me().stats.goldfish||0)>=5)award("goldnet");
+        F.fish.forEach(o=>{if(o!==f)o.el.classList.add("gone");});F.i++;hud();setTimeout(ask,800);}
+      else{F.lines--;F.streak=0;sWrong();f.el.classList.add("snap");shakeEl($("fiQ"));floatText("Snap!","#ff8a8a");hud();
+        F.fish.forEach(o=>{if(o.ok)o.el.classList.add("glow");});
+        if(F.lines<=0){setTimeout(end,1200);return;}F.i++;setTimeout(ask,1300);}});}
+  function end(){F.on=false;stop();const full=F.caught>=F.qs.length;const tr=[];if(full)tr.push("bigcatch");
+    finishGame("fish",F.score,{title:full?"Your net is full!":"Back to shore!",detail:`You caught <b>${F.caught}</b> fish${F.golden?`, including <b>${F.golden}</b> golden fish`:""}!`,trophies:tr,again:()=>{openGame("fish");start();}});}
+  function stop(){F.on=false;if(F.raf){cancelAnimationFrame(F.raf);F.raf=null;}}
+  return{enter,stop};
+})();
+
+/* ==================== DAVID'S SLING ==================== */
+const Sling=(()=>{
+  let W,cv,g;const S={stones:5,score:0,hits:0,streak:0,best:0,qs:[],qi:0,q:null,targets:[],stone:null,drag:null,boss:null,on:false,raf:null,last:0,msg:"",msgT:0,parts:[],busy:false,giant:0};
+  function enter(){stop();W=regGame.root.sling;W.innerHTML=`<div class="hud"><span id="slStones"></span><span class="chip"><small>Hits</small><span id="slHits">0</span></span><span class="chip gold num" id="slS">0</span></div>
+      <div class="qbar" id="slQ">David’s Sling</div><div class="slwrap" id="slWrap"><canvas id="slCv"></canvas><div class="scover" id="slOver"></div></div>`;
+    cv=$("slCv");g=cv.getContext("2d");const best=me().best.sling||0;
+    $("slOver").innerHTML=`<div class="voycard"><h2 style="color:#fcd34d">&#129686; David’s Sling</h2><p>David picked <b>5 smooth stones</b> from the brook (1 Samuel 17:40). Now it’s your turn!</p><p><b>Pull back</b> on the sling and <b>let go</b> to throw. Hit the jar with the <b>right answer</b>. Missing, or hitting the wrong jar, costs a stone. Every 5 hits, the giant <b>Goliath</b> appears. Hit him on the forehead!</p>
+      <button class="btn gold wide" id="slGo">Pick up your stones &#9654;</button><p style="margin-top:12px;font-size:15px;">${best?`&#127942; Your high score: <b style="color:var(--gold)">${fmt(best)}</b>`:"Set your first high score!"}</p></div>`;
+    $("slGo").onclick=start;size();draw();
+    /* grab ANYWHERE on the field and pull back (like a slingshot); the pull is measured from where the finger first touched */
+    cv.onpointerdown=e=>{if(!S.on||S.stone||S.busy)return;const p=pt(e);S.drag={sx:p.x,sy:p.y,x:p.x,y:p.y};try{cv.setPointerCapture(e.pointerId);}catch(_){}};
+    cv.onpointermove=e=>{if(S.drag){const p=pt(e);S.drag.x=p.x;S.drag.y=p.y;}};
+    cv.onpointerup=e=>{if(!S.drag)return;const v=launchV(S.drag);S.drag=null;if(!v)return;const o=origin();S.stone={x:o.x,y:o.y,vx:v.vx,vy:v.vy,r:8};tone(300,.08,"triangle",.15);};
+    cv.onpointercancel=()=>{S.drag=null;};
+    addEventListener("resize",()=>{if(screen==="sling"){size();layout();}});}
+  function pt(e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*(cv.width/r.width),y:(e.clientY-r.top)*(cv.height/r.height)};}
+  function size(){const w=$("slWrap");cv.width=w.clientWidth;cv.height=w.clientHeight;}
+  const origin=()=>({x:cv.width*.13,y:cv.height*.72});
+  const W_p=()=>cv.width;
+  const MAXPULL=()=>Math.max(70,Math.min(130,cv.height*.22));
+  function pullVec(d){let dx=d.x-d.sx,dy=d.y-d.sy;const len=Math.hypot(dx,dy),m=MAXPULL();if(len>m){dx*=m/len;dy*=m/len;}return{dx,dy,len:Math.min(len,m)};}
+  /* full pull reaches just past the far edge; gentler pulls drop shorter, so aiming is about how far you pull */
+  function launchV(d){const p=pullVec(d);if(p.len<12)return null;const k=p.len/MAXPULL(),pw=Math.sqrt(Math.max(2*cv.height*cv.height,1.8*cv.height*cv.width))*k;return{vx:-p.dx/p.len*pw,vy:-p.dy/p.len*pw};}
+  function start(){AC();$("slOver").classList.add("hidden");Object.assign(S,{stones:5,score:0,hits:0,streak:0,best:0,qs:shortQs(26,40),qi:0,on:true,boss:null,parts:[],busy:false,giant:0});size();next();hud();S.last=performance.now();S.raf=requestAnimationFrame(loop);}
+  function hud(){$("slStones").innerHTML=Array.from({length:5},(_,i)=>`<span class="stone${i<S.stones?"":" used"}"></span>`).join("");$("slHits").textContent=S.hits;$("slS").textContent=fmt(S.score);}
+  function next(){S.stone=null;S.busy=false;
+    if(S.hits>0&&S.hits%5===0&&S.giant<S.hits/5){S.giant=S.hits/5;S.boss={x:cv.width*.8,y:cv.height*.3,dir:1,tries:3};$("slQ").innerHTML="&#9888;&#65039; <b>Goliath appears!</b> Hit him right on the forehead! (3 throws)";S.targets=[];return;}
+    S.boss=null;S.q=S.qs[S.qi++%S.qs.length];$("slQ").innerHTML=esc(S.q.text);layout();}
+  function layout(){if(!S.q||S.boss)return;const opts=S.targets.length&&S.targets[0].q===S.q?S.targets.map(t=>({t:t.t,ok:t.ok})):qOpts(S.q,S.q.type==="tf"?2:3);const n=opts.length,W_=cv.width,H=cv.height;
+    S.targets=opts.map((o,i)=>({q:S.q,t:o.t,ok:o.ok,x:W_*(n===2?[.5,.8][i]:[.44,.64,.84][i]),y:H*(n===2?[.46,.32][i]:[.54,.41,.28][i]),w:Math.max(44,Math.min(70,W_*.09)),h:Math.max(54,Math.min(86,H*.15)),hit:false}));}
+  function loop(ts){if(!S.on){S.raf=null;return;}if(paused){S.last=ts;S.raf=requestAnimationFrame(loop);return;}const dt=Math.min(.033,(ts-S.last)/1000);S.last=ts;step(dt);draw();S.raf=requestAnimationFrame(loop);}
+  function step(dt){const G=cv.height*1.6;
+    if(S.boss){const b=S.boss;b.y+=b.dir*cv.height*.12*dt;if(b.y>cv.height*.42||b.y<cv.height*.2)b.dir*=-1;}
+    const s=S.stone;if(s){s.vy+=G*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;
+      if(S.boss){const b=S.boss,hx=b.x,hy=b.y-cv.height*.02,hr=Math.max(12,cv.height*.035);
+        if(Math.hypot(s.x-hx,s.y-hy)<hr+s.r){boom(s.x,s.y,"#fde68a");S.stone=null;S.score+=3000;S.stones=Math.min(5,S.stones+1);award("giant");flash("GOLIATH FALLS! +3,000");sRight();confetti();S.busy=true;hud();setTimeout(next,1400);return;}
+        if(s.x>cv.width+30||s.y>cv.height+30){S.stone=null;b.tries--;S.stones--;hud();sWrong();flash(b.tries>0?`Missed! ${b.tries} throw${b.tries===1?"":"s"} left`:"Goliath got away!");if(S.stones<=0){end();return;}if(b.tries<=0){S.busy=true;setTimeout(next,1200);}}
+        return;}
+      for(const t of S.targets){if(t.hit)continue;const pad=s.r+Math.min(10,W_p()*.012);if(s.x>t.x-t.w/2-pad&&s.x<t.x+t.w/2+pad&&s.y>t.y-t.h/2-pad-24&&s.y<t.y+t.h/2+pad){t.hit=true;S.stone=null;boom(t.x,t.y,t.ok?"#34d399":"#f87171");
+          if(t.ok){S.hits++;S.streak++;S.best=Math.max(S.best,S.streak);const pts=300+Math.min(700,(S.streak-1)*100);S.score+=pts;flash("+"+fmt(pts));sRight();if(S.streak>=10)award("sharpshooter");}
+          else{S.stones--;S.streak=0;flash("Wrong jar!");sWrong();S.targets.forEach(o=>o.reveal=o.ok);}
+          hud();S.busy=true;if(S.stones<=0){setTimeout(end,900);return;}setTimeout(next,t.ok?900:1500);return;}}
+      if(s.x>cv.width+30||s.y>cv.height+30||s.x<-30){S.stone=null;S.stones--;S.streak=0;flash("Missed!");sWrong();hud();if(S.stones<=0)setTimeout(end,700);}}
+    S.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=G*.6*dt;p.l-=dt;});S.parts=S.parts.filter(p=>p.l>0);if(S.msgT>0)S.msgT-=dt;}
+  function boom(x,y,c){for(let i=0;i<26;i++){const a=Math.random()*6.28,v=80+Math.random()*220;S.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,l:.8,c});}}
+  function flash(m){S.msg=m;S.msgT=1.4;}
+  function draw(){if(!g)return;const W_=cv.width,H=cv.height;g.clearRect(0,0,W_,H);
+    const sky=g.createLinearGradient(0,0,0,H);sky.addColorStop(0,"#7dd3fc");sky.addColorStop(1,"#fde68a");g.fillStyle=sky;g.fillRect(0,0,W_,H);
+    g.fillStyle="#a16207";g.beginPath();g.moveTo(0,H*.8);g.quadraticCurveTo(W_*.5,H*.7,W_,H*.82);g.lineTo(W_,H);g.lineTo(0,H);g.fill();g.fillStyle="#65a30d";g.fillRect(0,H*.86,W_,H*.14);
+    const o=origin();g.strokeStyle="#78350f";g.lineWidth=6;g.beginPath();g.moveTo(o.x,H*.9);g.lineTo(o.x,o.y+20);g.moveTo(o.x,o.y+20);g.lineTo(o.x-16,o.y-10);g.moveTo(o.x,o.y+20);g.lineTo(o.x+16,o.y-10);g.stroke();
+    let pull=null;if(S.drag){const pv=pullVec(S.drag);pull={x:Math.max(9,o.x+pv.dx),y:Math.min(cv.height-9,o.y+pv.dy)};}else if(!S.stone&&S.on)pull={x:o.x,y:o.y};
+    g.strokeStyle="#451a03";g.lineWidth=3;if(pull){g.beginPath();g.moveTo(o.x-16,o.y-10);g.lineTo(pull.x,pull.y);g.lineTo(o.x+16,o.y-10);g.stroke();g.fillStyle="#6b7280";g.beginPath();g.arc(pull.x,pull.y,8,0,7);g.fill();}
+    if(!S.drag&&!S.stone&&S.on&&!S.busy&&S.hits===0&&S.stones===5){g.fillStyle="rgba(15,23,42,.75)";g.font=`900 ${Math.round(Math.max(14,Math.min(20,W_*.03)))}px system-ui`;g.textAlign="left";g.fillText("\u2190 Drag back, aim, let go!",o.x+26,o.y+6);}
+    const v=S.drag&&launchV(S.drag);if(v){let x=o.x,y=o.y,vx=v.vx,vy=v.vy;const G=H*1.6;g.fillStyle="rgba(255,255,255,.9)";
+      for(let i=0;i<26;i++){for(let j=0;j<3;j++){vy+=G*.012;x+=vx*.012;y+=vy*.012;}if(x>W_||y>H)break;g.beginPath();g.arc(x,y,3,0,7);g.fill();}}
+    S.targets.forEach(t=>{if(t.hit&&!t.reveal)return;g.fillStyle="#57534e";g.fillRect(t.x-4,t.y+t.h/2,8,H*.86-(t.y+t.h/2));
+      g.fillStyle=t.reveal?"#34d399":"#c2410c";g.beginPath();g.ellipse(t.x,t.y,t.w/2,t.h/2,0,0,7);g.fill();g.fillStyle="#9a3412";g.fillRect(t.x-t.w*.25,t.y-t.h/2-6,t.w*.5,10);
+      label(t.t,t.x,t.y-t.h/2-14);});
+    if(S.boss){const b=S.boss,h=H*.5;g.fillStyle="#78716c";g.fillRect(b.x-h*.16,b.y+h*.05,h*.32,h*.55);g.fillStyle="#d6a77a";g.beginPath();g.arc(b.x,b.y,h*.13,0,7);g.fill();
+      g.fillStyle="#57534e";g.fillRect(b.x-h*.14,b.y-h*.16,h*.28,h*.07);g.fillStyle="#ef4444";g.beginPath();g.arc(b.x,b.y-H*.02,Math.max(5,H*.012),0,7);g.fill();
+      g.fillStyle="#111";g.font=`900 ${Math.round(H*.04)}px system-ui`;g.textAlign="center";g.fillText("GOLIATH",b.x,b.y+h*.75);}
+    if(S.stone){g.fillStyle="#6b7280";g.beginPath();g.arc(S.stone.x,S.stone.y,S.stone.r,0,7);g.fill();}
+    S.parts.forEach(p=>{g.globalAlpha=Math.max(0,p.l/.8);g.fillStyle=p.c;g.fillRect(p.x,p.y,5,5);});g.globalAlpha=1;
+    if(S.msgT>0){g.globalAlpha=Math.min(1,S.msgT);g.fillStyle=/Wrong|Missed|away/.test(S.msg)?"#b91c1c":"#065f46";g.font=`900 ${Math.round(Math.min(40,W_*.06))}px system-ui`;g.textAlign="center";g.fillText(S.msg,W_/2,H*.16);g.globalAlpha=1;}}
+  function label(t,x,y){const fs=Math.max(12,Math.min(16,cv.width*.022));g.font=`900 ${fs}px system-ui`;const words=t.split(" ");const lines=[];let cur="";
+    words.forEach(w=>{const tr=cur?cur+" "+w:w;if(g.measureText(tr).width>cv.width*.18&&cur){lines.push(cur);cur=w;}else cur=tr;});lines.push(cur);
+    const wmax=Math.max(...lines.map(l=>g.measureText(l).width))+14,hh=lines.length*(fs+3)+8;x=Math.max(wmax/2+4,Math.min(cv.width-wmax/2-4,x));g.fillStyle="rgba(255,255,255,.94)";g.strokeStyle="#78350f";g.lineWidth=2;
+    rr(g,x-wmax/2,y-hh,wmax,hh,8);g.fill();g.stroke();g.fillStyle="#1f2937";g.textAlign="center";g.textBaseline="top";lines.forEach((l,i)=>g.fillText(l,x,y-hh+5+i*(fs+3)));g.textBaseline="alphabetic";}
+  function end(){if(!S.on)return;S.on=false;stop();const tr=[];if(S.best>=10)tr.push("sharpshooter");
+    finishGame("sling",S.score,{title:"Out of stones!",detail:`You hit <b>${S.hits}</b> right answer${S.hits===1?"":"s"}. Best streak: <b>${S.best}</b> in a row.`,trophies:tr,again:()=>{openGame("sling");start();}});}
+  function stop(){S.on=false;if(S.raf){cancelAnimationFrame(S.raf);S.raf=null;}}
+  return{enter,stop};
+})();
+
+/* ==================== WALLS OF JERICHO (rhythm) ==================== */
+const Jericho=(()=>{
+  let W;const J={notes:[],t0:0,on:false,raf:null,hits:0,perfect:0,combo:0,best:0,score:0,judged:0,lastJ:"",lastT:0,useCtx:true};
+  const SPEED=260;   /* pixels per second */
+  function now(){return J.useCtx&&actx?actx.currentTime:performance.now()/1000;}
+  function enter(){stop();W=regGame.root.jericho;const best=me().best.jericho||0;
+    W.innerHTML=`<div class="hud"><span class="chip" id="jeDay">Day 1 of 7</span><span class="chip combo" id="jeCombo">Combo 0</span><span class="chip gold num" id="jeS">0</span></div>
+      <div class="jecity" id="jeCity"></div><div class="jelane" id="jeLane"><div class="jehit">&#127930;</div><div id="jeNotes"></div><div class="jejudge" id="jeJudge"></div></div>
+      <button class="jetap" id="jeTap">&#127930; BLOW THE TRUMPET!<small>tap here (or press Space)</small></button><div class="scover" id="jeOver"></div>`;
+    city(0);$("jeOver").innerHTML=`<div class="voycard"><h2 style="color:#fcd34d">&#127930; Walls of Jericho</h2><p>God told Joshua to march around Jericho <b>once a day for six days</b>, and <b>seven times on the seventh day</b>. Then the priests blew their trumpets, the people shouted, and the walls fell down! (Joshua 6)</p>
+      <p>Trumpet notes slide toward the &#127930;. <b>Tap when each note reaches it.</b> Stay on the beat to crack the walls. On day 7, finish with a big <b>SHOUT</b>!</p>
+      <button class="btn gold wide" id="jeGo">Start marching &#9654;</button><p style="margin-top:12px;font-size:15px;">${best?`&#127942; Your high score: <b style="color:var(--gold)">${fmt(best)}</b>`:"Set your first high score!"}</p></div>`;
+    $("jeGo").onclick=start;$("jeTap").onpointerdown=e=>{e.preventDefault();tap();};}
+  function city(k,fallen){const cracks=Array.from({length:Math.min(12,Math.floor(k*12))},(_,i)=>{const x=60+((i*53)%280),y=70+((i*29)%50);return`<path d="M${x} ${y} l6 9 l-5 7 l7 10" stroke="#3f2a12" stroke-width="2.5" fill="none"/>`;}).join("");
+    $("jeCity").innerHTML=`<svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMax meet"><rect width="400" height="150" fill="#fde68a"/><circle cx="340" cy="30" r="18" fill="#fbbf24"/>
+      <g class="${fallen?"wfall":""}"><rect x="40" y="60" width="320" height="80" fill="#c08a4a" stroke="#7c4a1e" stroke-width="3"/>${Array.from({length:12},(_,i)=>`<rect x="${42+i*26.5}" y="48" width="16" height="14" fill="#c08a4a" stroke="#7c4a1e" stroke-width="2"/>`).join("")}
+      <rect x="180" y="95" width="40" height="45" rx="18" fill="#5b3a1a"/>${cracks}</g><rect y="140" width="400" height="10" fill="#a16207"/></svg>`;}
+  function start(){AC();J.useCtx=!!actx;$("jeOver").classList.add("hidden");J.notes=[];let t=1.6;
+    const days=[[96,8],[100,8],[104,8],[108,8],[112,8],[116,8]];
+    days.forEach(([bpm,n],d)=>{const b=60/bpm;for(let i=0;i<n;i++){J.notes.push({t,day:d+1});t+=b;}t+=b*2;});
+    const b7=60/126;for(let lap=0;lap<7;lap++){for(let i=0;i<6;i++){J.notes.push({t,day:7,lap:lap+1});t+=b7;}}t+=b7;J.notes.push({t,day:7,shout:true});
+    Object.assign(J,{hits:0,perfect:0,combo:0,best:0,score:0,judged:0,on:true});J.t0=now();
+    if(store.sound&&actx)J.notes.forEach(n=>{const at=J.t0+n.t;const o=actx.createOscillator(),gn=actx.createGain();o.type=n.shout?"sawtooth":"square";o.frequency.value=n.shout?220:(n.day===7?520:440);o.connect(gn);gn.connect(actx.destination);gn.gain.setValueAtTime(0,at-.001);gn.gain.linearRampToValueAtTime(.06,at+.005);gn.gain.exponentialRampToValueAtTime(.0001,at+.09);o.start(at-.002);o.stop(at+.12);n.osc=o;});
+    const box=$("jeNotes");box.innerHTML="";J.notes.forEach(n=>{const el=document.createElement("div");el.className="jenote"+(n.shout?" shout":"");el.innerHTML=n.shout?"SHOUT!":"&#9835;";box.appendChild(el);n.el=el;});
+    J.raf=requestAnimationFrame(loop);}
+  function songT(){return now()-J.t0;}
+  function loop(){if(!J.on){J.raf=null;return;}const t=songT(),hitX=60,lane=$("jeLane").clientWidth;
+    J.notes.forEach(n=>{if(n.done){return;}const x=hitX+(n.t-t)*SPEED;if(x>lane+40){n.el.style.display="none";return;}n.el.style.display="";n.el.style.transform=`translateX(${x}px)`;
+      if(t-n.t>.18){n.done=true;n.el.classList.add("miss");judge("Miss",0,n);}});
+    const cur=J.notes.find(n=>!n.done)||J.notes[J.notes.length-1];$("jeDay").textContent=cur.day<7?`Day ${cur.day} of 7 · march once`:cur.shout?"Day 7 · SHOUT!":`Day 7 · lap ${cur.lap} of 7`;
+    if(J.judged>=J.notes.length){finish();return;}J.raf=requestAnimationFrame(loop);}
+  function tap(){if(!J.on)return;const t=songT();const n=J.notes.filter(x=>!x.done).sort((a,b)=>Math.abs(a.t-t)-Math.abs(b.t-t))[0];if(!n)return;const d=Math.abs(n.t-t);
+    if(!store.sound||!actx){} else tone(n.shout?330:660,.12,"triangle",.12);
+    if(d<=.075){n.done=true;n.el.classList.add("hitp");judge("Perfect!",n.shout?1000:300,n);}else if(d<=.15){n.done=true;n.el.classList.add("hitg");judge("Good",n.shout?500:150,n);}
+    else{J.combo=0;showJ("Too early!");}}
+  function judge(label,pts,n){J.judged++;if(pts){J.hits++;if(label==="Perfect!")J.perfect++;J.combo++;J.best=Math.max(J.best,J.combo);J.score+=pts+Math.min(300,J.combo*10);}else J.combo=0;
+    showJ(label);$("jeCombo").textContent=`Combo ${J.combo}`;$("jeS").textContent=fmt(J.score);city(J.hits/J.notes.length*1.4);}
+  function showJ(l){const j=$("jeJudge");j.textContent=l;j.className="jejudge show "+(l==="Perfect!"?"p":l==="Good"?"g":"m");clearTimeout(J.jt);J.jt=setTimeout(()=>j.className="jejudge",350);}
+  function finish(){J.on=false;stop();const acc=J.hits/J.notes.length,perf=J.perfect/J.notes.length;const fell=acc>=.6;city(1,fell);
+    if(fell){$("jeCity").classList.add("rumble");sFanfare();confetti();}else sWrong();
+    const tr=[];if(fell)tr.push("wallsfell");if(perf>=.9)tr.push("perfectmarch");
+    setTimeout(()=>finishGame("jericho",J.score,{title:fell?"The walls came tumbling down!":"The walls are still standing…",detail:`You hit <b>${Math.round(acc*100)}%</b> of the beats (${Math.round(perf*100)}% perfect). Best combo: <b>${J.best}</b>.${fell?"":" Hit at least 60% to bring the walls down!"}`,trophies:tr,again:()=>{openGame("jericho");start();}}),fell?2200:900);}
+  function stop(){J.on=false;if(J.raf){cancelAnimationFrame(J.raf);J.raf=null;}J.notes.forEach(n=>{try{n.osc&&n.osc.stop();}catch(e){}});}
+  addEventListener("keydown",e=>{if(screen==="jericho"&&e.code==="Space"){e.preventDefault();tap();}});
+  return{enter,stop,pause(){if(J.on&&actx)actx.suspend();},resume(){if(J.on&&actx)actx.resume();}};
+})();
+
+/* ==================== register the new games ==================== */
+regGame.root={};
+[["timeline",Timeline],["books",Books],["climb",Climb],["daily",Daily],["sprint",Sprint],["escape",Escape],["fish",Fish,1],["sling",Sling,1],["jericho",Jericho,1]].forEach(([id,m,full])=>regGame.root[id]=regGame(id,m,full));
+
 /* ==================== MY PROGRESS ==================== */
 let progTab="v";
 function renderProgress(){
