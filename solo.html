@@ -412,6 +412,21 @@
   @media (max-width:480px){.brand #brandText{display:none;} .topbar{gap:6px;padding-left:10px;padding-right:10px;} .navbtn{padding:8px 10px;}}
 
   /* My Progress call-out on the home screen */
+  .unlock{background:linear-gradient(135deg,#312e81,#1e293b 70%);border:3px solid #818cf8;border-radius:22px;padding:16px 18px;margin:22px 0 4px;position:relative;}
+  .unlock.done{border-color:var(--green);background:linear-gradient(135deg,#14532d,#1e293b 70%);}
+  .unlock h3{margin:0 0 6px;font-size:clamp(19px,2.4vw,26px);font-weight:900;}
+  .unlock p{margin:0 0 10px;color:#e0e7ff;font-weight:700;line-height:1.45;}
+  .ugoals{display:flex;flex-direction:column;gap:6px;}
+  .ug{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.25);border-radius:12px;padding:8px 12px;font-weight:800;line-height:1.3;}
+  .ug .uc{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid #a5b4fc;display:flex;align-items:center;justify-content:center;font-weight:900;color:#a5b4fc;}
+  .ug .ut{flex:1;} .ug b{white-space:nowrap;color:#fde68a;}
+  .ug.ok{color:#a7f3d0;} .ug.ok .uc{background:var(--green);border-color:var(--green);color:#04241a;}
+  .unext{display:flex;flex-direction:column;gap:2px;margin-top:10px;color:#a5b4fc;font-weight:800;font-size:13px;}
+  .tlink{position:absolute;right:12px;bottom:8px;background:none;border:none;color:#64748b;font-size:11px;font-weight:800;}
+  .teach{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;} .teach input{flex:1;min-width:140px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);font-weight:800;}
+  .tile.locked{filter:grayscale(.85);opacity:.6;} .tile.locked .td{opacity:.8;}
+  .lockb{position:absolute;right:12px;top:12px;background:#1e1b4b;border:2px solid #818cf8;color:#c7d2fe;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:900;}
+  .lockb.new{background:var(--gold);border-color:var(--gold);color:var(--gold-ink);}
   .progcall{background:linear-gradient(135deg,#14532d,#1e293b 70%);border:3px solid var(--green);border-radius:22px;padding:16px 18px;margin:0 0 8px;box-shadow:0 0 0 4px rgba(52,211,153,.12);}
   .progcall h3{margin:0 0 6px;font-size:clamp(20px,2.6vw,28px);font-weight:900;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .progcall h3 .tagnew{background:var(--green);color:#04241a;border-radius:999px;padding:3px 10px;font-size:12px;letter-spacing:.5px;}
@@ -583,9 +598,10 @@
     <div class="tiles g" id="gPathTile"></div>
     <div class="gstep"><span class="n">3</span><div><b>Play it</b><span class="t">Once you know it, test yourself with these games and beat your high scores!</span></div></div>
     <div class="tiles g" id="gTiles"></div>
+    <div id="unlockCard"></div>
     <div class="sechead"><h2>&#129504; Learn &amp; Remember</h2></div>
     <div class="tiles" id="tilesL"></div>
-    <div class="sechead"><h2>&#127918; Bible Adventures &amp; Arcade</h2><span class="tag">NEW GAMES</span></div>
+    <div class="sechead"><h2>&#127918; Bible Adventures &amp; Arcade</h2></div>
     <div class="tiles" id="tiles"></div>
     <div id="loadErr" class="loadmsg hidden"></div>
     <p class="legal">Scripture quotations are from the ESV&reg; Bible (The Holy Bible, English Standard Version&reg;), &copy; 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.</p>
@@ -1021,12 +1037,51 @@ function show(name){
 }
 function openGame(id){
   if(!contentReady){show("home");return;}
+  if(isLocked(id)){show("home");const u=lockOf(id);toast("&#128274;",`Reach <b>Level ${u.lv}</b> to unlock this game!`);setTimeout(()=>{const c=$("unlockCard");if(c)c.scrollIntoView({behavior:"smooth",block:"center"});},300);return;}
   show(id);
   (({quiz:Quiz,whoami:Who,conc:Conc,wheel:Wheel,verse:Build,cat:Build,voyager:{enter:enterVoyager},bridge:Bridge,share:Share,scroll:Scroll,path:Path})[id]||REG[id]).enter(id);
 }
 $("homeBtn").onclick=()=>show("home");
 $("playerBtn").onclick=()=>show("players");
 const bestChip=gid=>{const b=(me()&&me().best[gid])||0;return b?`&#127942; Best: ${fmt(b)}`:"No high score yet";};
+
+
+/* ==================== UNLOCKING GAMES IN STAGES ==================== */
+/* The Gospel games and the original games are always open. The newer games unlock in 3 levels,
+   so kids learn the Gospel first. The goals are checked from what each player has already done. */
+const TEACHER_CODE="JOHN316";
+const UNLOCKS=[
+  {lv:1,games:["daily","fish","books"],goals:[
+    {t:"Open all 4 parts of the Gospel (Step 1: Learn it)",cur:p=>Object.keys(p.gLearn||{}).length,need:4},
+    {t:"Finish 2 Gospel Path lessons",cur:p=>[0,1,2,3,4].filter(i=>(p.path||{})[i]).length,need:2}]},
+  {lv:2,games:["sprint","timeline","escape"],goals:[
+    {t:"Finish all 5 Gospel Path lessons",cur:p=>[0,1,2,3,4].filter(i=>(p.path||{})[i]).length,need:5},
+    {t:"Build the Gospel bridge in Bridge Builder",cur:p=>p.trophies.bridge?1:0,need:1},
+    {t:"Finish building a memory verse in Verse Builder",cur:p=>p.trophies.builder?1:0,need:1}]},
+  {lv:3,games:["climb","sling","jericho"],goals:[
+    {t:"Share the whole Gospel with Ryan in Share It!",cur:p=>p.trophies.messenger?1:0,need:1},
+    {t:"Check off 3 Gospel points as “I know it!” in My Progress",cur:()=>gKnown(),need:3},
+    {t:"Earn 12 trophies",cur:p=>Object.keys(p.trophies).length,need:12}]}];
+const lockOf=id=>UNLOCKS.find(u=>u.games.includes(id));
+function levelDone(u,p){return u.goals.every(g=>g.cur(p)>=g.need);}
+/* levels unlock in order: level 2 needs level 1 done, and so on */
+function unlockedLevel(p){if(!p)return 0;if(p.unlockAll)return UNLOCKS.length;let n=0;for(const u of UNLOCKS){if(levelDone(u,p))n=u.lv;else break;}return n;}
+function isLocked(id,p){p=p||me();const u=lockOf(id);return !!u&&unlockedLevel(p)<u.lv;}
+function gameName(id){const g=GAMES.find(x=>x.id===id);return g?g.ic+" "+g.tt:id;}
+function renderUnlock(){const p=me(),box=$("unlockCard");if(!p||!box)return;const have=unlockedLevel(p);
+  if(have>=UNLOCKS.length){box.innerHTML=`<div class="unlock done"><h3>&#128275; All games unlocked!</h3><p>You unlocked every game. Keep beating your high scores and earning trophies!</p></div>`;return;}
+  const u=UNLOCKS[have];
+  box.innerHTML=`<div class="unlock"><h3>&#128274; Unlock more games: Level ${u.lv} of ${UNLOCKS.length}</h3>
+    <p>More games are waiting! Reach these goals to unlock <b>${u.games.map(gameName).join(", ")}</b>.</p>
+    <div class="ugoals">${u.goals.map(g=>{const c=Math.min(g.need,g.cur(p)),ok=c>=g.need;return`<div class="ug${ok?" ok":""}"><span class="uc">${ok?"&#10004;":"&#9675;"}</span><span class="ut">${esc(g.t)}</span>${g.need>1?`<b>${c} / ${g.need}</b>`:""}</div>`;}).join("")}</div>
+    <div class="unext">${UNLOCKS.slice(have+1).map(x=>`<span>Level ${x.lv}: ${x.games.map(gameName).join(" &middot; ")}</span>`).join("")}</div>
+    <button class="tlink" id="teachBtn">Teacher?</button><div class="teach hidden" id="teachBox"><input id="teachCode" placeholder="Teacher code" autocomplete="off"><button class="btn" id="teachGo" style="min-width:0;padding:8px 14px;font-size:14px;">Unlock all for ${esc(p.name)}</button></div></div>`;
+  $("teachBtn").onclick=()=>$("teachBox").classList.toggle("hidden");
+  $("teachGo").onclick=()=>{if($("teachCode").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"")===TEACHER_CODE){p.unlockAll=1;saveStore();renderHome();}else{sWrong();shakeEl($("teachBox"));}};}
+/* celebrate when a new level opens up */
+function checkUnlocks(){const p=me();if(!p)return;const have=unlockedLevel(p),seen=p.lvSeen||0;
+  if(have>seen){p.lvSeen=have;saveStore();if(seen<have&&!p.unlockAll){const games=UNLOCKS.filter(u=>u.lv>seen&&u.lv<=have).flatMap(u=>u.games);
+    toast("&#128275;",`<b>New games unlocked!</b> ${games.map(gameName).join(", ")}`);sFanfare();confetti();}}}
 
 /* ==================== PLAYERS ==================== */
 const AVATARS=["&#129409;","&#128059;","&#129418;","&#128032;","&#129413;","&#128034;","&#128030;","&#129412;","&#128044;","&#129417;",
@@ -1062,6 +1117,7 @@ $("addPlayer").onclick=addPlayer;$("newName").addEventListener("keydown",e=>{if(
 /* ==================== HOME ==================== */
 function renderHome(){
   const p=me();if(!p){show("players");return;}
+  checkUnlocks();
   $("hello").textContent=`Hi, ${p.name}!`;
   const nT=Object.keys(p.trophies).length,vK=countKnown("v"),cK=countKnown("c");
   const pct=(a,b)=>b?Math.round(a/b*100):0;
@@ -1072,7 +1128,7 @@ function renderHome(){
     <div class="mini"><div>&#10013;&#65039; Gospel points<b>${gk0} / ${GPTS.length}</b></div><div>&#128220; Memory verses<b>${vK} / ${C.memverses.length}</b></div><div>&#9997;&#65039; Catechism<b>${cK} / ${C.catechism.length}</b></div></div>
     <button class="btn green" id="progGo">&#128203; Open My Progress &#9654;</button>`;
   $("progGo").onclick=()=>show("progress");
-  {const st=Daily.streak(),dn=Daily.doneToday();$("dailyBanner").innerHTML=`<div class="daily${dn?" done":""}"><span style="font-size:38px">&#127838;</span><div class="dt"><b>${dn?"Daily Bread: done today!":"Today\u2019s Daily Bread is ready!"}</b>${dn?`&#128293; ${st}-day streak. Come back tomorrow!`:`4 quick questions${st?` &middot; keep your &#128293; ${st}-day streak going`:" &middot; start a streak today"}`}</div>${dn?"":`<button class="btn gold" id="dailyGo">Start &#9654;</button>`}</div>`;
+  if(isLocked("daily",p))$("dailyBanner").innerHTML="";else{const st=Daily.streak(),dn=Daily.doneToday();$("dailyBanner").innerHTML=`<div class="daily${dn?" done":""}"><span style="font-size:38px">&#127838;</span><div class="dt"><b>${dn?"Daily Bread: done today!":"Today\u2019s Daily Bread is ready!"}</b>${dn?`&#128293; ${st}-day streak. Come back tomorrow!`:`4 quick questions${st?` &middot; keep your &#128293; ${st}-day streak going`:" &middot; start a streak today"}`}</div>${dn?"":`<button class="btn gold" id="dailyGo">Start &#9654;</button>`}</div>`;
    const dg=$("dailyGo");if(dg)dg.onclick=()=>{AC();openGame("daily");};}
   const gk=gKnown();$("gStat").innerHTML=`<span>&#10013;&#65039; Gospel points I know</span><b>${gk} / ${GPTS.length}</b><div class="bar"><i style="width:${pct(gk,GPTS.length)}%;background:linear-gradient(90deg,#f97316,#fde047)"></i></div>`;
   $("gStat").onclick=()=>{progTab="g";show("progress");};
@@ -1081,11 +1137,14 @@ function renderHome(){
   $("tilesL").innerHTML="";const t=$("tiles");t.innerHTML="";const gt=$("gTiles");gt.innerHTML="";const gp=$("gPathTile");gp.innerHTML="";
   GAMES.forEach(g=>{const d=document.createElement("button");d.className="tile";d.style.setProperty("--tc",g.tc);const b=p.best[g.id]||0;
     d.innerHTML=`<div class="barl"></div><div class="ic">${g.ic}</div><div class="tt">${g.tt}</div><div class="td">${g.td}</div><div class="best">${b?"&#127942; High score: "+fmt(b):"Not played yet"}</div>`;
+    const lk=lockOf(g.id);if(lk&&isLocked(g.id,p)){d.classList.add("locked");d.insertAdjacentHTML("afterbegin",`<span class="lockb">&#128274; Level ${lk.lv}</span>`);d.querySelector(".best").innerHTML=`&#128274; Unlocks at Level ${lk.lv}`;}
+    else if(lk&&(p.lvSeen||0)>=lk.lv&&!p.plays[g.id]&&!p.unlockAll)d.insertAdjacentHTML("afterbegin",`<span class="lockb new">&#10024; NEW</span>`);
     if(g.id==="path"){const st=p.path||{};const done=[0,1,2,3,4].filter(i=>st[i]).length;d.querySelector(".best").innerHTML=`${done} of 5 lessons done &middot; ${[0,1,2,3,4].reduce((a,i)=>a+(st[i]||0),0)} / 15 &#11088;`;}
     d.onclick=()=>{AC();openGame(g.id);};(g.sec==="gospel"?gt:g.sec==="gpath"?gp:g.sec==="learn"?$("tilesL"):t).appendChild(d);});
   const pr=document.createElement("button");pr.className="tile prog";
   pr.innerHTML=`<div class="barl"></div><div class="ic">&#128203;</div><div class="tt">My Progress</div><div class="td">Check off the verses and catechism you know by heart, see your trophies, and print your sheet to show your teacher.</div><div class="best">${vK+cK} checked off</div>`;
   pr.onclick=()=>show("progress");$("tilesL").appendChild(pr);
+  renderUnlock();
 }
 
 /* ==================== QUIZ SHOWDOWN ==================== */
