@@ -861,7 +861,7 @@ const GAMES=[
   {id:"cat",sec:"learn",ic:"&#9997;&#65039;",tt:"Catechism Builder",tc:"#a3e635",td:"Learn a catechism question and answer, one level at a time."},
   {id:"voyager",sec:"fun",ic:"&#128640;",tt:"Verse Voyager",tc:"#7c5cff",td:"Fly your ship through the right words to build a verse. Outrun the fog!"},
   {id:"daily",sec:"learn",ic:"&#127838;",tt:"Daily Bread",tc:"#f59e0b",td:"A quick 4-question challenge every day. Keep your streak going!"},
-  {id:"climb",sec:"learn",ic:"&#9968;&#65039;",tt:"Catechism Climb",tc:"#38bdf8",td:"Climb the mountain one catechism answer at a time. Base camps save your spot!"},
+  {id:"climb",sec:"learn",ic:"&#9968;&#65039;",tt:"Catechism Climb",tc:"#38bdf8",td:"Climb 4 mountains one catechism answer at a time. Base camps every 5 save your spot!"},
   {id:"sprint",sec:"learn",ic:"&#9889;",tt:"Verse Scramble Sprint",tc:"#facc15",td:"A verse explodes into pieces. Put it back together as fast as you can!"},
   {id:"timeline",sec:"learn",ic:"&#128336;",tt:"Timeline Builder",tc:"#818cf8",td:"Put the big events of the Bible in order, from Creation to Paul."},
   {id:"books",sec:"learn",ic:"&#128218;",tt:"Bible Bookshelf",tc:"#d97706",td:"Put all 66 books of the Bible back on the shelf, in order. Beat your time!"},
@@ -900,14 +900,14 @@ const TROPHIES=[
   {id:"ready",ic:"&#127894;&#65039;",tt:"Ready to Share",td:"Share the whole Gospel in Pro mode with no wrong picks.",g:1},
   {id:"scrollkeeper",ic:"&#129530;",tt:"Scroll Keeper",td:"Catch 25 scrolls in one game of Scroll Catcher.",g:1},
   {id:"onfire",ic:"&#128293;",tt:"On Fire!",td:"Catch 10 scrolls in a row in Scroll Catcher.",g:1},
-  {id:"timetraveler",ic:"&#128368;&#65039;",tt:"Time Traveler",td:"Finish all 4 levels of Timeline Builder."},
+  {id:"timetraveler",ic:"&#128368;&#65039;",tt:"Time Traveler",td:"Finish all 5 levels of Timeline Builder."},
   {id:"perfecttime",ic:"&#9201;&#65039;",tt:"Perfect Timing",td:"Finish a Timeline level of 9 or more events with no mistakes."},
   {id:"librarian",ic:"&#128218;",tt:"Librarian",td:"Finish every section shelf in Bible Bookshelf."},
   {id:"bookworm",ic:"&#128027;",tt:"Bookworm",td:"Finish the Speed Shelf with all 66 books."},
   {id:"speedlib",ic:"&#128640;",tt:"Lightning Librarian",td:"Finish the Speed Shelf in 3 minutes or less, with 3 or fewer mistakes."},
-  {id:"basecamp",ic:"&#127957;&#65039;",tt:"Base Camp",td:"Reach base camp 10 in Catechism Climb."},
-  {id:"halfway",ic:"&#9968;&#65039;",tt:"Halfway Up",td:"Climb halfway up the catechism mountain."},
-  {id:"summit",ic:"&#128681;",tt:"Summit!",td:"Climb every catechism question to the top of the mountain."},
+  {id:"basecamp",ic:"&#127957;&#65039;",tt:"Base Camp",td:"Reach your first base camp in Catechism Climb."},
+  {id:"halfway",ic:"&#128681;",tt:"Mountain Top",td:"Reach the summit of a catechism mountain."},
+  {id:"summit",ic:"&#127956;&#65039;",tt:"Top of the Range",td:"Conquer all 4 catechism mountains."},
   {id:"daily1",ic:"&#127838;",tt:"Daily Bread",td:"Finish your first Daily Bread."},
   {id:"week",ic:"&#128197;",tt:"Week Streak",td:"Do Daily Bread 7 days in a row."},
   {id:"month",ic:"&#128198;",tt:"Month Streak",td:"Do Daily Bread 30 days in a row."},
@@ -1964,19 +1964,25 @@ function sShuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.fl
 function choiceBtns(box,opts,onPick){box.innerHTML="";opts.forEach(o=>{const b=document.createElement("button");b.className="choice small";b.innerHTML=o.html;b.onclick=()=>onPick(o,b);box.appendChild(b);});}
 
 /* ==================== TIMELINE BUILDER ==================== */
-const TL_EVENTS=[["Creation","Genesis 1"],["Adam and Eve leave the garden","Genesis 3"],["Noah and the flood","Genesis 6–9"],["The tower of Babel","Genesis 11"],
-  ["God calls Abram","Genesis 12"],["Joseph is sold by his brothers","Genesis 37"],["Moses at the burning bush","Exodus 3"],["The exodus from Egypt","Exodus 12–14"],
-  ["The Ten Commandments","Exodus 20"],["The walls of Jericho fall","Joshua 6"],["Gideon’s 300 men","Judges 7"],["Samson","Judges 13–16"],
-  ["David defeats Goliath","1 Samuel 17"],["Solomon builds the temple","1 Kings 6"],["Elijah on Mount Carmel","1 Kings 18"],["Jonah goes to Nineveh","Jonah 3"],
-  ["Judah is taken to Babylon","2 Kings 25"],["Daniel in the lions’ den","Daniel 6"],["Esther becomes queen","Esther 2"],["Nehemiah rebuilds the walls","Nehemiah 6"],
-  ["Jesus is born","Luke 2"],["Jesus is baptized","Matthew 3"],["Jesus feeds the 5,000","John 6"],["Jesus dies and rises again","Luke 23–24"],
-  ["Pentecost","Acts 2"],["Saul meets Jesus on the road to Damascus","Acts 9"]];
+/* in Bible order; only events whose order is clear */
+const TL_EVENTS=[["Creation","Genesis 1"],["Adam and Eve leave the garden","Genesis 3"],["Cain and Abel","Genesis 4"],["Noah and the flood","Genesis 6–9"],["The tower of Babel","Genesis 11"],
+  ["God calls Abram","Genesis 12"],["Isaac is born","Genesis 21"],["Jacob dreams of a stairway to heaven","Genesis 28"],["Joseph is sold by his brothers","Genesis 37"],["Joseph rules in Egypt","Genesis 41"],
+  ["Baby Moses in a basket","Exodus 2"],["Moses at the burning bush","Exodus 3"],["The ten plagues","Exodus 7–12"],["Crossing the Red Sea","Exodus 14"],["The Ten Commandments","Exodus 20"],
+  ["The golden calf","Exodus 32"],["The twelve spies","Numbers 13"],["The walls of Jericho fall","Joshua 6"],["Gideon’s 300 men","Judges 7"],["Samson","Judges 13–16"],
+  ["Saul becomes the first king","1 Samuel 10"],["Samuel anoints young David","1 Samuel 16"],["David defeats Goliath","1 Samuel 17"],["David becomes king","2 Samuel 5"],["Solomon builds the temple","1 Kings 6"],
+  ["The kingdom splits in two","1 Kings 12"],["Elijah on Mount Carmel","1 Kings 18"],["Jonah goes to Nineveh","Jonah 3"],["Israel is taken to Assyria","2 Kings 17"],["Judah is taken to Babylon","2 Kings 25"],
+  ["Daniel in the lions’ den","Daniel 6"],["Esther becomes queen","Esther 2"],["Nehemiah rebuilds the walls","Nehemiah 6"],
+  ["An angel visits Mary","Luke 1"],["Jesus is born","Luke 2"],["The wise men visit","Matthew 2"],["Boy Jesus in the temple","Luke 2"],["Jesus is baptized","Matthew 3"],
+  ["Jesus is tempted in the wilderness","Matthew 4"],["Jesus turns water into wine","John 2"],["Jesus feeds the 5,000","John 6"],["The Transfiguration","Matthew 17"],["Jesus raises Lazarus","John 11"],
+  ["Palm Sunday: Jesus rides into Jerusalem","Matthew 21"],["The Last Supper","Luke 22"],["Jesus dies and rises again","Luke 23–24"],["Jesus goes up to heaven","Acts 1"],["Pentecost","Acts 2"],
+  ["Stephen is stoned","Acts 7"],["Saul meets Jesus on the road to Damascus","Acts 9"],["Peter visits Cornelius","Acts 10"],["Paul’s first missionary journey","Acts 13–14"],
+  ["Paul and Silas in prison at Philippi","Acts 16"],["Paul is shipwrecked","Acts 27"]];
 const Timeline=(()=>{
-  const LV=[5,7,9,12];let W;
+  const LV=[5,7,9,12,15];let W;
   const T={lv:0,ev:[],placed:[],queue:[],cur:null,hearts:3,score:0,miss:0,lvMiss:0,busy:false};
   function enter(){W=W||regGame.root.timeline;const best=me().best.timeline||0;
     W.innerHTML=`<div class="ghead"><h2>&#128336; Timeline Builder</h2><div class="chip gold">${best?"&#127942; Best: "+fmt(best):"No high score yet"}</div></div>
-      <p class="rules">Put the big events of the Bible in order! A new event card appears, and you tap where it goes on the timeline: before, between, or after the events already there. There are <b>4 levels</b>, each with more events. You have <b>3 hearts</b>, and a wrong spot costs one.</p>
+      <p class="rules">Put the big events of the Bible in order! A new event card appears, and you tap where it goes on the timeline: before, between, or after the events already there. There are <b>5 levels</b>, each with more events, from ${TL_EVENTS.length} events in all. You have <b>3 hearts</b>, and a wrong spot costs one. Finishing a level gives a heart back.</p>
       <button class="btn gold" id="tlGo">Start &#9654;</button>`;$("tlGo").onclick=start;}
   function start(){T.lv=0;T.hearts=3;T.score=0;T.miss=0;level();}
   function level(){T.lvMiss=0;const n=LV[T.lv];const idx=pickN([...TL_EVENTS.keys()],n).sort((a,b)=>a-b);const first=idx[Math.floor(Math.random()*idx.length)];
@@ -1998,7 +2004,7 @@ const Timeline=(()=>{
     if(!T.queue.length){const bonus=500+(T.lvMiss?0:500);T.score+=bonus;
       render(`<span style="color:var(--green)">&#10004; Level ${T.lv+1} complete! +${fmt(bonus)}${T.lvMiss?"":" (no mistakes!)"}</span>`);
       if(!T.lvMiss&&LV[T.lv]>=9)award("perfecttime");
-      setTimeout(()=>{if(T.lv<LV.length-1){T.lv++;level();}else end(true);},1600);return;}
+      setTimeout(()=>{if(T.lv<LV.length-1){T.lv++;T.hearts=Math.min(3,T.hearts+1);level();}else end(true);},1600);return;}
     render(i===right?`<span style="color:var(--green)">&#10004; Right!</span>`:`<span style="color:#ff8a8a">Not quite. It goes here (look for the green card).</span>`);setTimeout(next,i===right?600:1500);}
   function end(won){finishGame("timeline",T.score,{title:won?"Timeline complete!":"Good try!",detail:won?`You put the whole Bible timeline in order${T.miss?` with ${T.miss} mistake${T.miss===1?"":"s"}`:" with no mistakes"}!`:`You made it to level ${T.lv+1}.`,
     trophies:won?["timetraveler"]:[],again:()=>{openGame("timeline");start();}});}
@@ -2015,6 +2021,7 @@ const SHELVES=[
   ["Gospels & Acts","#15803d",["Matthew","Mark","Luke","John","Acts"]],
   ["Paul’s Letters","#1d4ed8",["Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon"]],
   ["Other Letters & Revelation","#a21caf",["Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"]]];
+const SPINE=["#7c2d12","#14532d","#1e3a8a","#4c1d95","#713f12","#831843","#134e4a","#3f3f46"];  /* plain leather colors that do not give away the category */
 const Books=(()=>{
   let W;const B={mode:null,list:[],i:0,miss:0,streakMiss:0,clk:null,h:null};
   const MODES=[...SHELVES.map((s,i)=>({id:"s"+i,t:s[0],secs:[i]})),{id:"ot",t:"Old Testament (39)",secs:[0,1,2,3,4],big:1},{id:"nt",t:"New Testament (27)",secs:[5,6,7],big:1},{id:"all",t:"⚡ Speed Shelf: all 66",secs:[0,1,2,3,4,5,6,7],big:1}];
@@ -2031,10 +2038,10 @@ const Books=(()=>{
       <div class="shelf" id="bkShelf"></div><div class="feedback" id="bkFb" style="text-align:center"></div><div class="label" style="margin-top:6px">Tap the next book</div><div class="pile" id="bkPile"></div>
       <div class="row" style="margin-top:12px"><button class="btn" id="bkQuit" style="min-width:0;padding:9px 14px;font-size:14px;">&#8592; Pick another shelf</button></div>`;
     $("bkQuit").onclick=()=>{stop();enter();};
-    const pile=$("bkPile");shuffle(B.list).forEach(o=>{const b=document.createElement("button");b.className="bk";b.textContent=o.t;b.style.setProperty("--c",SHELVES[o.s][1]);b.onclick=()=>tap(o,b);pile.appendChild(b);});
+    const pile=$("bkPile");shuffle(B.list).forEach(o=>{const b=document.createElement("button");b.className="bk";b.textContent=o.t;b.style.setProperty("--c",m.big?"#64748b":SHELVES[o.s][1]);b.onclick=()=>tap(o,b);pile.appendChild(b);});
     paint();stop();B.h=setInterval(()=>$("bkT").textContent=mmss(B.clk.secs()),300);}
   function paint(){$("bkN").textContent=`${B.i} / ${B.list.length}`;const sh=$("bkShelf");let h="",last=-1;
-    B.list.slice(0,B.i).forEach(o=>{if(o.s!==last&&B.mode.big){h+=`<span class="shelflabel" style="--c:${SHELVES[o.s][1]}">${esc(SHELVES[o.s][0])}</span>`;last=o.s;}h+=`<span class="spine" style="--c:${SHELVES[o.s][1]}">${esc(o.t)}</span>`;});
+    B.list.slice(0,B.i).forEach(o=>{if(o.s!==last&&B.mode.big){h+=`<span class="shelflabel" style="--c:${SHELVES[o.s][1]}">${esc(SHELVES[o.s][0])}</span>`;last=o.s;}h+=`<span class="spine" style="--c:${B.mode.big?SPINE[B.list.indexOf(o)%SPINE.length]:SHELVES[o.s][1]}">${esc(o.t)}</span>`;});
     if(B.i<B.list.length)h+=`<span class="spine empty">?</span>`;sh.innerHTML=h;sh.scrollTop=sh.scrollHeight;}
   function tap(o,btn){const want=B.list[B.i];if(!want)return;
     if(o.t===want.t){btn.remove();B.i++;B.streakMiss=0;sBlip();$("bkFb").textContent="";paint();if(B.i>=B.list.length)end();else follow($("bkPile"),"nearest");}
@@ -2052,42 +2059,53 @@ const Books=(()=>{
 
 /* ==================== CATECHISM CLIMB ==================== */
 const Climb=(()=>{
-  let W;const K={pos:0,camp:0,ropes:3,score:0,busy:false,run:0};
-  const list=()=>C.catechism.slice().sort((a,b)=>a.n-b.n);
-  const rec=()=>{const p=me();p.climb=p.climb||{camp:0,best:0};return p.climb;};
-  function mountain(){const n=list().length,pts=[];for(let i=0;i<=n;i++){const t=i/n;pts.push([150+Math.sin(t*Math.PI*7)*(70*(1-t)+10),390-t*360]);}
-    const [x,y]=pts[K.pos];let flags="";for(let c=10;c<n;c+=10){const [fx,fy]=pts[c];flags+=`<g><line x1="${fx}" y1="${fy}" x2="${fx}" y2="${fy-22}" stroke="#fde68a" stroke-width="2"/><path d="M${fx} ${fy-22} l16 5 l-16 5z" fill="${c<=K.camp?"#34d399":"#94a3b8"}"/><text x="${fx+20}" y="${fy-10}" fill="#e2e8f0" stroke="#0f172a" stroke-width="3" paint-order="stroke" font-size="11" font-weight="900" font-family="system-ui">${c}</text></g>`;}
+  /* The catechism is split into 4 shorter mountains. Base camps every 5 questions save your spot. */
+  let W;const K={m:0,pos:0,camp:0,ropes:3,score:0,busy:false,run:0};const PEAKS=4,CAMP=5;
+  const all=()=>C.catechism.slice().sort((a,b)=>a.n-b.n);
+  function peaks(){const L=all(),size=Math.ceil(L.length/PEAKS),out=[];for(let i=0;i<PEAKS;i++){const q=L.slice(i*size,(i+1)*size);if(q.length)out.push(q);}return out;}
+  const list=()=>peaks()[K.m];
+  const NAMES=["Foothill Peak","Cedar Ridge","Eagle Mountain","Summit of Zion"];
+  const rec=()=>{const p=me();if(!p.climb||!p.climb.v)p.climb={v:2,m:[]};for(let i=0;i<PEAKS;i++)p.climb.m[i]=p.climb.m[i]||{camp:0,best:0,top:0};return p.climb;};
+  function mountain(){const n=list().length,pts=[];for(let i=0;i<=n;i++){const t=i/n;pts.push([150+Math.sin(t*Math.PI*3.5)*(80*(1-t)+8),390-t*360]);}
+    const [x,y]=pts[K.pos];let flags="";for(let c=CAMP;c<n;c+=CAMP){const [fx,fy]=pts[c];flags+=`<g><line x1="${fx}" y1="${fy}" x2="${fx}" y2="${fy-22}" stroke="#fde68a" stroke-width="2"/><path d="M${fx} ${fy-22} l16 5 l-16 5z" fill="${c<=K.camp?"#34d399":"#94a3b8"}"/><text x="${fx+20}" y="${fy-10}" fill="#e2e8f0" stroke="#0f172a" stroke-width="3" paint-order="stroke" font-size="12" font-weight="900" font-family="system-ui">Camp ${c/CAMP}</text></g>`;}
     const [sx,sy]=pts[n];
     return `<svg viewBox="0 0 300 410" class="mtn"><defs><linearGradient id="mt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".25" stop-color="#94a3b8"/><stop offset="1" stop-color="#334155"/></linearGradient></defs>
       <path d="M150 20 L290 400 L10 400Z" fill="url(#mt)"/><path d="M150 20 L178 95 L160 85 L148 100 L135 84 L122 95Z" fill="#fff"/>
       <polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#78350f" stroke-width="3" stroke-dasharray="4 4"/>
       <polyline points="${pts.slice(0,K.pos+1).map(p=>p.join(",")).join(" ")}" fill="none" stroke="#fbbf24" stroke-width="4"/>${flags}
+      ${pts.slice(1,n).map((p,i)=>(i+1)%CAMP?`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="${i+1<=K.pos?"#fbbf24":"#64748b"}"/>`:"").join("")}
       <text x="${sx}" y="${sy-6}" text-anchor="middle" font-size="22">&#128681;</text><text x="${x}" y="${y+8}" text-anchor="middle" font-size="26">${avOf(me())}</text></svg>`;}
-  function enter(){W=regGame.root.climb;const r=rec(),n=list().length;
+  function enter(){W=regGame.root.climb;const r=rec(),P=peaks();
     W.innerHTML=`<div class="ghead"><h2>&#9968;&#65039; Catechism Climb</h2><div class="chip gold">${me().best.climb?"&#127942; Best: "+fmt(me().best.climb):"No high score yet"}</div></div>
-      <p class="rules">Climb the mountain one catechism answer at a time! Each right answer moves you up one ledge. A wrong answer costs a <b>rope</b> and slides you back to your last <b>base camp</b>. You have 3 ropes per climb. Base camps at 10, 20, 30, and so on <b>save your spot</b> for next time. Can you reach the top at question ${n}?</p>
-      <div class="climbwrap"><div class="mtnbox" id="clMtn"></div><div><div class="card"><div class="label">Your climb</div><div class="detail" style="margin:0">Highest point: <b>${r.best}</b> of ${n}<br>Next climb starts at: <b>${r.camp?"Base camp "+r.camp:"the bottom"}</b></div></div>
-      <div class="row" style="margin-top:12px"><button class="btn gold" id="clGo">${r.camp?`Climb from base camp ${r.camp} &#9654;`:"Start climbing &#9654;"}</button>${r.camp?`<button class="btn" id="clBottom">Start from the bottom</button>`:""}</div></div></div>`;
-    K.pos=r.camp;K.camp=r.camp;$("clMtn").innerHTML=mountain();$("clGo").onclick=()=>start(r.camp);const b=$("clBottom");if(b)b.onclick=()=>start(0);}
+      <p class="rules">Climb a mountain one catechism answer at a time! Each right answer moves you up one ledge. A wrong answer costs a <b>rope</b> and slides you back to your last <b>base camp</b>. You have 3 ropes per climb. There is a base camp every <b>${CAMP} questions</b>, and it <b>saves your spot</b> for next time. Reach the flag at the top to conquer the mountain, then try the next one!</p>
+      <div class="label">Pick a mountain</div><div class="vlist" id="clPeaks"></div>`;
+    const box=$("clPeaks");P.forEach((q,i)=>{const m=r.m[i],b=document.createElement("button");b.className="vitem";b.style.borderLeft=`6px solid ${m.top?"var(--green)":"#38bdf8"}`;
+      b.innerHTML=`<b>${m.top?"&#128681; ":"&#9968;&#65039; "}Mountain ${i+1}: ${NAMES[i]||""}</b><span>Questions ${q[0].n} to ${q[q.length-1].n} &middot; ${q.length} ledges</span><div class="badges">${m.top?`<span class="bdg k">&#10004; Summit reached</span>`:m.camp?`<span class="bdg">&#127957;&#65039; Saved at base camp ${m.camp/CAMP} (question ${q[m.camp].n})</span>`:m.best?`<span class="bdg">Highest: ${m.best} of ${q.length}</span>`:`<span class="bdg">Not climbed yet</span>`}</div>`;
+      b.onclick=()=>pickPeak(i);box.appendChild(b);});}
+  function pickPeak(i){K.m=i;const r=rec(),m=r.m[i],n=list().length;K.pos=m.camp;K.camp=m.camp;
+    W.innerHTML=`<div class="ghead"><h2>&#9968;&#65039; Mountain ${i+1}: ${NAMES[i]||""}</h2></div>
+      <div class="climbwrap"><div class="mtnbox">${mountain()}</div><div><div class="card"><div class="label">Your climb</div><div class="detail" style="margin:0">Highest point: <b>${m.best}</b> of ${n}${m.top?" &middot; &#128681; summit reached!":""}<br>This climb starts at: <b>${m.camp?"Base camp "+m.camp/CAMP:"the bottom"}</b></div></div>
+      <div class="row" style="margin-top:12px"><button class="btn gold" id="clGo">${m.camp?`Climb from base camp ${m.camp/CAMP} &#9654;`:"Start climbing &#9654;"}</button>${m.camp?`<button class="btn" id="clBottom">Start from the bottom</button>`:""}<button class="btn" id="clBack">&#8592; Other mountains</button></div></div></div>`;
+    $("clGo").onclick=()=>start(m.camp);const b=$("clBottom");if(b)b.onclick=()=>start(0);$("clBack").onclick=enter;}
   function start(from){K.run++;K.pos=from;K.camp=from;K.ropes=3;K.score=0;ask();}
   function ask(msg){const L=list(),q=L[K.pos],ans=catAnswer(q.a,true);K.busy=false;
-    const others=shuffle(L.filter(x=>x!==q).map(x=>catAnswer(x.a,true)).filter((a,i,arr)=>a!==ans&&arr.indexOf(a)===i)).slice(0,2);
-    W.innerHTML=`<div class="hud2"><b>Question ${q.n} of ${L.length}</b><div class="scorebox"><span class="chip"><small>Ropes</small>${"&#129698;".repeat(K.ropes)||"0"}</span><span class="chip gold num">${fmt(K.score)}</span></div></div>
+    const others=shuffle(all().filter(x=>x!==q).map(x=>catAnswer(x.a,true)).filter((a,i,arr)=>a!==ans&&arr.indexOf(a)===i)).slice(0,2);
+    W.innerHTML=`<div class="hud2"><b>Mountain ${K.m+1} &middot; Question ${K.pos+1} of ${L.length}</b><div class="scorebox"><span class="chip"><small>Ropes</small>${"&#129698;".repeat(K.ropes)||"0"}</span><span class="chip gold num">${fmt(K.score)}</span></div></div>
       <div class="climbwrap"><div class="mtnbox">${mountain()}</div><div><div class="brprompt">${esc(q.q)}</div><div class="choices one" id="clOpts"></div><div class="feedback" id="clFb">${msg||""}</div></div></div>`;
     choiceBtns($("clOpts"),shuffle([{html:esc(ans),ok:1},...others.map(a=>({html:esc(a)}))]),answer);follow($("clOpts"),"nearest");}
-  function answer(o,btn){if(K.busy)return;K.busy=true;const L=list(),r=rec();$("clOpts").querySelectorAll("button").forEach(b=>b.disabled=true);
-    if(o.ok){btn.classList.add("right");K.pos++;K.score+=100;sRight();r.best=Math.max(r.best,K.pos);
+  function answer(o,btn){if(K.busy)return;K.busy=true;const L=list(),r=rec(),m=r.m[K.m];$("clOpts").querySelectorAll("button").forEach(b=>b.disabled=true);
+    if(o.ok){btn.classList.add("right");K.pos++;K.score+=100;sRight();m.best=Math.max(m.best,K.pos);
       let note="&#10004; Up you go!";
-      if(K.pos>=L.length){K.score+=3000;r.camp=0;saveStore();award("summit");setTimeout(()=>end(true),700);return;}
-      if(K.pos%10===0){K.camp=K.pos;r.camp=Math.max(r.camp,K.pos);K.score+=500;note=`&#127957;&#65039; Base camp ${K.pos}! Your spot is saved. +500`;toast("&#127957;&#65039;",`Base camp ${K.pos} reached!`);}
-      if(r.best>=10)award("basecamp");if(r.best>=Math.ceil(L.length/2))award("halfway");saveStore();
-      setTimeout(()=>ask(`<span style="color:var(--green)">${note}</span>`),650);}
+      if(K.pos>=L.length){K.score+=2000;m.camp=0;m.top=1;saveStore();award("halfway");if(r.m.every(x=>x.top))award("summit");setTimeout(()=>end(true),700);return;}
+      if(K.pos%CAMP===0){K.camp=K.pos;m.camp=Math.max(m.camp,K.pos);K.score+=500;award("basecamp");note=`&#127957;&#65039; Base camp ${K.pos/CAMP}! Your spot is saved. +500`;toast("&#127957;&#65039;",`Base camp ${K.pos/CAMP} reached!`);}
+      saveStore();setTimeout(()=>ask(`<span style="color:var(--green)">${note}</span>`),650);}
     else{btn.classList.add("wrong");K.ropes--;sWrong();const right=catAnswer(L[K.pos].a,true);
       $("clFb").innerHTML=`<span style="color:#ff8a8a">You slipped!</span><small>The answer is: <b style="color:var(--ink)">${esc(right)}</b></small>`;
       if(K.ropes<=0){setTimeout(()=>end(false),1800);return;}
-      K.pos=K.camp;setTimeout(()=>ask(`<span style="color:#ff8a8a">Back to ${K.camp?"base camp "+K.camp:"the bottom"}. ${K.ropes} rope${K.ropes===1?"":"s"} left.</span>`),2000);}}
-  function end(top){const r=rec();finishGame("climb",K.score,{title:top?"You reached the summit!":"Out of ropes!",detail:top?"You climbed every catechism question! Amazing!":`You reached question ${K.pos+1}. Highest ever: ${r.best}. Next time you start at ${r.camp?"base camp "+r.camp:"the bottom"}.`,
-    again:()=>{openGame("climb");}});}
+      K.pos=K.camp;setTimeout(()=>ask(`<span style="color:#ff8a8a">Back to ${K.camp?"base camp "+K.camp/CAMP:"the bottom"}. ${K.ropes} rope${K.ropes===1?"":"s"} left.</span>`),2000);}}
+  function end(top){const r=rec(),m=r.m[K.m],left=r.m.filter(x=>!x.top).length;
+    finishGame("climb",K.score,{title:top?`You conquered Mountain ${K.m+1}!`:"Out of ropes!",detail:top?(left?`You climbed every question on ${NAMES[K.m]}! ${left} mountain${left===1?"":"s"} left to climb.`:"You have climbed every catechism mountain! Amazing!"):`You reached question ${K.pos+1} of ${list().length}. Next time you start at ${m.camp?"base camp "+m.camp/CAMP:"the bottom"}.`,
+      again:()=>{openGame("climb");pickPeak(K.m);}});}
   return{enter,stop(){K.run++;}};
 })();
 
@@ -2275,6 +2293,10 @@ const Sling=(()=>{
   function size(){const w=$("slWrap");cv.width=w.clientWidth;cv.height=w.clientHeight;}
   const origin=()=>({x:cv.width*.13,y:cv.height*.72});
   const W_p=()=>cv.width;
+  const GOL=new Image();GOL.src="images/goliath.png";
+  /* Goliath stands on the ground at the right. hx/hy/hr = his face and forehead (the target) */
+  function gol(){const W_=cv.width,H=cv.height,h=Math.min(H*.62,W_*.42*560/354),w=h*354/560,bob=S.boss?Math.sin(S.boss.t*2)*3:0;
+    const x=W_*.95-w,top=H*.86-h+bob;return{x,top,w,h,hx:x+w*.46,hy:top+h*.072,hr:Math.max(22,h*.07)};}
   const MAXPULL=()=>Math.max(70,Math.min(130,cv.height*.22));
   function pullVec(d){let dx=d.x-d.sx,dy=d.y-d.sy;const len=Math.hypot(dx,dy),m=MAXPULL();if(len>m){dx*=m/len;dy*=m/len;}return{dx,dy,len:Math.min(len,m)};}
   /* full pull reaches just past the far edge; gentler pulls drop shorter, so aiming is about how far you pull */
@@ -2282,19 +2304,22 @@ const Sling=(()=>{
   function start(){AC();$("slOver").classList.add("hidden");Object.assign(S,{stones:5,score:0,hits:0,streak:0,best:0,qs:shortQs(26,40),qi:0,on:true,boss:null,parts:[],busy:false,giant:0});size();next();hud();S.last=performance.now();S.raf=requestAnimationFrame(loop);}
   function hud(){$("slStones").innerHTML=Array.from({length:5},(_,i)=>`<span class="stone${i<S.stones?"":" used"}"></span>`).join("");$("slHits").textContent=S.hits;$("slS").textContent=fmt(S.score);}
   function next(){S.stone=null;S.busy=false;
-    if(S.hits>0&&S.hits%5===0&&S.giant<S.hits/5){S.giant=S.hits/5;S.boss={x:cv.width*.8,y:cv.height*.3,dir:1,tries:3};$("slQ").innerHTML="&#9888;&#65039; <b>Goliath appears!</b> Hit him right on the forehead! (3 throws)";S.targets=[];return;}
+    if(S.hits>0&&S.hits%5===0&&S.giant<S.hits/5){S.giant=S.hits/5;S.boss={t:0,tries:3,fall:0};$("slQ").innerHTML="<span>&#9888;&#65039; <b>Goliath appears!</b> Hit him on the forehead! (3 throws)</span>";S.targets=[];return;}
     S.boss=null;S.q=S.qs[S.qi++%S.qs.length];$("slQ").innerHTML=esc(S.q.text);layout();}
   function layout(){if(!S.q||S.boss)return;const opts=S.targets.length&&S.targets[0].q===S.q?S.targets.map(t=>({t:t.t,ok:t.ok})):qOpts(S.q,S.q.type==="tf"?2:3);const n=opts.length,W_=cv.width,H=cv.height;
-    S.targets=opts.map((o,i)=>({q:S.q,t:o.t,ok:o.ok,x:W_*(n===2?[.5,.8][i]:[.44,.64,.84][i]),y:H*(n===2?[.46,.32][i]:[.54,.41,.28][i]),w:Math.max(44,Math.min(70,W_*.09)),h:Math.max(54,Math.min(86,H*.15)),hit:false}));}
-  function loop(ts){if(!S.on){S.raf=null;return;}if(paused){S.last=ts;S.raf=requestAnimationFrame(loop);return;}const dt=Math.min(.033,(ts-S.last)/1000);S.last=ts;step(dt);draw();S.raf=requestAnimationFrame(loop);}
+    S.targets=opts.map((o,i)=>({q:S.q,t:o.t,ok:o.ok,x:W_*(n===2?[.5,.82][i]:[.42,.63,.85][i]),y:H*(n===2?[.6,.34][i]:[.64,.47,.3][i]),w:Math.max(44,Math.min(70,W_*.09)),h:Math.max(54,Math.min(86,H*.15)),hit:false}));}
+  function loop(ts){if(!S.on){S.raf=null;return;}if(paused){S.last=ts;S.raf=requestAnimationFrame(loop);return;}const dt=Math.min(.033,(ts-S.last)/1000);const wr=$("slWrap");if(wr&&(wr.clientWidth!==cv.width||wr.clientHeight!==cv.height)){size();layout();}S.last=ts;step(dt);draw();S.raf=requestAnimationFrame(loop);}
   function step(dt){const G=cv.height*1.6;
-    if(S.boss){const b=S.boss;b.y+=b.dir*cv.height*.12*dt;if(b.y>cv.height*.42||b.y<cv.height*.2)b.dir*=-1;}
+    if(S.boss){S.boss.t+=dt;if(S.boss.fall>0)S.boss.fall=Math.min(1,S.boss.fall+dt*1.3);}
     const s=S.stone;if(s){s.vy+=G*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;
-      if(S.boss){const b=S.boss,hx=b.x,hy=b.y-cv.height*.02,hr=Math.max(12,cv.height*.035);
-        if(Math.hypot(s.x-hx,s.y-hy)<hr+s.r){boom(s.x,s.y,"#fde68a");S.stone=null;S.score+=3000;S.stones=Math.min(5,S.stones+1);award("giant");flash("GOLIATH FALLS! +3,000");sRight();confetti();S.busy=true;hud();setTimeout(next,1400);return;}
-        if(s.x>cv.width+30||s.y>cv.height+30){S.stone=null;b.tries--;S.stones--;hud();sWrong();flash(b.tries>0?`Missed! ${b.tries} throw${b.tries===1?"":"s"} left`:"Goliath got away!");if(S.stones<=0){end();return;}if(b.tries<=0){S.busy=true;setTimeout(next,1200);}}
+      if(S.boss){const b=S.boss,G_=gol();
+        if(!b.fall&&Math.hypot(s.x-G_.hx,s.y-G_.hy)<G_.hr+s.r){boom(s.x,s.y,"#fde68a");S.stone=null;b.fall=.01;S.score+=3000;S.stones=Math.min(5,S.stones+1);award("giant");flash("GOLIATH FALLS! +3,000");sRight();confetti();S.busy=true;hud();setTimeout(next,2000);return;}
+        const inBody=!b.fall&&s.x>G_.x+G_.w*.2&&s.x<G_.x+G_.w*.8&&s.y>G_.top+G_.h*.14&&s.y<G_.top+G_.h;
+        if(inBody||s.x>cv.width+30||s.y>cv.height+30){if(inBody)boom(s.x,s.y,"#d6d3d1");S.stone=null;b.tries--;S.stones--;hud();sWrong();
+          flash(inBody?(b.tries>0?`Clang! His armor! ${b.tries} left`:"Clang! Goliath got away!"):(b.tries>0?`Missed! ${b.tries} throw${b.tries===1?"":"s"} left`:"Goliath got away!"));
+          if(S.stones<=0){setTimeout(end,700);return;}if(b.tries<=0){S.busy=true;setTimeout(next,1200);}}
         return;}
-      for(const t of S.targets){if(t.hit)continue;const pad=s.r+Math.min(10,W_p()*.012);if(s.x>t.x-t.w/2-pad&&s.x<t.x+t.w/2+pad&&s.y>t.y-t.h/2-pad-24&&s.y<t.y+t.h/2+pad){t.hit=true;S.stone=null;boom(t.x,t.y,t.ok?"#34d399":"#f87171");
+      for(const t of S.targets){if(t.hit)continue;const ex=(s.x-t.x)/(t.w/2+s.r+7),ey=(s.y-t.y)/(t.h/2+s.r+7);if(ex*ex+ey*ey<1||(Math.abs(s.x-t.x)<t.w*.25+s.r&&s.y>t.y-t.h/2-8-s.r&&s.y<t.y)){t.hit=true;S.stone=null;boom(t.x,t.y,t.ok?"#34d399":"#f87171");
           if(t.ok){S.hits++;S.streak++;S.best=Math.max(S.best,S.streak);const pts=300+Math.min(700,(S.streak-1)*100);S.score+=pts;flash("+"+fmt(pts));sRight();if(S.streak>=10)award("sharpshooter");}
           else{S.stones--;S.streak=0;flash("Wrong jar!");sWrong();S.targets.forEach(o=>o.reveal=o.ok);}
           hud();S.busy=true;if(S.stones<=0){setTimeout(end,900);return;}setTimeout(next,t.ok?900:1500);return;}}
@@ -2314,9 +2339,9 @@ const Sling=(()=>{
     S.targets.forEach(t=>{if(t.hit&&!t.reveal)return;g.fillStyle="#57534e";g.fillRect(t.x-4,t.y+t.h/2,8,H*.86-(t.y+t.h/2));
       g.fillStyle=t.reveal?"#34d399":"#c2410c";g.beginPath();g.ellipse(t.x,t.y,t.w/2,t.h/2,0,0,7);g.fill();g.fillStyle="#9a3412";g.fillRect(t.x-t.w*.25,t.y-t.h/2-6,t.w*.5,10);
       label(t.t,t.x,t.y-t.h/2-14);});
-    if(S.boss){const b=S.boss,h=H*.5;g.fillStyle="#78716c";g.fillRect(b.x-h*.16,b.y+h*.05,h*.32,h*.55);g.fillStyle="#d6a77a";g.beginPath();g.arc(b.x,b.y,h*.13,0,7);g.fill();
-      g.fillStyle="#57534e";g.fillRect(b.x-h*.14,b.y-h*.16,h*.28,h*.07);g.fillStyle="#ef4444";g.beginPath();g.arc(b.x,b.y-H*.02,Math.max(5,H*.012),0,7);g.fill();
-      g.fillStyle="#111";g.font=`900 ${Math.round(H*.04)}px system-ui`;g.textAlign="center";g.fillText("GOLIATH",b.x,b.y+h*.75);}
+    if(S.boss){const b=S.boss,G_=gol();g.save();if(b.fall){g.translate(G_.x+G_.w*.5,G_.top+G_.h);g.rotate(b.fall*1.45);g.globalAlpha=Math.max(0,1-Math.max(0,b.fall-.7)*3);g.translate(-(G_.x+G_.w*.5),-(G_.top+G_.h));}
+      if(GOL.complete&&GOL.naturalWidth)g.drawImage(GOL,G_.x,G_.top,G_.w,G_.h);else{g.fillStyle="#78716c";g.fillRect(G_.x+G_.w*.25,G_.top+G_.h*.15,G_.w*.5,G_.h*.85);g.fillStyle="#d6a77a";g.beginPath();g.arc(G_.hx,G_.hy,G_.hr,0,7);g.fill();}
+      g.restore();if(!b.fall){const pulse=.5+.5*Math.sin(b.t*5);g.strokeStyle=`rgba(239,68,68,${.45+.4*pulse})`;g.lineWidth=3;g.setLineDash([6,5]);g.beginPath();g.arc(G_.hx,G_.hy,G_.hr+4,0,7);g.stroke();g.setLineDash([]);}}
     if(S.stone){g.fillStyle="#6b7280";g.beginPath();g.arc(S.stone.x,S.stone.y,S.stone.r,0,7);g.fill();}
     S.parts.forEach(p=>{g.globalAlpha=Math.max(0,p.l/.8);g.fillStyle=p.c;g.fillRect(p.x,p.y,5,5);});g.globalAlpha=1;
     if(S.msgT>0){g.globalAlpha=Math.min(1,S.msgT);g.fillStyle=/Wrong|Missed|away/.test(S.msg)?"#b91c1c":"#065f46";g.font=`900 ${Math.round(Math.min(40,W_*.06))}px system-ui`;g.textAlign="center";g.fillText(S.msg,W_/2,H*.16);g.globalAlpha=1;}}
