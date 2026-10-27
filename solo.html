@@ -1050,6 +1050,8 @@ const bestChip=gid=>{const b=(me()&&me().best[gid])||0;return b?`&#127942; Best:
 /* The Gospel games and the original games are always open. The newer games unlock in 3 levels,
    so kids learn the Gospel first. The goals are checked from what each player has already done. */
 const TEACHER_CODE="JOHN316";
+/* a player named Habbakuk (or Habakkuk) gets every game unlocked */
+const allOpen=p=>!!p&&(p.unlockAll||/^(habbakuk|habakkuk)$/i.test((p.name||"").trim()));
 const UNLOCKS=[
   {lv:1,games:["daily","fish","books"],goals:[
     {t:"Open all 4 parts of the Gospel (Step 1: Learn it)",cur:p=>Object.keys(p.gLearn||{}).length,need:4},
@@ -1065,7 +1067,7 @@ const UNLOCKS=[
 const lockOf=id=>UNLOCKS.find(u=>u.games.includes(id));
 function levelDone(u,p){return u.goals.every(g=>g.cur(p)>=g.need);}
 /* levels unlock in order: level 2 needs level 1 done, and so on */
-function unlockedLevel(p){if(!p)return 0;if(p.unlockAll)return UNLOCKS.length;let n=0;for(const u of UNLOCKS){if(levelDone(u,p))n=u.lv;else break;}return n;}
+function unlockedLevel(p){if(!p)return 0;if(allOpen(p))return UNLOCKS.length;let n=0;for(const u of UNLOCKS){if(levelDone(u,p))n=u.lv;else break;}return n;}
 function isLocked(id,p){p=p||me();const u=lockOf(id);return !!u&&unlockedLevel(p)<u.lv;}
 function gameName(id){const g=GAMES.find(x=>x.id===id);return g?g.ic+" "+g.tt:id;}
 function renderUnlock(){const p=me(),box=$("unlockCard");if(!p||!box)return;const have=unlockedLevel(p);
@@ -1080,7 +1082,7 @@ function renderUnlock(){const p=me(),box=$("unlockCard");if(!p||!box)return;cons
   $("teachGo").onclick=()=>{if($("teachCode").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"")===TEACHER_CODE){p.unlockAll=1;saveStore();renderHome();}else{sWrong();shakeEl($("teachBox"));}};}
 /* celebrate when a new level opens up */
 function checkUnlocks(){const p=me();if(!p)return;const have=unlockedLevel(p),seen=p.lvSeen||0;
-  if(have>seen){p.lvSeen=have;saveStore();if(seen<have&&!p.unlockAll){const games=UNLOCKS.filter(u=>u.lv>seen&&u.lv<=have).flatMap(u=>u.games);
+  if(have>seen){p.lvSeen=have;saveStore();if(seen<have&&!allOpen(p)){const games=UNLOCKS.filter(u=>u.lv>seen&&u.lv<=have).flatMap(u=>u.games);
     toast("&#128275;",`<b>New games unlocked!</b> ${games.map(gameName).join(", ")}`);sFanfare();confetti();}}}
 
 /* ==================== PLAYERS ==================== */
@@ -1138,7 +1140,7 @@ function renderHome(){
   GAMES.forEach(g=>{const d=document.createElement("button");d.className="tile";d.style.setProperty("--tc",g.tc);const b=p.best[g.id]||0;
     d.innerHTML=`<div class="barl"></div><div class="ic">${g.ic}</div><div class="tt">${g.tt}</div><div class="td">${g.td}</div><div class="best">${b?"&#127942; High score: "+fmt(b):"Not played yet"}</div>`;
     const lk=lockOf(g.id);if(lk&&isLocked(g.id,p)){d.classList.add("locked");d.insertAdjacentHTML("afterbegin",`<span class="lockb">&#128274; Level ${lk.lv}</span>`);d.querySelector(".best").innerHTML=`&#128274; Unlocks at Level ${lk.lv}`;}
-    else if(lk&&(p.lvSeen||0)>=lk.lv&&!p.plays[g.id]&&!p.unlockAll)d.insertAdjacentHTML("afterbegin",`<span class="lockb new">&#10024; NEW</span>`);
+    else if(lk&&(p.lvSeen||0)>=lk.lv&&!p.plays[g.id]&&!allOpen(p))d.insertAdjacentHTML("afterbegin",`<span class="lockb new">&#10024; NEW</span>`);
     if(g.id==="path"){const st=p.path||{};const done=[0,1,2,3,4].filter(i=>st[i]).length;d.querySelector(".best").innerHTML=`${done} of 5 lessons done &middot; ${[0,1,2,3,4].reduce((a,i)=>a+(st[i]||0),0)} / 15 &#11088;`;}
     d.onclick=()=>{AC();openGame(g.id);};(g.sec==="gospel"?gt:g.sec==="gpath"?gp:g.sec==="learn"?$("tilesL"):t).appendChild(d);});
   const pr=document.createElement("button");pr.className="tile prog";
