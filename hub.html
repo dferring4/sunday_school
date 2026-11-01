@@ -541,6 +541,33 @@
   }
   .hardtag{display:inline-block;background:#7f1d1d;color:#fecaca;border:1px solid #ef4444;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:900;margin-left:8px;vertical-align:2px;}
   .hardtag.xt{background:linear-gradient(90deg,#4c1d95,#be185d);color:#fff;border-color:#f0abfc;}
+  /* ===== SKETCH IT! (Pictionary) ===== */
+  #sketch{position:relative;}
+  .skbar{display:flex;align-items:center;gap:10px;padding:8px 14px;flex-wrap:wrap;border-bottom:1px solid var(--line);background:rgba(9,15,26,.6);}
+  .skbar .lbl{color:var(--muted);font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:1px;}
+  .skteam{font-weight:900;font-size:clamp(18px,2.4vw,28px);color:var(--tc,#fff);}
+  .sktimer{margin-left:auto;font-weight:900;font-size:clamp(34px,5vw,64px);line-height:1;color:var(--gold);min-width:2.2ch;text-align:right;}
+  .sktimer.low{color:var(--red-hot);animation:tick 1s ease infinite;}
+  .skgot{font-weight:900;color:var(--green);font-size:clamp(16px,2vw,24px);}
+  .skpad{position:relative;flex:1;min-height:0;margin:10px 12px;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 0 0 4px var(--tc,#334155);}
+  #skCv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block;cursor:crosshair;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+  .skcover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px;background:rgba(15,23,42,.88);color:#fff;z-index:2;}
+  .skcover h2{margin:0;font-size:clamp(26px,4vw,52px);font-weight:900;}
+  .skcover p{margin:0;font-weight:700;font-size:clamp(15px,2vw,22px);color:#cbd5e1;max-width:760px;line-height:1.4;}
+  .skcover .awardbar{justify-content:center;} .skcover .pill{color:#e2e8f0;font-size:16px;padding:8px 16px;} .skcover .pill.on{color:var(--gold-ink);}
+  .sksum{font-size:clamp(18px,2.6vw,30px);font-weight:900;}
+  .sktools{display:flex;align-items:center;gap:8px;padding:0 12px 8px;flex-wrap:wrap;justify-content:center;}
+  .skc{width:40px;height:40px;border-radius:50%;border:3px solid #475569;background:var(--c);touch-action:manipulation;}
+  .skc.on{border-color:#fff;box-shadow:0 0 0 3px var(--gold);}
+  .sksz{width:44px;height:40px;border-radius:12px;border:2px solid #475569;background:var(--panel);display:flex;align-items:center;justify-content:center;touch-action:manipulation;}
+  .sksz i{display:block;border-radius:50%;background:#e2e8f0;}
+  .sksz.on,.sktool.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold);}
+  .sktool{min-width:0;padding:8px 12px;font-size:15px;touch-action:manipulation;}
+  #sketch .controls button{touch-action:manipulation;}
+  .skflash{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:clamp(40px,8vw,110px);font-weight:900;pointer-events:none;opacity:0;z-index:3;text-shadow:0 4px 18px rgba(0,0,0,.35);}
+  .skflash.go{animation:skpop 1s ease forwards;}
+  @keyframes skpop{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+  @media(max-width:700px){.skc{width:32px;height:32px;} .sksz{width:36px;height:32px;}}
 </style>
 </head>
 <body>
@@ -673,6 +700,18 @@
       <button class="btn gold big" id="bcPlus">+1 Correct</button>
       <button class="btn green big" id="bcStart">Start</button>
       <button class="btn" id="bcNext">Next &#9654;</button>
+    </div>
+  </div>
+
+  <!-- ============ SKETCH IT! (Pictionary) ============ -->
+  <div id="sketch" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+    <div class="skbar"><span class="lbl">Drawing</span><span class="skteam" id="skTeam">—</span><span class="skgot" id="skGot"></span><span class="sktimer num" id="skTimer">60</span></div>
+    <div class="skpad" id="skPad"><canvas id="skCv"></canvas><div class="skflash" id="skFlash"></div><div class="skcover" id="skCover"></div></div>
+    <div class="sktools" id="skTools"></div>
+    <div class="controls">
+      <button class="btn" id="skSkip" style="min-width:150px;">&#9197;&#65039; Skip &minus;2,000</button>
+      <button class="btn green big" id="skGotIt">&#10004; Got it! +5,000</button>
+      <button class="btn" id="skEnd" style="min-width:0;">&#9632; End turn</button>
     </div>
   </div>
 
@@ -1245,6 +1284,7 @@ const GAMES=[
   {id:"hotpotato",ic:"&#129364;",tt:"Hot Potato",tc:"#fb923c",td:"Answer fast and pass it on! A secret fuse is burning, and whoever's holding the potato at the BOOM loses 5,000.",count:()=>state.questions.filter(q=>q.type!=="fb").length+" questions"},
   {id:"versemem",ic:"&#128220;",tt:"Verse Eraser",tc:"#60a5fa",td:"Say the verse together while words disappear, until you can say it with none showing.",count:()=>state.memverses.length+" verse"+(state.memverses.length===1?"":"s")},
   {id:"catmem",ic:"&#9997;&#65039;",tt:"Catechism Eraser",tc:"#a3e635",td:"Memorize the question AND the answer. Words vanish a few at a time.",count:()=>state.catechism.length+" questions"},
+  {id:"sketch",ic:"&#9999;&#65039;",tt:"Sketch It!",tc:"#e879f9",td:"Draw your card on the iPad while your team guesses. +5,000 for each right guess in 60 seconds; skip costs 2,000.",count:()=>"use your own paper cards"},
   /* Verse Voyager now lives in the Solo Challenge (solo.html). Its code stays here but has no tile. */
   {id:"spinner",ic:"&#127905;",tt:"Cup Spinner",tc:"#ff3d7f",td:"Knock down cups, then spin! Play it safe for a sure bonus, or risk it for big points (and maybe Lose All).",count:()=>"2 wheels · points × cups"},
 ];
@@ -1256,10 +1296,10 @@ function renderHub(){
 }
 function showScreen(name){
   screen=name;
-  ["hub","quiz","whoami","jeopardy","concentration","beatclock","charades","wordwheel","voyager","hotpotato","versemem","catmem","spinner","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
+  ["hub","quiz","whoami","jeopardy","concentration","beatclock","charades","wordwheel","voyager","hotpotato","versemem","catmem","spinner","sketch","setup"].forEach(s=>$(s).classList.toggle("hidden",s!==name));
   $("homeBtn").classList.toggle("hidden",name==="hub");
   $("modeBtn").innerHTML=name==="setup"?"&#9654; Back":"&#9881; Setup";
-  const titles={hub:"Game Hub",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",charades:"Reverse Charades",wordwheel:"Word Puzzle Wheel",voyager:"Verse Voyager",hotpotato:"Hot Potato",versemem:"Verse Eraser",catmem:"Catechism Eraser",spinner:"Cup Spinner",setup:"Setup"};
+  const titles={hub:"Game Hub",sketch:"Sketch It!",quiz:"Quiz Showdown",whoami:"Who Am I?",jeopardy:"Jeopardy",concentration:"Concentration",beatclock:"Beat the Clock",charades:"Reverse Charades",wordwheel:"Word Puzzle Wheel",voyager:"Verse Voyager",hotpotato:"Hot Potato",versemem:"Verse Eraser",catmem:"Catechism Eraser",spinner:"Cup Spinner",setup:"Setup"};
   $("brandText").textContent=titles[name]||"Game Hub";
   if(name==="hub")renderHub();
   if(name!=="quiz"){stopTimer(true);$("quizStartOverlay").classList.remove("show");}
@@ -1275,11 +1315,91 @@ function showScreen(name){
   if(name==="versemem")VM.enter();
   if(name==="catmem")CM.enter();
   if(name==="spinner")SP.enter(); else SP.leave();
+  if(name==="sketch")SK.enter(); else SK.leave();
   if(name==="setup")renderSetup();
 }
 $("homeBtn").onclick=()=>showScreen("hub");
 $("modeBtn").onclick=()=>showScreen(screen==="setup"?"hub":"setup");
 $("fsBtn").onclick=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen&&document.exitFullscreen();};
+
+
+/* ==================== SKETCH IT! (Pictionary with your own paper cards) ==================== */
+const SK=(()=>{
+  const GOT=5000,SKIP=2000;
+  const COLORS=["#111827","#ef4444","#2563eb","#16a34a","#f59e0b","#7c3aed","#92400e"];
+  const SIZES=[4,9,18];
+  const P={team:0,phase:"idle",left:60,secs:60,handle:null,got:0,skipped:0,strokes:[],cur:null,color:COLORS[0],size:1,eraser:false,penSeen:false,turns:0};
+  let cv,g,ready=false;
+  function init(){if(ready)return;ready=true;cv=$("skCv");g=cv.getContext("2d");
+    const tools=$("skTools");
+    tools.innerHTML=COLORS.map(c=>`<button class="skc" data-c="${c}" style="--c:${c}" aria-label="Color"></button>`).join("")+
+      SIZES.map((s,i)=>`<button class="sksz" data-s="${i}" aria-label="Pen size"><i style="width:${s+4}px;height:${s+4}px"></i></button>`).join("")+
+      `<button class="btn sktool" id="skEraser">&#129529; Eraser</button><button class="btn sktool" id="skUndo">&#8630; Undo</button><button class="btn sktool" id="skClear">&#128465;&#65039; Clear</button>`;
+    tools.querySelectorAll(".skc").forEach(b=>b.onclick=()=>{P.color=b.dataset.c;P.eraser=false;tool();});
+    tools.querySelectorAll(".sksz").forEach(b=>b.onclick=()=>{P.size=+b.dataset.s;tool();});
+    $("skEraser").onclick=()=>{P.eraser=!P.eraser;tool();};
+    $("skUndo").onclick=()=>{P.strokes.pop();redraw();};
+    $("skClear").onclick=()=>{P.strokes=[];redraw();};
+    $("skGotIt").onclick=gotIt;$("skSkip").onclick=skip;$("skEnd").onclick=()=>{if(P.phase==="running")timeUp(true);};
+    /* drawing: Apple Pencil, finger or mouse. Once a Pencil is used, fingers are ignored so a resting palm doesn't draw. */
+    cv.addEventListener("pointerdown",e=>{if(P.phase!=="running")return;if(e.pointerType==="pen")P.penSeen=true;else if(e.pointerType==="touch"&&P.penSeen)return;
+      if(P.cur)return;e.preventDefault();try{cv.setPointerCapture(e.pointerId);}catch(_){}
+      const pt=xy(e);P.cur={id:e.pointerId,c:P.eraser?"#fff":P.color,w:SIZES[P.size]*(P.eraser?3:1),pen:e.pointerType==="pen",pts:[pt]};P.strokes.push(P.cur);dot(P.cur,pt);});
+    cv.addEventListener("pointermove",e=>{const s=P.cur;if(!s||e.pointerId!==s.id)return;e.preventDefault();
+      const evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];(evs.length?evs:[e]).forEach(ev=>{const pt=xy(ev);seg(s,s.pts[s.pts.length-1],pt);s.pts.push(pt);});});
+    const up=e=>{if(P.cur&&e.pointerId===P.cur.id)P.cur=null;};
+    cv.addEventListener("pointerup",up);cv.addEventListener("pointercancel",up);
+    ["touchstart","touchmove"].forEach(t=>cv.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+    ["gesturestart","gesturechange"].forEach(t=>document.addEventListener(t,e=>{if(screen==="sketch")e.preventDefault();}));
+    addEventListener("resize",()=>{if(screen==="sketch")fit();});
+    document.addEventListener("keydown",e=>{if(screen!=="sketch"||P.phase!=="running")return;if(e.key==="Enter"){e.preventDefault();gotIt();}});}
+  function tool(){$("skTools").querySelectorAll(".skc").forEach(b=>b.classList.toggle("on",!P.eraser&&b.dataset.c===P.color));
+    $("skTools").querySelectorAll(".sksz").forEach(b=>b.classList.toggle("on",+b.dataset.s===P.size));$("skEraser").classList.toggle("on",P.eraser);}
+  /* points are stored as 0..1 of the pad so the drawing survives a resize or rotation */
+  function xy(e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height,p:e.pointerType==="pen"&&e.pressure>0?e.pressure:.5};}
+  function width(s,p){return s.pen?Math.max(1.5,s.w*(.35+p*1.3)):s.w;}
+  function dot(s,a){const k=devicePixelRatio||1;g.fillStyle=s.c;g.beginPath();g.arc(a.x*cv.width,a.y*cv.height,width(s,a.p)*k/2,0,7);g.fill();}
+  function seg(s,a,b){const k=devicePixelRatio||1;g.strokeStyle=s.c;g.lineCap="round";g.lineJoin="round";g.lineWidth=width(s,(a.p+b.p)/2)*k;
+    g.beginPath();g.moveTo(a.x*cv.width,a.y*cv.height);g.lineTo(b.x*cv.width,b.y*cv.height);g.stroke();}
+  function redraw(){g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);P.strokes.forEach(s=>{dot(s,s.pts[0]);for(let i=1;i<s.pts.length;i++)seg(s,s.pts[i-1],s.pts[i]);});}
+  function fit(){const k=devicePixelRatio||1,r=$("skPad").getBoundingClientRect();cv.width=Math.max(1,Math.round(r.width*k));cv.height=Math.max(1,Math.round(r.height*k));redraw();}
+  function clearPad(){P.strokes=[];P.cur=null;redraw();}
+  function teamColor(){const t=state.teams[P.team];return t?t.color:"#334155";}
+  function head(){const t=state.teams[P.team];$("skTeam").textContent=t?t.name:"—";$("skTeam").style.setProperty("--tc",teamColor());$("skPad").style.setProperty("--tc",teamColor());
+    $("skTimer").textContent=P.phase==="running"?P.left:P.secs;$("skTimer").classList.toggle("low",P.phase==="running"&&P.left<=10);
+    $("skGot").innerHTML=P.phase==="idle"?"":`&#10004; ${P.got}${P.skipped?` &middot; &#9197;&#65039; ${P.skipped}`:""}`;
+    const run=P.phase==="running";$("skGotIt").disabled=!run;$("skSkip").disabled=!run;$("skEnd").disabled=!run;}
+  function cover(html){const c=$("skCover");if(!html){c.classList.add("hidden");return;}c.innerHTML=html;c.classList.remove("hidden");}
+  function lobby(){P.phase="idle";stopT();head();
+    if(!state.teams.length){cover(`<h2>&#9999;&#65039; Sketch It!</h2><p>Add teams in Setup first.</p>`);return;}
+    const t=state.teams[P.team];
+    cover(`<h2>&#9999;&#65039; Sketch It!</h2>
+      <p>The drawer picks a card and draws it here. <b>No letters, numbers or talking!</b> Only the drawer&rsquo;s team guesses.<br>
+      Right guess: tap <b style="color:var(--green)">Got it! +5,000</b> and the board clears for the next card. Too hard? <b>Skip</b> costs 2,000.</p>
+      <div class="lbl" style="color:#94a3b8;font-weight:900;letter-spacing:1px;">WHOSE TURN?</div><div class="awardbar" id="skTeams"></div>
+      <div class="awardbar" id="skSecs"></div>
+      <button class="btn green" id="skGo" style="font-size:clamp(20px,2.6vw,30px);padding:16px 34px;">&#9654; Start ${esc(t.name)}&rsquo;s ${P.secs} seconds</button>`);
+    teamAwardBar($("skTeams"),i=>{P.team=i;sBlip();lobby();},"");[...$("skTeams").children].forEach((b,i)=>b.classList.toggle("sel",i===P.team));
+    $("skSecs").innerHTML=[45,60,90].map(s=>`<button class="pill${s===P.secs?" on":""}" data-s="${s}">${s} sec</button>`).join("");
+    $("skSecs").querySelectorAll("button").forEach(b=>b.onclick=()=>{P.secs=+b.dataset.s;sBlip();lobby();});
+    $("skGo").onclick=start;}
+  function start(){AC();P.phase="running";P.left=P.secs;P.got=0;P.skipped=0;P.penSeen=false;cover("");fit();clearPad();head();sTick();
+    stopT();P.handle=setInterval(()=>{P.left--;if(P.left<=0){P.left=0;timeUp(false);return;}head();if(P.left<=5)sTickLow();},1000);}
+  function stopT(){if(P.handle){clearInterval(P.handle);P.handle=null;}}
+  function flash(txt,col){const f=$("skFlash");f.textContent=txt;f.style.color=col;f.classList.remove("go");void f.offsetWidth;f.classList.add("go");}
+  function gotIt(){if(P.phase!=="running")return;P.got++;award(P.team,GOT);sCorrect();burstConfetti();flash("+5,000","#16a34a");clearPad();head();}
+  function skip(){if(P.phase!=="running")return;P.skipped++;award(P.team,-SKIP);tone(220,.25,"sawtooth",.18);flash("−2,000","#ef4444");clearPad();head();}
+  function timeUp(early){stopT();P.phase="done";head();P.cur=null;if(!early){sBuzzer();$("app").classList.add("shake");setTimeout(()=>$("app").classList.remove("shake"),500);}
+    const t=state.teams[P.team],net=P.got*GOT-P.skipped*SKIP,n=state.teams.length,next=(P.team+1)%n;
+    cover(`<h2>${early?"Turn over":"&#9200; Time!"}</h2>
+      <div class="sksum" style="color:${t.color}">${esc(t.name)}: ${P.got} right${P.skipped?`, ${P.skipped} skipped`:""}</div>
+      <p style="font-size:clamp(20px,3vw,34px);color:#fff;font-weight:900;">${net>=0?"+":"−"}${fmt(Math.abs(net))} points this turn</p>
+      <button class="btn green" id="skNext" style="font-size:clamp(20px,2.6vw,30px);padding:16px 34px;">Next: ${esc(state.teams[next].name)} &#9654;</button>
+      <button class="btn" id="skPick" style="min-width:0;">Pick a different team</button>`);
+    $("skNext").onclick=()=>{P.team=next;start();};$("skPick").onclick=()=>{P.team=next;lobby();};}
+  return{enter(){init();tool();if(P.team>=state.teams.length)P.team=0;requestAnimationFrame(()=>{fit();if(P.phase!=="running")lobby();});},
+    leave(){if(P.phase==="running"){stopT();P.phase="idle";}P.cur=null;}};
+})();
 
 /* ==================== QUIZ ==================== */
 const QUIZ_RIGHT=1000, QUIZ_WRONG=500;
